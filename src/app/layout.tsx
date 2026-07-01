@@ -1,23 +1,27 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Nav from "./_components/Nav";
+import Footer from "./_components/Footer";
+import { CartProvider } from "./_components/CartContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://cyberadspace.com"),
-  title: "CyberAdSpace Films — A Florida Anthology",
+  title: "CyberAdSpace — The Space Station for Florida's Best Brands",
   description:
-    "Five short films. One connected week. CyberAdSpace Films is a cinematic anthology from Florida — small, funny, real stories from the CyberAdSpace universe.",
+    "One address. Ten brands. Zero middlemen. CyberAdSpace is the marketplace for Palm Polish, The Green Oven, Canamo Cafe, The Hemp Dispensary, and more — plus a cinematic anthology arriving 2026.",
   openGraph: {
-    title: "CyberAdSpace Films — A Florida Anthology",
+    title: "CyberAdSpace — Ten Brands. One Space Station.",
     description:
-      "Five short films. One connected week. Coming 2026 from CyberAdSpace.",
+      "The marketplace where Palm Polish, The Green Oven, The Hemp Dispensary, The Faith Vault, LustLine and six more live under one roof.",
     url: "https://cyberadspace.com",
-    siteName: "CyberAdSpace Films",
+    siteName: "CyberAdSpace",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "CyberAdSpace Films — A Florida Anthology",
-    description: "Five short films. One connected week. Coming 2026.",
+    title: "CyberAdSpace — Ten Brands. One Space Station.",
+    description:
+      "The marketplace where all our brands live. Plus a cinematic anthology in 2026.",
   },
 };
 
@@ -37,7 +41,13 @@ export default function RootLayout({
         />
       </head>
       <body className="grain">
-        {children}
+        <div className="starfield" />
+        <div className="stars" />
+        <CartProvider>
+          <Nav />
+          {children}
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );
