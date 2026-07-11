@@ -39,39 +39,6 @@ export default function Home() {
           }}
         />
 
-        <div className="relative z-10 px-6 md:px-10 pb-20 md:pb-28 max-w-7xl w-full mx-auto">
-          <div className="eyebrow mb-6 flex items-center gap-3">
-            <span
-              className="inline-block w-2 h-2 rounded-full"
-              style={{ background: "var(--accent-2)", boxShadow: "0 0 10px var(--accent-2)" }}
-            />
-            CYBERADSPACE · TRANSMITTING FROM ORBIT
-          </div>
-          <h1 className="display text-white leading-[0.94] font-bold text-[44px] sm:text-[68px] md:text-[92px] lg:text-[120px] max-w-6xl">
-            One address.
-            <br />
-            <span style={{ color: "var(--accent)" }}>{brandCount} brands.</span>
-            <br />
-            <span style={{ color: "var(--accent-2)" }}>Zero middlemen.</span>
-          </h1>
-          <p
-            className="mt-8 max-w-xl text-lg md:text-xl leading-relaxed"
-            style={{ color: "var(--text-muted)" }}
-          >
-            A marketplace for a family of Florida brands — faith, cannabis,
-            food, music, real estate, and more. All under one roof.
-            Every one of them live.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Link href="#brands" className="btn btn-primary">
-              Enter the Marketplace
-            </Link>
-            <Link href="/films" className="btn btn-cyan">
-              Films · Coming 2026
-            </Link>
-          </div>
-        </div>
-
         <div
           className="absolute bottom-6 left-1/2 -translate-x-1/2 mono text-[10px] tracking-[0.32em] z-10"
           style={{ color: "var(--text-faint)" }}

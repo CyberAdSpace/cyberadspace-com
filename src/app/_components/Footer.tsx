@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-4 gap-10 mb-14">
           <div className="md:col-span-2">
-            <Wordmark className="h-9 w-auto mb-5" />
+            <Wordmark className="h-16 w-auto mb-5" />
             <p className="text-sm max-w-md leading-relaxed" style={{ color: "var(--text-muted)" }}>
               The space station for a family of Florida brands. Fourteen
               independent companies, one address. Films arriving 2026.

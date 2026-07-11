@@ -110,7 +110,6 @@ export const BRANDS: Brand[] = [
     category: "Education · Music",
     accent: "#7fbfff",
     logo: "/assets/logos/logo-antrias-academy.png",
-    logoBg: "light",
     url: "https://antriasacademy.com",
   },
   {
@@ -128,7 +127,7 @@ export const BRANDS: Brand[] = [
     tagline: "Property management, maintenance, Airbnb, and real estate.",
     category: "Real Estate · Rentals",
     accent: "#d4af37",
-    logo: "/assets/logos/logo-bam-casas.jpg",
+    logo: "/assets/logos/logo-bam-casas.png",
     logoBg: "light",
     url: "https://bamcasas.com",
   },

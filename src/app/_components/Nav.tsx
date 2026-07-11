@@ -13,7 +13,7 @@ export default function Nav() {
       }}
     >
       <Link href="/" aria-label="CyberAdSpace home" className="block">
-        <Wordmark className="h-8 w-auto" />
+        <Wordmark className="h-12 md:h-14 w-auto" />
       </Link>
 
       <div className="hidden md:flex items-center gap-8">
