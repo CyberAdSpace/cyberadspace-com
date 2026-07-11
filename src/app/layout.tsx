@@ -2,17 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "./_components/Nav";
 import Footer from "./_components/Footer";
-import { CartProvider } from "./_components/CartContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://cyberadspace.com"),
   title: "CyberAdSpace — The Space Station for Florida's Best Brands",
   description:
-    "One address. Ten brands. Zero middlemen. CyberAdSpace is the marketplace for Palm Polish, The Green Oven, Canamo Cafe, The Hemp Dispensary, and more — plus a cinematic anthology arriving 2026.",
+    "One address. Fourteen brands. Zero middlemen. CyberAdSpace is the marketplace for The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish, BAM Casas, and more — plus a cinematic anthology arriving 2026.",
   openGraph: {
-    title: "CyberAdSpace — Ten Brands. One Space Station.",
+    title: "CyberAdSpace — Fourteen Brands. One Space Station.",
     description:
-      "The marketplace where Palm Polish, The Green Oven, The Hemp Dispensary, The Faith Vault, LustLine and six more live under one roof.",
+      "The marketplace where The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish, BAM Casas and nine more live under one roof.",
     url: "https://cyberadspace.com",
     siteName: "CyberAdSpace",
     type: "website",
@@ -43,11 +42,9 @@ export default function RootLayout({
       <body className="grain">
         <div className="starfield" />
         <div className="stars" />
-        <CartProvider>
-          <Nav />
-          {children}
-          <Footer />
-        </CartProvider>
+        <Nav />
+        {children}
+        <Footer />
       </body>
     </html>
   );

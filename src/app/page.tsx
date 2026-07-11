@@ -13,6 +13,8 @@ const FILMS = [
 ];
 
 export default function Home() {
+  const brandCount = BRANDS.length;
+
   return (
     <>
       {/* HERO */}
@@ -48,7 +50,7 @@ export default function Home() {
           <h1 className="display text-white leading-[0.94] font-bold text-[44px] sm:text-[68px] md:text-[92px] lg:text-[120px] max-w-6xl">
             One address.
             <br />
-            <span style={{ color: "var(--accent)" }}>Ten brands.</span>
+            <span style={{ color: "var(--accent)" }}>{brandCount} brands.</span>
             <br />
             <span style={{ color: "var(--accent-2)" }}>Zero middlemen.</span>
           </h1>
@@ -56,9 +58,9 @@ export default function Home() {
             className="mt-8 max-w-xl text-lg md:text-xl leading-relaxed"
             style={{ color: "var(--text-muted)" }}
           >
-            A marketplace for a family of Florida brands — auto, cannabis,
-            food, wellness, faith, education, digital. All under one roof.
-            All shipped direct.
+            A marketplace for a family of Florida brands — faith, cannabis,
+            food, music, real estate, and more. All under one roof.
+            Every one of them live.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link href="#brands" className="btn btn-primary">
@@ -82,9 +84,9 @@ export default function Home() {
       <section className="relative py-10 border-y" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
           {[
-            { n: "10", l: "Brands in the family" },
-            { n: "4", l: "Live today" },
-            { n: "6", l: "Landing 2026" },
+            { n: String(brandCount), l: "Brands in the family" },
+            { n: String(brandCount), l: "Live right now" },
+            { n: "5", l: "Films landing 2026" },
             { n: "1", l: "Studio behind all of it" },
           ].map((s) => (
             <div key={s.l}>
@@ -105,7 +107,7 @@ export default function Home() {
           <div className="reveal mb-14 md:mb-20">
             <div className="eyebrow mb-4">The Family</div>
             <h2 className="display text-white font-bold text-4xl md:text-6xl leading-[0.95] max-w-4xl">
-              Ten independent brands.
+              {brandCount} independent brands.
               <br />
               <span style={{ color: "var(--text-muted)" }}>
                 One marketplace they all live in.
@@ -115,71 +117,69 @@ export default function Home() {
               className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed"
               style={{ color: "var(--text-muted)" }}
             >
-              Every product on CyberAdSpace is made by a brand we built.
-              Explore each brand&apos;s catalog, story, and shop below.
+              Every brand here is one we built. Tap any card to jump straight
+              to that brand&apos;s own site — shop, read, book, or explore.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {BRANDS.map((brand, i) => (
-              <Link
+              <a
                 key={brand.slug}
-                href={`/${brand.slug}`}
-                className="reveal brand-tile group block"
+                href={brand.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="reveal brand-card group"
                 style={
                   {
-                    ["--brand-accent" as string]: brand.accent + "80",
-                    transitionDelay: `${i * 60}ms`,
+                    ["--brand-accent" as string]: brand.accent,
+                    transitionDelay: `${i * 45}ms`,
                   } as React.CSSProperties
                 }
               >
-                <Image
-                  src={brand.image}
-                  alt={brand.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover"
-                />
-                <div
-                  className="absolute top-4 left-4 z-[2] pill"
-                  style={{
-                    background: "rgba(4,6,13,0.65)",
-                    backdropFilter: "blur(6px)",
-                  }}
-                >
-                  <span className={brand.status === "live" ? "pill-live" : "pill-soon"}
-                    style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-                  >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full"
-                      style={{
-                        background: brand.status === "live" ? "#7fd8be" : brand.accent,
-                        boxShadow: `0 0 8px ${brand.status === "live" ? "#7fd8be" : brand.accent}`,
-                      }}
-                    />
-                    {brand.status === "live" ? "SHOP OPEN" : "COMING SOON"}
+                {/* status pill */}
+                <div className="brand-card-top">
+                  <span className="pill-live-inline">
+                    <span className="live-dot" />
+                    LIVE
+                  </span>
+                  <span className="mono text-[9px] tracking-[0.26em]" style={{ color: brand.accent }}>
+                    {brand.category.toUpperCase()}
                   </span>
                 </div>
 
-                <div className="brand-tile-content">
-                  <div className="mono text-[9px] tracking-[0.28em] mb-2" style={{ color: brand.accent }}>
-                    {brand.category.toUpperCase()}
+                {/* logo */}
+                <div className="brand-card-logo">
+                  <div
+                    className={brand.logoBg === "light" ? "logo-plate" : "logo-bare"}
+                  >
+                    <Image
+                      src={brand.logo}
+                      alt={`${brand.name} logo`}
+                      width={340}
+                      height={160}
+                      className="brand-logo-img"
+                    />
                   </div>
-                  <h3 className="display text-white font-bold text-2xl md:text-3xl leading-tight mb-2">
+                </div>
+
+                {/* name + tagline */}
+                <div className="brand-card-body">
+                  <h3 className="display text-white font-bold text-xl md:text-2xl leading-tight mb-2">
                     {brand.name}
                   </h3>
                   <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
                     {brand.tagline}
                   </p>
                   <div
-                    className="mono text-[10px] tracking-[0.24em] mt-4 flex items-center gap-2"
+                    className="mono text-[10px] tracking-[0.24em] mt-4 flex items-center gap-2 brand-card-cta"
                     style={{ color: brand.accent }}
                   >
-                    <span>ENTER</span>
-                    <span aria-hidden>→</span>
+                    <span>VISIT SITE</span>
+                    <span aria-hidden>↗</span>
                   </div>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -256,9 +256,9 @@ export default function Home() {
               This is that place.
             </p>
             <p>
-              Every brand on CyberAdSpace is owned or operated by us. Some are
-              live and shipping. Some are landing later this year. All of them
-              share one universe, one aesthetic, and one address on the web.
+              Every brand on CyberAdSpace is owned or operated by us. They span
+              faith, cannabis, food, music, real estate, and more — all sharing
+              one universe, one aesthetic, and one address on the web.
             </p>
           </div>
         </div>

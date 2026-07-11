@@ -244,6 +244,98 @@ body { overflow-x: hidden; }
   background: linear-gradient(to top, rgba(4, 6, 13, 0.95) 0%, rgba(4, 6, 13, 0.7) 60%, transparent 100%);
 }
 
+/* Brand card — logo-forward marketplace card */
+.brand-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--brand-accent) 12%, transparent) 0%, transparent 55%),
+    var(--bg-panel);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+              border-color 320ms ease,
+              box-shadow 380ms ease;
+}
+.brand-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--brand-accent, var(--accent));
+  box-shadow:
+    0 24px 60px -24px rgba(0, 0, 0, 0.7),
+    0 0 44px -14px var(--brand-accent, rgba(255, 184, 77, 0.35));
+}
+.brand-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 0;
+}
+.pill-live-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #7fd8be;
+  padding: 3px 9px;
+  border: 1px solid rgba(127, 216, 190, 0.35);
+  border-radius: 999px;
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7fd8be;
+  box-shadow: 0 0 8px #7fd8be;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+.brand-card-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 24px 22px;
+  min-height: 150px;
+}
+.logo-bare,
+.logo-plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.logo-plate {
+  background: #fbfaf6;
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+.brand-logo-img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 92px;
+  object-fit: contain;
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.logo-plate .brand-logo-img { max-height: 84px; }
+.brand-card:hover .brand-logo-img { transform: scale(1.04); }
+.brand-card-body {
+  padding: 4px 22px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.brand-card-body { padding-top: 20px; }
+.brand-card-cta {
+  opacity: 0.75;
+  transition: opacity 280ms ease, gap 280ms ease;
+}
+.brand-card:hover .brand-card-cta { opacity: 1; gap: 10px; }
+
 /* Poster (for films section — carried over from v1) */
 .poster {
   position: relative;
