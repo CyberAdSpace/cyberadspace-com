@@ -306,7 +306,7 @@ body { overflow-x: hidden; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: auto;
   background: transparent;
   border: none;
 }
@@ -339,7 +339,7 @@ body { overflow-x: hidden; }
 .logo-plate .brand-logo-img {
   position: relative;
   z-index: 1;
-  max-height: 140px;
+  max-height: 165px;
 }
 .brand-card:hover .brand-logo-img { transform: scale(1.05); }
 .brand-card-body {
