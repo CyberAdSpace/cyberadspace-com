@@ -28,7 +28,15 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
-          className="hero-image object-cover"
+          className="hero-image object-cover hidden md:block"
+        />
+        <Image
+          src="/assets/cyber-hero-space-mobile.png"
+          alt="A Cybertruck orbits Earth above a glowing Florida"
+          fill
+          priority
+          sizes="100vw"
+          className="hero-image object-cover md:hidden"
         />
         <div className="scanlines" />
         <div
