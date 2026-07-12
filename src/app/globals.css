@@ -582,7 +582,7 @@ body { overflow-x: hidden; }
 .map-truck-img {
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 16px rgba(85, 214, 255, 0.5));
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.55)) drop-shadow(0 0 22px rgba(85, 214, 255, 0.75));
   animation: truck-hover 3.2s ease-in-out infinite;
 }
 .map-truck-flying .map-truck-img { animation: truck-fly 1.15s ease-in-out; }
