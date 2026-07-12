@@ -11,6 +11,7 @@ export type Brand = {
   logo: string; // /assets/logos/*
   location: LocationId; // where this brand lives on the orbit map
   url: string; // external site — logos link straight here
+  email: string; // brand inbox on the CyberAdSpace domain
 };
 
 export const BRANDS: Brand[] = [
@@ -23,6 +24,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-faith-vault.png",
     location: "orbit",
     url: "https://thefaithvault.com",
+    email: "TheFaithVault@CyberAdSpace.com",
   },
   {
     slug: "the-scripture-guide",
@@ -33,6 +35,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-scripture-guide.png",
     location: "orbit",
     url: "https://thescriptureguide.com",
+    email: "TheScriptureGuide@CyberAdSpace.com",
   },
   {
     slug: "the-divine-reader",
@@ -43,6 +46,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-divine-reader.png",
     location: "orbit",
     url: "https://thedivinereader.com",
+    email: "TheDivineReader@CyberAdSpace.com",
   },
   {
     slug: "religion-relief",
@@ -53,6 +57,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-religion-relief.png",
     location: "orbit",
     url: "https://religionrelief.com",
+    email: "ReligionRelief@CyberAdSpace.com",
   },
   {
     slug: "canamo-cafe",
@@ -63,6 +68,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-canamo-cafe.png",
     location: "orlando",
     url: "https://canamocafe.com",
+    email: "CanamoCafe@CyberAdSpace.com",
   },
   {
     slug: "the-hemp-cookies",
@@ -73,6 +79,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-hemp-cookies.png",
     location: "zephyrhills",
     url: "https://thehempcookies.com",
+    email: "TheHempCookies@CyberAdSpace.com",
   },
   {
     slug: "the-hemp-dispensary",
@@ -83,6 +90,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-hemp-dispensary.png",
     location: "zephyrhills",
     url: "https://thehempdispensary.com",
+    email: "TheHempDispensary@CyberAdSpace.com",
   },
   {
     slug: "the-green-oven",
@@ -93,6 +101,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-green-oven.png",
     location: "zephyrhills",
     url: "https://thegreenoven.co",
+    email: "TheGreenOven@CyberAdSpace.com",
   },
   {
     slug: "elevated-remedies",
@@ -103,6 +112,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-elevated-remedies.png",
     location: "orbit",
     url: "https://elevatedremedies.world",
+    email: "ElevatedRemedies@CyberAdSpace.com",
   },
   {
     slug: "williams-produce",
@@ -113,6 +123,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-williams-produce.png",
     location: "dade-city",
     url: "https://williamsproduceandmore.com",
+    email: "WilliamsProduce@CyberAdSpace.com",
   },
   {
     slug: "antrias-academy",
@@ -123,6 +134,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-antrias-academy.png",
     location: "orlando",
     url: "https://antriasacademy.com",
+    email: "AntriasAcademy@CyberAdSpace.com",
   },
   {
     slug: "palm-polish",
@@ -133,6 +145,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-palm-polish.png",
     location: "orlando",
     url: "https://palm-polish.vercel.app",
+    email: "PalmPolish@CyberAdSpace.com",
   },
   {
     slug: "solar-splashing",
@@ -143,6 +156,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-solar-splashing.png",
     location: "gulf-coast",
     url: "https://solarsplashing.com",
+    email: "SolarSplashing@CyberAdSpace.com",
   },
   {
     slug: "florida-garage-sales",
@@ -153,6 +167,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-florida-garage-sales.png",
     location: "orbit",
     url: "https://floridagaragesales.com",
+    email: "FloridaGarageSales@CyberAdSpace.com",
   },
 ];
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Script from "next/script";
 import NotifyForm from "./NotifyForm";
 import OrbitMap from "./_components/OrbitMap";
+import WebAuthConnect from "./_components/WebAuthConnect";
 import { BRANDS } from "@/data/brands";
 
 const FILMS = [
@@ -100,11 +101,8 @@ export default function Home() {
 
           <div className="float-grid">
             {BRANDS.map((brand, i) => (
-              <a
+              <div
                 key={brand.slug}
-                href={brand.url}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="reveal float-brand"
                 style={
                   {
@@ -114,17 +112,27 @@ export default function Home() {
                   } as React.CSSProperties
                 }
               >
-                <span className="float-brand-logo">
-                  <Image
-                    src={brand.logo}
-                    alt={`${brand.name} logo`}
-                    width={340}
-                    height={160}
-                    className="float-brand-img"
-                  />
-                </span>
-                <span className="float-brand-tagline">{brand.tagline}</span>
-              </a>
+                <a
+                  href={brand.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="float-brand-link"
+                >
+                  <span className="float-brand-logo">
+                    <Image
+                      src={brand.logo}
+                      alt={`${brand.name} logo`}
+                      width={340}
+                      height={160}
+                      className="float-brand-img"
+                    />
+                  </span>
+                  <span className="float-brand-tagline">{brand.tagline}</span>
+                </a>
+                <a href={`mailto:${brand.email}`} className="float-brand-email">
+                  {brand.email}
+                </a>
+              </div>
             ))}
           </div>
         </div>
@@ -205,7 +213,7 @@ export default function Home() {
               Set Up Crypto Payments <span aria-hidden>→</span>
             </a>
           </div>
-          <div className="reveal flex justify-center">
+          <div className="reveal flex flex-col items-center gap-8">
             <Image
               src="/assets/cas-card.png"
               alt="The reloadable CAS card by CyberAdSpace"
@@ -213,6 +221,7 @@ export default function Home() {
               height={725}
               className="cas-card-img"
             />
+            <WebAuthConnect />
           </div>
         </div>
       </section>
