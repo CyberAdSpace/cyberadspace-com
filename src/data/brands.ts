@@ -50,7 +50,7 @@ export const BRANDS: Brand[] = [
     tagline: "AI worship music, composed for your soul.",
     category: "Faith · Music",
     accent: "#e8b878",
-    logo: "/assets/logos/logo-religion-relief.jpg",
+    logo: "/assets/logos/logo-religion-relief.png",
     location: "orbit",
     url: "https://religionrelief.com",
   },
@@ -80,7 +80,7 @@ export const BRANDS: Brand[] = [
     tagline: "Federal hemp, done right.",
     category: "Cannabis · Dispensary",
     accent: "#7fd8be",
-    logo: "/assets/logos/logo-hemp-dispensary.webp",
+    logo: "/assets/logos/logo-hemp-dispensary.png",
     location: "zephyrhills",
     url: "https://thehempdispensary.com",
   },
@@ -155,8 +155,8 @@ export type MapLocation = {
 };
 
 export const LOCATIONS: MapLocation[] = [
-  { id: "dade-city", name: "Dade City", blurb: "Farm country. Produce territory.", x: 49, y: 40 },
-  { id: "zephyrhills", name: "Zephyrhills", blurb: "Hemp headquarters of the family.", x: 52.5, y: 45.5 },
-  { id: "orlando", name: "Orlando", blurb: "Service brands across Central Florida.", x: 60, y: 41 },
+  { id: "dade-city", name: "Dade City", blurb: "Farm country. Produce territory.", x: 45, y: 37.5 },
+  { id: "zephyrhills", name: "Zephyrhills", blurb: "Hemp headquarters of the family.", x: 49, y: 47 },
+  { id: "orlando", name: "Orlando", blurb: "Service brands across Central Florida.", x: 63, y: 41 },
   { id: "orbit", name: "In Orbit", blurb: "Digital brands. Available everywhere.", x: 20, y: 16 },
 ];
