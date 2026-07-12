@@ -1,6 +1,6 @@
 // The CyberAdSpace brand family. Every brand is live and links directly to its own site.
 
-export type LocationId = "dade-city" | "zephyrhills" | "orlando" | "orbit";
+export type LocationId = "dade-city" | "zephyrhills" | "orlando" | "gulf-coast" | "orbit";
 
 export type Brand = {
   slug: string;
@@ -135,6 +135,16 @@ export const BRANDS: Brand[] = [
     url: "https://palm-polish.vercel.app",
   },
   {
+    slug: "solar-splashing",
+    name: "SolarSplashing",
+    tagline: "Solar installs and custom pools, Gulf Coast.",
+    category: "Solar · Pools",
+    accent: "#ffd166",
+    logo: "/assets/logos/logo-solar-splashing.png",
+    location: "gulf-coast",
+    url: "https://solarsplashing.com",
+  },
+  {
     slug: "florida-garage-sales",
     name: "Florida Garage Sales",
     tagline: "Garage-sale finds across the Sunshine State.",
@@ -158,5 +168,6 @@ export const LOCATIONS: MapLocation[] = [
   { id: "dade-city", name: "Dade City", blurb: "Farm country. Produce territory.", x: 45, y: 37.5 },
   { id: "zephyrhills", name: "Zephyrhills", blurb: "Hemp headquarters of the family.", x: 49, y: 47 },
   { id: "orlando", name: "Orlando", blurb: "Service brands across Central Florida.", x: 63, y: 41 },
+  { id: "gulf-coast", name: "Gulf Coast", blurb: "Sun, water, and solar territory.", x: 38, y: 45 },
   { id: "orbit", name: "In Orbit", blurb: "Digital brands. Available everywhere.", x: 20, y: 16 },
 ];

@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Wordmark className="h-16 w-auto mb-5" />
             <p className="text-sm max-w-md leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              The space station for a family of Florida brands. Thirteen
+              The space station for a family of Florida brands. Fourteen
               independent companies, one address. Films arriving 2026.
             </p>
           </div>
@@ -44,7 +44,7 @@ export default function Footer() {
             © 2026 CYBERADSPACE · MADE IN FLORIDA · TRANSMITTED FROM ORBIT
           </div>
           <div className="mono text-[10px] tracking-[0.28em]" style={{ color: "var(--text-faint)" }}>
-            13 BRANDS · 5 FILMS · 1 FAMILY
+            14 BRANDS · 5 FILMS · 1 FAMILY
           </div>
         </div>
       </div>

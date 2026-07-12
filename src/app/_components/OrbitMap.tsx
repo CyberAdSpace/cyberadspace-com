@@ -119,6 +119,29 @@ export default function OrbitMap() {
             Claim Your Territory <span aria-hidden>→</span>
           </a>
         </div>
+
+        {/* cyber drivers */}
+        <div className="orbit-pitch mt-8">
+          <div className="mono text-[10px] tracking-[0.3em] mb-4" style={{ color: "var(--accent-2)" }}>
+            CYBER DRIVERS · EARN 4%
+          </div>
+          <p className="text-sm md:text-base leading-relaxed mb-5" style={{ color: "var(--text-muted)" }}>
+            Own a Cybertruck? Wrap it, and deliver for the brands in your
+            territory — in {loc.id === "orbit" ? "Dade City" : loc.name}, that
+            means delivering for{" "}
+            <span className="text-white font-semibold">
+              {loc.id === "orbit" ? "Williams Produce" : (localBrands[0]?.name ?? "local brands")}
+            </span>
+            . You earn <span className="text-white font-semibold">4%</span> of
+            every delivery.
+          </p>
+          <a
+            href="mailto:contact@cyberadspace.com?subject=I%20want%20to%20be%20a%20Cyber%20Driver"
+            className="btn btn-cyan"
+          >
+            Become a Cyber Driver <span aria-hidden>→</span>
+          </a>
+        </div>
       </div>
     </div>
   );

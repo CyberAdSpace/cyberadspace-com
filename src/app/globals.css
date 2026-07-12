@@ -632,3 +632,11 @@ body { overflow-x: hidden; }
   border-top: 1px solid var(--border);
   padding-top: 1.75rem;
 }
+
+/* CAS card */
+.cas-card-img {
+  width: min(560px, 100%);
+  height: auto;
+  animation: floaty 7s ease-in-out infinite;
+  filter: drop-shadow(0 0 34px rgba(80, 200, 255, 0.22)) drop-shadow(0 24px 50px rgba(0, 0, 0, 0.55));
+}

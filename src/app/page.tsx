@@ -154,6 +154,69 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CAS TOKEN */}
+      <section id="cas" className="relative py-24 md:py-32 px-6 md:px-10">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+          <div className="reveal">
+            <div className="eyebrow mb-4">The CAS Token · XPR Network</div>
+            <h2 className="display text-white font-bold text-4xl md:text-6xl leading-[0.95]">
+              One token.
+              <br />
+              <span style={{ color: "var(--text-muted)" }}>Every brand.</span>
+            </h2>
+            <p
+              className="mt-6 max-w-xl text-base md:text-lg leading-relaxed"
+              style={{ color: "var(--text-muted)" }}
+            >
+              CAS is CyberAdSpace&apos;s own currency, built on the XPR
+              Network. It powers payments across the whole family — and we
+              bring merchants along with us.
+            </p>
+            <div className="mt-8 space-y-5">
+              <div>
+                <div className="mono text-[10px] tracking-[0.3em] mb-1" style={{ color: "var(--accent)" }}>
+                  CRYPTO CHECKOUT
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                  We set merchants up with crypto payment processing, end to end.
+                </p>
+              </div>
+              <div>
+                <div className="mono text-[10px] tracking-[0.3em] mb-1" style={{ color: "var(--accent)" }}>
+                  RELOADABLE CAS CARDS
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                  A gift card with crypto on it. Load it, spend it, reload it.
+                </p>
+              </div>
+              <div>
+                <div className="mono text-[10px] tracking-[0.3em] mb-1" style={{ color: "var(--accent)" }}>
+                  SPEND IT ANYWHERE WE PROCESS
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                  Your card works at every merchant on the CyberAdSpace processor.
+                </p>
+              </div>
+            </div>
+            <a
+              href="mailto:contact@cyberadspace.com?subject=Set%20up%20crypto%20payments%20for%20my%20business"
+              className="btn btn-cyan mt-9"
+            >
+              Set Up Crypto Payments <span aria-hidden>→</span>
+            </a>
+          </div>
+          <div className="reveal flex justify-center">
+            <Image
+              src="/assets/cas-card.png"
+              alt="The reloadable CAS card by CyberAdSpace"
+              width={1064}
+              height={725}
+              className="cas-card-img"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* FILMS STRIP */}
       <section
         id="films-strip"
