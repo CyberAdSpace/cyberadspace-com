@@ -122,16 +122,6 @@ export const BRANDS: Brand[] = [
     url: "https://palm-polish.vercel.app",
   },
   {
-    slug: "bam-casas",
-    name: "BAM Casas",
-    tagline: "Property management, maintenance, Airbnb, and real estate.",
-    category: "Real Estate · Rentals",
-    accent: "#d4af37",
-    logo: "/assets/logos/logo-bam-casas.png",
-    logoBg: "light",
-    url: "https://bamcasas.com",
-  },
-  {
     slug: "florida-garage-sales",
     name: "Florida Garage Sales",
     tagline: "The Sunshine State's home for garage-sale finds and deals.",

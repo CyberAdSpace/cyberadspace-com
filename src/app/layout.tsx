@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://cyberadspace.com"),
   title: "CyberAdSpace — The Space Station for Florida's Best Brands",
   description:
-    "One address. Fourteen brands. Zero middlemen. CyberAdSpace is the marketplace for The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish, BAM Casas, and more — plus a cinematic anthology arriving 2026.",
+    "One address. Thirteen brands. Zero middlemen. CyberAdSpace is the marketplace for The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish, and more — plus a cinematic anthology arriving 2026.",
   openGraph: {
-    title: "CyberAdSpace — Fourteen Brands. One Space Station.",
+    title: "CyberAdSpace — Thirteen Brands. One Space Station.",
     description:
-      "The marketplace where The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish, BAM Casas and nine more live under one roof.",
+      "The marketplace where The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish and nine more live under one roof.",
     url: "https://cyberadspace.com",
     siteName: "CyberAdSpace",
     type: "website",
