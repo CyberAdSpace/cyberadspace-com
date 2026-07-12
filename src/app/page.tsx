@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import NotifyForm from "./NotifyForm";
+import OrbitMap from "./_components/OrbitMap";
 import { BRANDS } from "@/data/brands";
 
 const FILMS = [
@@ -92,70 +93,63 @@ export default function Home() {
               className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed"
               style={{ color: "var(--text-muted)" }}
             >
-              Every brand here is one we built. Tap any card to jump straight
+              Every brand here is one we built. Tap any logo to jump straight
               to that brand&apos;s own site — shop, read, book, or explore.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="float-grid">
             {BRANDS.map((brand, i) => (
               <a
                 key={brand.slug}
                 href={brand.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="reveal brand-card group"
+                className="reveal float-brand"
                 style={
                   {
                     ["--brand-accent" as string]: brand.accent,
                     transitionDelay: `${i * 45}ms`,
+                    ["--float-delay" as string]: `${(i % 5) * 0.9}s`,
                   } as React.CSSProperties
                 }
               >
-                {/* status pill */}
-                <div className="brand-card-top">
-                  <span className="pill-live-inline">
-                    <span className="live-dot" />
-                    LIVE
-                  </span>
-                  <span className="mono text-[9px] tracking-[0.26em]" style={{ color: brand.accent }}>
-                    {brand.category.toUpperCase()}
-                  </span>
-                </div>
-
-                {/* logo */}
-                <div className="brand-card-logo">
-                  <div
-                    className={brand.logoBg === "light" ? "logo-plate" : "logo-bare"}
-                  >
-                    <Image
-                      src={brand.logo}
-                      alt={`${brand.name} logo`}
-                      width={340}
-                      height={160}
-                      className="brand-logo-img"
-                    />
-                  </div>
-                </div>
-
-                {/* name + tagline */}
-                <div className="brand-card-body">
-                  <h3 className="display text-white font-bold text-xl md:text-2xl leading-tight mb-2">
-                    {brand.name}
-                  </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                    {brand.tagline}
-                  </p>
-                  <div
-                    className="mono text-[10px] tracking-[0.24em] mt-4 flex items-center gap-2 brand-card-cta"
-                    style={{ color: brand.accent }}
-                  >
-                    <span>VISIT SITE</span>
-                    <span aria-hidden>↗</span>
-                  </div>
-                </div>
+                <span className="float-brand-logo">
+                  <Image
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    width={340}
+                    height={160}
+                    className="float-brand-img"
+                  />
+                </span>
+                <span className="float-brand-tagline">{brand.tagline}</span>
               </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ORBIT MAP */}
+      <section id="map" className="relative py-24 md:py-32 px-6 md:px-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="reveal mb-14 md:mb-16">
+            <div className="eyebrow mb-4">The Orbit Map</div>
+            <h2 className="display text-white font-bold text-4xl md:text-6xl leading-[0.95] max-w-4xl">
+              Move the truck.
+              <br />
+              <span style={{ color: "var(--text-muted)" }}>Unlock the local market.</span>
+            </h2>
+            <p
+              className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Every territory on the map has its own exclusive marketplace.
+              Send the Cybertruck to a city and see who&apos;s trading there.
+            </p>
+          </div>
+          <div className="reveal">
+            <OrbitMap />
           </div>
         </div>
       </section>
