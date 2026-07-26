@@ -20,6 +20,7 @@ export default function Nav() {
         <Link href="/" className="nav-link">Home</Link>
         <Link href="/#brands" className="nav-link">Brands</Link>
         <Link href="/films" className="nav-link">Films</Link>
+        <Link href="/payments" className="nav-link">Payments</Link>
         <Link href="/#studio" className="nav-link">Studio</Link>
       </div>
 

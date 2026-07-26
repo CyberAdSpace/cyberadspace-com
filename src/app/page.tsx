@@ -206,12 +206,17 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <a
-              href="mailto:contact@cyberadspace.com?subject=Set%20up%20crypto%20payments%20for%20my%20business"
-              className="btn btn-cyan mt-9"
-            >
-              Set Up Crypto Payments <span aria-hidden>→</span>
-            </a>
+            <div className="mt-9 flex flex-wrap items-center gap-5">
+              <Link href="/payments" className="btn btn-cyan">
+                Explore CyberAdSpace Payments <span aria-hidden>→</span>
+              </Link>
+              <a
+                href="mailto:contact@cyberadspace.com?subject=Set%20up%20crypto%20payments%20for%20my%20business"
+                className="nav-link"
+              >
+                Or email us directly
+              </a>
+            </div>
           </div>
           <div className="reveal flex flex-col items-center gap-8">
             <Image
