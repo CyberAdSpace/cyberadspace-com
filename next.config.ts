@@ -7,13 +7,13 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         has: [{ type: "host", value: "cyberadspace.com" }],
-        destination: "https://foundingtimes.com/",
+        destination: "https://antriasacademy.com/",
         permanent: false,
       },
       {
         source: "/:path*",
         has: [{ type: "host", value: "www.cyberadspace.com" }],
-        destination: "https://foundingtimes.com/",
+        destination: "https://antriasacademy.com/",
         permanent: false,
       },
     ];
