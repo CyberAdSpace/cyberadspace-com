@@ -11,7 +11,7 @@ export type Brand = {
   logo: string; // /assets/logos/*
   location: LocationId; // where this brand lives on the orbit map
   url: string; // external site — logos link straight here
-  email: string; // brand inbox on the CyberAdSpace domain
+  email: string; // brand inbox (own domain where one exists, else CyberAdSpace)
 };
 
 export const BRANDS: Brand[] = [
@@ -24,7 +24,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-faith-vault.png",
     location: "orbit",
     url: "https://thefaithvault.com",
-    email: "TheFaithVault@CyberAdSpace.com",
+    email: "Contact@thefaithvault.com",
   },
   {
     slug: "the-scripture-guide",
@@ -35,7 +35,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-scripture-guide.png",
     location: "orbit",
     url: "https://thescriptureguide.com",
-    email: "TheScriptureGuide@CyberAdSpace.com",
+    email: "Contact@thescriptureguide.com",
   },
   {
     slug: "the-divine-reader",
@@ -46,7 +46,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-divine-reader.png",
     location: "orbit",
     url: "https://thedivinereader.com",
-    email: "TheDivineReader@CyberAdSpace.com",
+    email: "Contact@thedivinereader.com",
   },
   {
     slug: "religion-relief",
@@ -57,7 +57,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-religion-relief.png",
     location: "orbit",
     url: "https://religionrelief.com",
-    email: "ReligionRelief@CyberAdSpace.com",
+    email: "Music@religionrelief.com",
   },
   {
     slug: "canamo-cafe",
@@ -112,7 +112,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-elevated-remedies.png",
     location: "orbit",
     url: "https://elevatedremedies.world",
-    email: "ElevatedRemedies@CyberAdSpace.com",
+    email: "Music@elevatedremedies.world",
   },
   {
     slug: "williams-produce",
@@ -134,7 +134,7 @@ export const BRANDS: Brand[] = [
     logo: "/assets/logos/logo-antrias-academy.png",
     location: "orlando",
     url: "https://antriasacademy.com",
-    email: "AntriasAcademy@CyberAdSpace.com",
+    email: "Music@antriasacademy.com",
   },
   {
     slug: "palm-polish",
