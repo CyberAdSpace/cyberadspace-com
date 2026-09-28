@@ -9,7 +9,7 @@ const FILMS = [
     runtime: "2:30",
     logline:
       "A night-shift nurse comes home to a couch, a game she doesn't care about, and a fridge full of small mercies.",
-    brands: ["Palm Polish", "The Green Oven", "Canamo Cafe"],
+    brands: ["The Green Oven", "Canamo Cafe"],
     poster: "/assets/poster-01-fridge.png",
   },
   {
@@ -36,7 +36,7 @@ const FILMS = [
     runtime: "2:30",
     logline:
       "One house, two rituals, and a phone that keeps buzzing on the counter.",
-    brands: ["The Faith Vault", "The Hemp Dispensary"],
+    brands: ["The Faith Vault"],
     poster: "/assets/poster-04-sunday.png",
   },
   {
@@ -45,7 +45,7 @@ const FILMS = [
     runtime: "3:00",
     logline:
       "A detailed car, a locked bedroom door, and a whole week catching up with itself.",
-    brands: ["Palm Polish", "LustLine", "Full Cast"],
+    brands: ["LustLine", "Full Cast"],
     poster: "/assets/poster-05-anniversary.png",
   },
 ];

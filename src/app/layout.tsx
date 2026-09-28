@@ -2,23 +2,24 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "./_components/Nav";
 import Footer from "./_components/Footer";
+import { BRANDS } from "@/data/brands";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://cyberadspace.com"),
   title: "CyberAdSpace — The Space Station for Florida's Best Brands",
   description:
-    "One address. Fourteen brands. Zero middlemen. CyberAdSpace is the marketplace for The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish, and more — plus a cinematic anthology arriving 2026.",
+    `One address. ${BRANDS.length} brands. Zero middlemen. CyberAdSpace is the marketplace for The Faith Vault, Canamo Cafe, Antria's Academy, and more — plus a cinematic anthology arriving 2026.`,
   openGraph: {
-    title: "CyberAdSpace — Fourteen Brands. One Space Station.",
+    title: `CyberAdSpace — ${BRANDS.length} Brands. One Space Station.`,
     description:
-      "The marketplace where The Faith Vault, The Hemp Dispensary, Canamo Cafe, Palm Polish and nine more live under one roof.",
+      "The marketplace where The Faith Vault, Canamo Cafe, Antria's Academy and the rest of our brand family live under one roof.",
     url: "https://cyberadspace.com",
     siteName: "CyberAdSpace",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "CyberAdSpace — Ten Brands. One Space Station.",
+    title: `CyberAdSpace — ${BRANDS.length} Brands. One Space Station.`,
     description:
       "The marketplace where all our brands live. Plus a cinematic anthology in 2026.",
   },

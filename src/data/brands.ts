@@ -1,6 +1,6 @@
 // The CyberAdSpace brand family. Every brand is live and links directly to its own site.
 
-export type LocationId = "dade-city" | "zephyrhills" | "orlando" | "gulf-coast" | "orbit";
+export type LocationId = "dade-city" | "zephyrhills" | "orlando" | "orbit";
 
 export type Brand = {
   slug: string;
@@ -82,17 +82,6 @@ export const BRANDS: Brand[] = [
     email: "TheHempCookies@CyberAdSpace.com",
   },
   {
-    slug: "the-hemp-dispensary",
-    name: "The Hemp Dispensary",
-    tagline: "Federal hemp, done right.",
-    category: "Cannabis · Dispensary",
-    accent: "#7fd8be",
-    logo: "/assets/logos/logo-hemp-dispensary.png",
-    location: "zephyrhills",
-    url: "https://thehempdispensary.com",
-    email: "TheHempDispensary@CyberAdSpace.com",
-  },
-  {
     slug: "the-green-oven",
     name: "The Green Oven",
     tagline: "Small-batch hemp edibles and tinctures.",
@@ -136,39 +125,6 @@ export const BRANDS: Brand[] = [
     url: "https://antriasacademy.com",
     email: "Music@antriasacademy.com",
   },
-  {
-    slug: "palm-polish",
-    name: "Palm Polish",
-    tagline: "Mobile auto detailing, in your driveway.",
-    category: "Auto · Detailing",
-    accent: "#ffb84d",
-    logo: "/assets/logos/logo-palm-polish.png",
-    location: "orlando",
-    url: "https://palm-polish.vercel.app",
-    email: "PalmPolish@CyberAdSpace.com",
-  },
-  {
-    slug: "solar-splashing",
-    name: "SolarSplashing",
-    tagline: "Solar installs and custom pools, Gulf Coast.",
-    category: "Solar · Pools",
-    accent: "#ffd166",
-    logo: "/assets/logos/logo-solar-splashing.png",
-    location: "gulf-coast",
-    url: "https://solarsplashing.com",
-    email: "SolarSplashing@CyberAdSpace.com",
-  },
-  {
-    slug: "florida-garage-sales",
-    name: "Florida Garage Sales",
-    tagline: "Garage-sale finds across the Sunshine State.",
-    category: "Marketplace · Local",
-    accent: "#ffb300",
-    logo: "/assets/logos/logo-florida-garage-sales.png",
-    location: "orbit",
-    url: "https://floridagaragesales.com",
-    email: "FloridaGarageSales@CyberAdSpace.com",
-  },
 ];
 
 export type MapLocation = {
@@ -182,7 +138,6 @@ export type MapLocation = {
 export const LOCATIONS: MapLocation[] = [
   { id: "dade-city", name: "Dade City", blurb: "Farm country. Produce territory.", x: 45, y: 37.5 },
   { id: "zephyrhills", name: "Zephyrhills", blurb: "Hemp headquarters of the family.", x: 49, y: 47 },
-  { id: "orlando", name: "Orlando", blurb: "Service brands across Central Florida.", x: 63, y: 41 },
-  { id: "gulf-coast", name: "Gulf Coast", blurb: "Sun, water, and solar territory.", x: 38, y: 45 },
+  { id: "orlando", name: "Orlando", blurb: "Food and learning across Central Florida.", x: 63, y: 41 },
   { id: "orbit", name: "In Orbit", blurb: "Digital brands. Available everywhere.", x: 20, y: 16 },
 ];
