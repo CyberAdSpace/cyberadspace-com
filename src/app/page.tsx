@@ -65,8 +65,8 @@ export default function Home() {
               <span>The Faith Vault <span aria-hidden>↗</span></span>
             </a>
             <a href="https://canamocafe.com" target="_blank" rel="noopener noreferrer">
-              <Image src="/assets/logos/logo-canamo-cafe.png" alt="Cánamo Café" width={220} height={160} />
-              <span>Cánamo Café <span aria-hidden>↗</span></span>
+              <Image src="/assets/logos/logo-canamo-cafe.png" alt="Cáñamo Café" width={220} height={160} />
+              <span>Cáñamo Café <span aria-hidden>↗</span></span>
             </a>
           </div>
           <div className="work-note mono">Our own brands. Your project could be next.</div>
@@ -102,7 +102,7 @@ export default function Home() {
         <div className="site-shell">
           <div className="section-intro">
             <div><div className="eyebrow">The CyberAdSpace portfolio</div><h2 className="display">We built our brands.<br /><span>Now let&apos;s build yours.</span></h2></div>
-            <p>Explore {BRANDS.length} brands we&apos;ve created across faith, music, education, food, and wellness. These are our own projects, not a list of client commissions. Visit each brand to see more.</p>
+            <p>Explore {BRANDS.length} brands we&apos;ve created across faith, music, education, food, and wellness. Most of these are brands we built and own. One was built for a partner. Visit each brand to see more.</p>
           </div>
           <div className="float-grid creation-portfolio">
             {BRANDS.map((brand, i) => (
@@ -112,11 +112,22 @@ export default function Home() {
                     <Image src={brand.logo} alt={`${brand.name} logo`} width={340} height={160} className="float-brand-img" sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 22vw" />
                   </span>
                   <h3 className="brand-name">{brand.name}</h3>
+                  <span className="brand-status mono">{brand.status}</span>
                   <span className="float-brand-tagline">{brand.tagline}</span>
                   <span className="brand-visit mono">Explore brand <span aria-hidden>↗</span></span>
                 </a>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="operators" className="site-shell section-space">
+        <div className="section-intro">
+          <div><div className="eyebrow">Run one of our brands</div><h2 className="display">Have the drive<br /><span>but not the idea?</span></h2></div>
+          <div className="operator-copy">
+            <p>Some of the brands we build are looking for someone to run them. You take it over, operate it and keep the large majority of what it earns. We keep a small license fee for the brand, site and domain. Every arrangement is a private, written agreement with one operator.</p>
+            <a className="btn btn-primary" href="mailto:Contact@CyberAdSpace.com?subject=Operator%20inquiry">Tell us which one interests you <span aria-hidden>↗</span></a>
           </div>
         </div>
       </section>

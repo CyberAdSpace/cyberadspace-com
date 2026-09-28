@@ -1,4 +1,4 @@
-// The CyberAdSpace brand family. Every brand is live and links directly to its own site.
+// The CyberAdSpace brand family. Each brand links directly to its own site; `status` is shown honestly on the card.
 
 export type LocationId = "dade-city" | "zephyrhills" | "orlando" | "orbit";
 
@@ -12,6 +12,7 @@ export type Brand = {
   location: LocationId; // where this brand lives on the orbit map
   url: string; // external site — logos link straight here
   email: string; // brand inbox (own domain where one exists, else CyberAdSpace)
+  status: string; // honest status label shown under the brand name
 };
 
 export const BRANDS: Brand[] = [
@@ -25,6 +26,7 @@ export const BRANDS: Brand[] = [
     location: "orbit",
     url: "https://thefaithvault.com",
     email: "Contact@thefaithvault.com",
+    status: "Live",
   },
   {
     slug: "the-scripture-guide",
@@ -36,6 +38,7 @@ export const BRANDS: Brand[] = [
     location: "orbit",
     url: "https://thescriptureguide.com",
     email: "Contact@thescriptureguide.com",
+    status: "Live",
   },
   {
     slug: "the-divine-reader",
@@ -47,6 +50,7 @@ export const BRANDS: Brand[] = [
     location: "orbit",
     url: "https://thedivinereader.com",
     email: "Contact@thedivinereader.com",
+    status: "Live",
   },
   {
     slug: "religion-relief",
@@ -58,10 +62,11 @@ export const BRANDS: Brand[] = [
     location: "orbit",
     url: "https://religionrelief.com",
     email: "Music@religionrelief.com",
+    status: "Live",
   },
   {
     slug: "canamo-cafe",
-    name: "Cánamo Café",
+    name: "Cáñamo Café",
     tagline: "Colombian coffee, comfort food, hemp wellness.",
     category: "Food · Café",
     accent: "#d1a06b",
@@ -69,6 +74,7 @@ export const BRANDS: Brand[] = [
     location: "orlando",
     url: "https://canamocafe.com",
     email: "CanamoCafe@CyberAdSpace.com",
+    status: "Launching soon",
   },
   {
     slug: "the-hemp-cookies",
@@ -80,6 +86,7 @@ export const BRANDS: Brand[] = [
     location: "zephyrhills",
     url: "https://thehempcookies.com",
     email: "TheHempCookies@CyberAdSpace.com",
+    status: "Launching soon",
   },
   {
     slug: "the-green-oven",
@@ -91,6 +98,7 @@ export const BRANDS: Brand[] = [
     location: "zephyrhills",
     url: "https://thegreenoven.co",
     email: "TheGreenOven@CyberAdSpace.com",
+    status: "Concept",
   },
   {
     slug: "elevated-remedies",
@@ -102,6 +110,7 @@ export const BRANDS: Brand[] = [
     location: "orbit",
     url: "https://elevatedremedies.world",
     email: "Music@elevatedremedies.world",
+    status: "Live",
   },
   {
     slug: "williams-produce",
@@ -113,6 +122,7 @@ export const BRANDS: Brand[] = [
     location: "dade-city",
     url: "https://williamsproduceandmore.com",
     email: "WilliamsProduce@CyberAdSpace.com",
+    status: "Built for a partner",
   },
   {
     slug: "antrias-academy",
@@ -124,6 +134,7 @@ export const BRANDS: Brand[] = [
     location: "orlando",
     url: "https://antriasacademy.com",
     email: "Music@antriasacademy.com",
+    status: "Live",
   },
 ];
 

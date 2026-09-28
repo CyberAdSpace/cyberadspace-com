@@ -15,12 +15,14 @@ export const metadata: Metadata = {
     url: "https://cyberadspace.com",
     siteName: "CyberAdSpace",
     type: "website",
+    images: [{ url: "/og-image-v2.jpg", width: 1200, height: 630, alt: "CyberAdSpace | Brands & Websites, Built with AI" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "CyberAdSpace | Brands & Websites, Built with AI",
     description:
       "We build brands and websites. Powered by AI. Created for you.",
+    images: ["/og-image-v2.jpg"],
   },
 };
 
