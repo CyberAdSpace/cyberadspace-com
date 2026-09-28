@@ -2,34 +2,33 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 
+type Status = { kind: "idle" | "sending" | "sent" | "error"; message?: string };
+
 export default function ProjectInquiry() {
-  const [draft, setDraft] = useState("");
-  const [mailto, setMailto] = useState("");
   const [ready, setReady] = useState(false);
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
 
   useEffect(() => { setReady(true); }, []);
 
-  function prepareEmail(event: FormEvent<HTMLFormElement>) {
+  async function send(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const body = [
-      "Hi CyberAdSpace,",
-      "",
-      `Name: ${String(data.get("name")).trim()}`,
-      `Email: ${String(data.get("email")).trim()}`,
-      `Project: ${data.get("service")}`,
-      "",
-      String(data.get("brief")).trim(),
-      "",
-      "Please let me know the next steps to discuss this project.",
-    ].join("\n");
-    setDraft(body);
-    setMailto(`mailto:Contact@CyberAdSpace.com?subject=${encodeURIComponent(`Project inquiry: ${data.get("service")}`)}&body=${encodeURIComponent(body)}`);
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    setStatus({ kind: "sending" });
+    try {
+      const res = await fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body.ok) throw new Error(body.error || "We couldn't send your message. Please try again or email Contact@CyberAdSpace.com.");
+      form.reset();
+      setStatus({ kind: "sent" });
+    } catch (err) {
+      setStatus({ kind: "error", message: err instanceof Error ? err.message : "We couldn't send your message. Please email Contact@CyberAdSpace.com." });
+    }
   }
 
   return (
-    <form className="project-form" onSubmit={prepareEmail} onChange={() => { setDraft(""); setMailto(""); }}>
-      <fieldset disabled={!ready}>
+    <form className="project-form" onSubmit={send}>
+      <fieldset disabled={!ready || status.kind === "sending"}>
       <div className="form-row">
         <div><label htmlFor="project-name">Your name</label><input id="project-name" name="name" autoComplete="name" placeholder="Name" required maxLength={100} pattern=".*\S.*" /></div>
         <div><label htmlFor="project-email">Your email</label><input id="project-email" name="email" type="email" autoComplete="email" placeholder="you@company.com" required maxLength={200} /></div>
@@ -41,19 +40,20 @@ export default function ProjectInquiry() {
       </select>
       <label htmlFor="project-brief">Tell us about your idea</label>
       <textarea id="project-brief" name="brief" required minLength={15} maxLength={1800} rows={5} placeholder="What does your business do? What would you like to build? Include your current website, timing, or budget if you have them." />
-      <button className="btn btn-primary" type="submit">Prepare my project email <span aria-hidden>↗</span></button>
+      <div className="form-hp" aria-hidden="true"><label htmlFor="project-website">Leave this empty</label><input id="project-website" name="website" tabIndex={-1} autoComplete="off" /></div>
+      <button className="btn btn-primary" type="submit">{status.kind === "sending" ? "Sending…" : <>Send my project <span aria-hidden>↗</span></>}</button>
       </fieldset>
-      <noscript><p className="form-help">Enable JavaScript to prepare a brief here, or email Contact@CyberAdSpace.com directly.</p></noscript>
-      <p className="form-help">This creates an email draft below. Nothing is sent or saved by this form. You review and send it through your email app.</p>
-      {draft && (
-        <div className="email-draft" role="status">
-          <h3>Your project email is ready.</h3>
-          <p>Open the draft in your email app, or copy the text and email Contact@CyberAdSpace.com.</p>
-          <textarea aria-label="Prepared project email" readOnly value={draft} rows={9} />
-          <a className="btn btn-cyan" href={mailto}>Open email draft <span aria-hidden>↗</span></a>
-          <p className="form-help">Not sent yet. Review your email and press Send in your email app.</p>
-        </div>
-      )}
+      <noscript><p className="form-help">Enable JavaScript to send this form, or email Contact@CyberAdSpace.com directly.</p></noscript>
+      <div role="status" aria-live="polite">
+        {status.kind === "sent" && (
+          <div className="email-draft">
+            <h3>Thanks, your project is on its way.</h3>
+            <p>We received your message at Contact@CyberAdSpace.com and will reply to the email you entered.</p>
+          </div>
+        )}
+        {status.kind === "error" && <p className="form-error">{status.message}</p>}
+      </div>
+      <p className="form-help">Your message goes straight to our inbox at Contact@CyberAdSpace.com. See our <a href="/privacy.html">Privacy Policy</a>.</p>
     </form>
   );
 }

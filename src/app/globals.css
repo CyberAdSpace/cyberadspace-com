@@ -94,6 +94,9 @@
 .email-draft h3 { font-size: 18px; }
 .email-draft > p { color: #aeb5c6; font-size: 13px; line-height: 1.7; margin: 12px 0 20px; }
 .email-draft textarea { font-size: 13px; }
+.form-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-error { color: #ff9b8a; font-size: 13px; line-height: 1.7; margin-top: 16px; }
+.project-form .form-help a { color: inherit; text-decoration: underline; }
 .faq-section { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; padding-block: 80px 96px; }
 .faq-section > .eyebrow { padding-top: 22px; }
 .faq-list details { border-bottom: 1px solid rgba(255,255,255,.16); }
