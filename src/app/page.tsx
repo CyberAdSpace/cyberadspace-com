@@ -65,7 +65,7 @@ export default function Home() {
               <span>The Faith Vault <span aria-hidden>↗</span></span>
             </a>
             <a href="https://canamocafe.com" target="_blank" rel="noopener noreferrer">
-              <Image src="/assets/logos/logo-canamo-cafe.png" alt="Cáñamo Café" width={220} height={160} />
+              <Image src="/assets/logos/logo-canamo-cafe-v2.png" alt="Cáñamo Café" width={220} height={160} />
               <span>Cáñamo Café <span aria-hidden>↗</span></span>
             </a>
           </div>
