@@ -1,32 +1,25 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import Wordmark from "./Wordmark";
 
+const LINKS = [["Services", "/#services"], ["Our brands", "/#brands"], ["How it works", "/#process"]];
+
 export default function Nav() {
+  const [open, setOpen] = useState(false);
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-10 py-5"
-      style={{
-        background:
-          "linear-gradient(to bottom, rgba(4,6,13,0.85), rgba(4,6,13,0.0))",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-      }}
-    >
-      <Link href="/" aria-label="CyberAdSpace home" className="block">
-        <Wordmark className="h-12 md:h-14 w-auto" />
-      </Link>
-
-      <div className="hidden md:flex items-center gap-8">
-        <Link href="/" className="nav-link">Home</Link>
-        <Link href="/#brands" className="nav-link">Brands</Link>
-        <Link href="/films" className="nav-link">Films</Link>
-        <Link href="/payments" className="nav-link">Payments</Link>
-        <Link href="/#studio" className="nav-link">Studio</Link>
-      </div>
-
-      <Link href="/#brands" className="nav-link hidden sm:inline-flex">
-        Enter →
-      </Link>
-    </nav>
+    <header className="site-header" onKeyDown={(event) => { if (event.key === "Escape") setOpen(false); }}>
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <nav aria-label="Main navigation" className="site-shell header-inner">
+        <Link href="/" aria-label="CyberAdSpace home" onClick={() => setOpen(false)}><Wordmark className="h-12 md:h-14 w-auto" /></Link>
+        <div className="desktop-links">{LINKS.map(([label, href]) => <Link key={href} href={href} className="nav-link">{label}</Link>)}</div>
+        <div className="header-actions">
+          <Link href="/#contact" className="header-cta" onClick={() => setOpen(false)}>Start a project <span aria-hidden>↗</span></Link>
+          <button className="mobile-menu-button" aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}>{open ? "Close" : "Menu"}</button>
+        </div>
+      </nav>
+      {open && <nav id="mobile-navigation" aria-label="Mobile navigation" className="mobile-navigation">{LINKS.map(([label, href]) => <Link key={href} href={href} onClick={() => setOpen(false)}>{label}<span aria-hidden>↗</span></Link>)}</nav>}
+    </header>
   );
 }

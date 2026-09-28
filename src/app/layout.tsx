@@ -2,26 +2,25 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "./_components/Nav";
 import Footer from "./_components/Footer";
-import { BRANDS } from "@/data/brands";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://cyberadspace.com"),
-  title: "CyberAdSpace — The Space Station for Florida's Best Brands",
+  title: "CyberAdSpace | AI-Powered Brand & Website Creation",
   description:
-    `One address. ${BRANDS.length} brands. Zero middlemen. CyberAdSpace is the marketplace for The Faith Vault, Canamo Cafe, Antria's Academy, and more — plus a cinematic anthology arriving 2026.`,
+    "We create brands and websites using AI, guided by your business goals. Explore the brands we've built and start your own project with CyberAdSpace.",
   openGraph: {
-    title: `CyberAdSpace — ${BRANDS.length} Brands. One Space Station.`,
+    title: "CyberAdSpace | Brands & Websites, Built with AI",
     description:
-      "The marketplace where The Faith Vault, Canamo Cafe, Antria's Academy and the rest of our brand family live under one roof.",
+      "Your idea. Our next build. AI-powered brand creation and website development for your business.",
     url: "https://cyberadspace.com",
     siteName: "CyberAdSpace",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `CyberAdSpace — ${BRANDS.length} Brands. One Space Station.`,
+    title: "CyberAdSpace | Brands & Websites, Built with AI",
     description:
-      "The marketplace where all our brands live. Plus a cinematic anthology in 2026.",
+      "We build brands and websites. Powered by AI. Created for you.",
   },
 };
 

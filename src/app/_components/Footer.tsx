@@ -1,53 +1,16 @@
 import Link from "next/link";
 import Wordmark from "./Wordmark";
-import { BRANDS } from "@/data/brands";
 
 export default function Footer() {
   return (
-    <footer
-      className="relative border-t pt-16 pb-10 px-6 md:px-10 mt-24"
-      style={{ borderColor: "var(--border)" }}
-    >
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-10 mb-14">
-          <div className="md:col-span-2">
-            <Wordmark className="h-16 w-auto mb-5" />
-            <p className="text-sm max-w-md leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              The space station for a family of Florida brands. {BRANDS.length}{" "}
-              independent companies, one address. Films arriving 2026.
-            </p>
-          </div>
-
-          <div>
-            <div className="eyebrow mb-4">Marketplace</div>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="nav-link" style={{ color: "var(--text-muted)" }}>All brands</Link></li>
-              <li><Link href="/films" className="nav-link" style={{ color: "var(--text-muted)" }}>Films</Link></li>
-              <li><Link href="/#studio" className="nav-link" style={{ color: "var(--text-muted)" }}>About</Link></li>
-              <li><Link href="/#notify" className="nav-link" style={{ color: "var(--text-muted)" }}>Notify me</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="eyebrow mb-4">Contact</div>
-            <ul className="space-y-2 text-sm" style={{ color: "var(--text-muted)" }}>
-              <li>Zephyrhills, Florida</li>
-              <li><a href="mailto:Contact@CyberAdSpace.com" className="nav-link" style={{ color: "var(--text-muted)" }}>Contact@CyberAdSpace.com</a></li>
-              <li>Press · partners · brand submissions</li>
-            </ul>
-          </div>
+    <footer className="creation-footer">
+      <div className="site-shell">
+        <div className="footer-main">
+          <div><Wordmark className="h-16 w-auto mb-5" /><p>Brands and websites.<br />Powered by AI. Created for you.</p></div>
+          <div><h2 className="eyebrow">Explore</h2><Link href="/#services">Our services</Link><Link href="/#brands">Brands we&apos;ve created</Link><Link href="/#process">How we work</Link></div>
+          <div><h2 className="eyebrow">Your next project</h2><Link href="/#contact">Start a conversation ↗</Link><a href="mailto:Contact@CyberAdSpace.com">Contact@CyberAdSpace.com</a><p>Brand creation · Website development</p></div>
         </div>
-
-        <div className="hairline mb-8" />
-
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="mono text-[10px] tracking-[0.28em]" style={{ color: "var(--text-faint)" }}>
-            © 2026 CYBERADSPACE · MADE IN FLORIDA · TRANSMITTED FROM ORBIT
-          </div>
-          <div className="mono text-[10px] tracking-[0.28em]" style={{ color: "var(--text-faint)" }}>
-            {BRANDS.length} BRANDS · 5 FILMS · 1 FAMILY
-          </div>
-        </div>
+        <div className="footer-bottom mono"><span>© {new Date().getFullYear()} CyberAdSpace</span><span>Built with imagination. Made for real businesses.</span></div>
       </div>
     </footer>
   );

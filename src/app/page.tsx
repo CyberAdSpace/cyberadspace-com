@@ -1,354 +1,160 @@
 import Image from "next/image";
-import Link from "next/link";
-import Script from "next/script";
-import NotifyForm from "./NotifyForm";
-import OrbitMap from "./_components/OrbitMap";
-import WebAuthConnect from "./_components/WebAuthConnect";
 import { BRANDS } from "@/data/brands";
+import ProjectInquiry from "./_components/ProjectInquiry";
 
-const FILMS = [
-  { id: "01", title: "The Fridge", runtime: "2:30", poster: "/assets/poster-01-fridge.png" },
-  { id: "02", title: "Deej's Song", runtime: "2:15", poster: "/assets/poster-02-deej.png" },
-  { id: "03", title: "The Driver", runtime: "2:45", poster: "/assets/poster-03-driver.png" },
-  { id: "04", title: "Sunday", runtime: "2:30", poster: "/assets/poster-04-sunday.png" },
-  { id: "05", title: "Anniversary", runtime: "3:00", poster: "/assets/poster-05-anniversary.png" },
+const SERVICES = [
+  {
+    n: "01",
+    title: "Build your brand.",
+    text: "Starting with an idea? Give it a name, a recognizable identity, and a clear story. We use AI to explore possibilities, then shape a direction around your business.",
+    items: ["Brand direction & naming", "Logos & visual identity", "Brand messaging"],
+  },
+  {
+    n: "02",
+    title: "Create your website.",
+    text: "Turn that identity into a place people can find you, understand what you do, and take the next step. A new site or a fresh start for the one you already have.",
+    items: ["Business websites & landing pages", "Mobile-ready design", "Content & launch setup"],
+  },
+  {
+    n: "03",
+    title: "Bring it all together.",
+    text: "Need both? Build the brand and the website as one project, with consistent visuals and messaging from the first impression to the final page.",
+    items: ["Brand + website projects", "AI-assisted images & copy", "Project-specific features"],
+  },
+];
+
+const PROCESS = [
+  ["Tell us the idea.", "Your business, your audience, what you need, and where you want to go. Bring a rough concept or an existing brand."],
+  ["Define the project.", "We agree on the deliverables, budget, timeline, and what is needed to launch before the build begins."],
+  ["Create. Review. Refine.", "AI helps us explore and build. Human direction and your feedback shape what makes it into the finished project."],
+  ["Get ready to launch.", "Review the website on desktop and mobile, finalize the content, and work through domain, hosting, and handoff details."],
 ];
 
 export default function Home() {
-  const brandCount = BRANDS.length;
-
   return (
-    <>
-      {/* HERO */}
-      <section
-        id="top"
-        className="relative min-h-screen w-full flex flex-col justify-end overflow-hidden"
-      >
-        <Image
-          src="/assets/cyber-hero-space.png"
-          alt="A Cybertruck orbits Earth above a glowing Florida"
-          fill
-          priority
-          sizes="100vw"
-          className="hero-image object-cover hidden md:block"
-        />
-        <Image
-          src="/assets/cyber-hero-space-mobile.png"
-          alt="A Cybertruck orbits Earth above a glowing Florida"
-          fill
-          priority
-          sizes="100vw"
-          className="hero-image object-cover md:hidden"
-        />
-        <div className="scanlines" />
-        <div
-          className="absolute inset-0 z-[1]"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(4,6,13,0.55) 0%, rgba(4,6,13,0.15) 30%, rgba(4,6,13,0.15) 50%, rgba(4,6,13,0.92) 100%)",
-          }}
-        />
-
-        <div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 mono text-[10px] tracking-[0.32em] z-10"
-          style={{ color: "var(--text-faint)" }}
-        >
-          ↓  DESCEND
+    <main id="main-content" className="creation-home">
+      <section id="top" className="creation-hero site-shell">
+        <div className="hero-copy">
+          <div className="eyebrow">Your idea. Our next build.</div>
+          <h1 className="display">
+            We build<br />
+            <span>brands &amp;<br />websites.</span>
+          </h1>
+          <p className="hero-line display">Powered by AI. Created for you.</p>
+          <p className="hero-description">
+            You bring the business idea. We help turn it into a brand people
+            recognize and a website that makes it real.
+          </p>
+          <div className="hero-actions">
+            <a href="#contact" className="btn btn-primary">Start your project <span aria-hidden>↗</span></a>
+            <a href="#brands" className="text-link">Explore our brands <span aria-hidden>↓</span></a>
+          </div>
+          <p className="hero-footnote">New businesses. Existing brands. Your next chapter.</p>
+        </div>
+        <div className="hero-work" aria-label="A selection of brands created by CyberAdSpace">
+          <div className="work-heading mono"><span>Ideas we brought to life</span><span aria-hidden>↗</span></div>
+          <a href="https://antriasacademy.com" target="_blank" rel="noopener noreferrer" className="work-feature">
+            <div className="work-image">
+              <Image src="/assets/logos/logo-antrias-academy.png" alt="Antria's Academy" width={340} height={160} priority />
+            </div>
+            <div className="work-caption"><span>Antria&apos;s Academy</span><span>Education · Music <span aria-hidden>↗</span></span></div>
+          </a>
+          <div className="work-pair">
+            <a href="https://thefaithvault.com" target="_blank" rel="noopener noreferrer">
+              <Image src="/assets/logos/logo-faith-vault.png" alt="The Faith Vault" width={220} height={160} />
+              <span>The Faith Vault <span aria-hidden>↗</span></span>
+            </a>
+            <a href="https://canamocafe.com" target="_blank" rel="noopener noreferrer">
+              <Image src="/assets/logos/logo-canamo-cafe.png" alt="Cánamo Café" width={220} height={160} />
+              <span>Cánamo Café <span aria-hidden>↗</span></span>
+            </a>
+          </div>
+          <div className="work-note mono">Our own brands. Your project could be next.</div>
         </div>
       </section>
 
-      {/* STATS BAR */}
-      <section className="relative py-10 border-y" style={{ borderColor: "var(--border)" }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
-          {[
-            { n: String(brandCount), l: "Brands in the family" },
-            { n: String(brandCount), l: "Live right now" },
-            { n: "5", l: "Films landing 2026" },
-            { n: "1", l: "Studio behind all of it" },
-          ].map((s) => (
-            <div key={s.l}>
-              <div className="display text-white font-bold text-4xl md:text-5xl" style={{ color: "var(--accent)" }}>
-                {s.n}
-              </div>
-              <div className="mono text-[10px] tracking-[0.28em] mt-2" style={{ color: "var(--text-muted)" }}>
-                {s.l.toUpperCase()}
-              </div>
-            </div>
+      <div className="capability-strip">
+        <div className="site-shell">
+          <span>Brand creation</span><span aria-hidden>+</span>
+          <span>Website development</span><span aria-hidden>+</span>
+          <span>AI-powered creativity</span>
+        </div>
+      </div>
+
+      <section id="services" className="site-shell section-space">
+        <div className="section-intro">
+          <div><div className="eyebrow">What we create</div><h2 className="display">From an idea<br />to an online presence.</h2></div>
+          <p>You don&apos;t need to know which AI tools to use or how to build a website. Tell us what you want to create. We&apos;ll help shape the path.</p>
+        </div>
+        <div className="service-list">
+          {SERVICES.map((service) => (
+            <article key={service.n} className="service-row">
+              <span className="service-number mono">{service.n}</span>
+              <h3 className="display">{service.title}</h3>
+              <div><p>{service.text}</p><ul>{service.items.map((item) => <li key={item}>{item}</li>)}</ul></div>
+            </article>
           ))}
         </div>
+        <div className="scope-note"><span className="mono">Built around your brief.</span><p>Deliverables, pricing, integrations, and ongoing support are scoped for your project. No one-size-fits-all package.</p></div>
       </section>
 
-      {/* BRANDS */}
-      <section id="brands" className="relative py-24 md:py-32 px-6 md:px-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="reveal mb-14 md:mb-20">
-            <div className="eyebrow mb-4">The Family</div>
-            <h2 className="display text-white font-bold text-4xl md:text-6xl leading-[0.95] max-w-4xl">
-              {brandCount} independent brands.
-              <br />
-              <span style={{ color: "var(--text-muted)" }}>
-                One marketplace they all live in.
-              </span>
-            </h2>
-            <p
-              className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Every brand here is one we built. Tap any logo to jump straight
-              to that brand&apos;s own site — shop, read, book, or explore.
-            </p>
+      <section id="brands" className="portfolio-section section-space">
+        <div className="site-shell">
+          <div className="section-intro">
+            <div><div className="eyebrow">The CyberAdSpace portfolio</div><h2 className="display">We built our brands.<br /><span>Now let&apos;s build yours.</span></h2></div>
+            <p>Explore {BRANDS.length} brands we&apos;ve created across faith, music, education, food, and wellness. These are our own projects, not a list of client commissions. Visit each brand to see more.</p>
           </div>
-
-          <div className="float-grid">
+          <div className="float-grid creation-portfolio">
             {BRANDS.map((brand, i) => (
-              <div
-                key={brand.slug}
-                className="reveal float-brand"
-                style={
-                  {
-                    ["--brand-accent" as string]: brand.accent,
-                    transitionDelay: `${i * 45}ms`,
-                    ["--float-delay" as string]: `${(i % 5) * 0.9}s`,
-                  } as React.CSSProperties
-                }
-              >
-                <a
-                  href={brand.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="float-brand-link"
-                >
+              <article key={brand.slug} className="float-brand" style={{ "--brand-accent": brand.accent, "--float-delay": `${(i % 5) * 0.9}s` } as React.CSSProperties}>
+                <a href={brand.url} target="_blank" rel="noopener noreferrer" className="float-brand-link">
                   <span className="float-brand-logo">
-                    <Image
-                      src={brand.logo}
-                      alt={`${brand.name} logo`}
-                      width={340}
-                      height={160}
-                      className="float-brand-img"
-                    />
+                    <Image src={brand.logo} alt={`${brand.name} logo`} width={340} height={160} className="float-brand-img" sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 22vw" />
                   </span>
+                  <h3 className="brand-name">{brand.name}</h3>
                   <span className="float-brand-tagline">{brand.tagline}</span>
+                  <span className="brand-visit mono">Explore brand <span aria-hidden>↗</span></span>
                 </a>
-                <a href={`mailto:${brand.email}`} className="float-brand-email">
-                  {brand.email}
-                </a>
-              </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ORBIT MAP */}
-      <section id="map" className="relative py-24 md:py-32 px-6 md:px-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="reveal mb-14 md:mb-16">
-            <div className="eyebrow mb-4">The Orbit Map</div>
-            <h2 className="display text-white font-bold text-4xl md:text-6xl leading-[0.95] max-w-4xl">
-              Move the truck.
-              <br />
-              <span style={{ color: "var(--text-muted)" }}>Unlock the local market.</span>
-            </h2>
-            <p
-              className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Every territory on the map has its own exclusive marketplace.
-              Send the Cybertruck to a city and see who&apos;s trading there.
-            </p>
+      <section id="process" className="site-shell section-space">
+        <div className="section-intro">
+          <div><div className="eyebrow">How we work</div><h2 className="display">AI in the process.<br />People in the decisions.</h2></div>
+          <p>AI is a creative and development tool, not a replacement for understanding your business. We build around your goals and refine with your input.</p>
+        </div>
+        <ol className="process-list">
+          {PROCESS.map(([title, text], i) => (
+            <li key={title}><span className="mono">0{i + 1}</span><h3 className="display">{title}</h3><p>{text}</p></li>
+          ))}
+        </ol>
+      </section>
+
+      <section id="contact" className="contact-section section-space">
+        <div className="site-shell contact-layout">
+          <div className="contact-copy">
+            <div className="eyebrow">Let&apos;s build something</div>
+            <h2 className="display">What have you<br />got in mind?</h2>
+            <p>A business you&apos;re ready to launch. A brand that needs a new look. A website that needs to work harder. Start with the idea.</p>
+            <a className="contact-email" href="mailto:Contact@CyberAdSpace.com">Contact@CyberAdSpace.com <span aria-hidden>↗</span></a>
+            <div className="contact-note"><span className="mono">A conversation, not a checkout.</span><p>We&apos;ll discuss scope and pricing before you commit to a project.</p></div>
           </div>
-          <div className="reveal">
-            <OrbitMap />
-          </div>
+          <ProjectInquiry />
         </div>
       </section>
 
-      {/* CAS TOKEN */}
-      <section id="cas" className="relative py-24 md:py-32 px-6 md:px-10">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-          <div className="reveal">
-            <div className="eyebrow mb-4">The CAS Token · XPR Network</div>
-            <h2 className="display text-white font-bold text-4xl md:text-6xl leading-[0.95]">
-              One token.
-              <br />
-              <span style={{ color: "var(--text-muted)" }}>Every brand.</span>
-            </h2>
-            <p
-              className="mt-6 max-w-xl text-base md:text-lg leading-relaxed"
-              style={{ color: "var(--text-muted)" }}
-            >
-              CAS is CyberAdSpace&apos;s own currency, built on the XPR
-              Network. It powers payments across the whole family — and we
-              bring merchants along with us.
-            </p>
-            <div className="mt-8 space-y-5">
-              <div>
-                <div className="mono text-[10px] tracking-[0.3em] mb-1" style={{ color: "var(--accent)" }}>
-                  CRYPTO CHECKOUT
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                  We set merchants up with crypto payment processing, end to end.
-                </p>
-              </div>
-              <div>
-                <div className="mono text-[10px] tracking-[0.3em] mb-1" style={{ color: "var(--accent)" }}>
-                  RELOADABLE CAS CARDS
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                  A gift card with crypto on it. Load it, spend it, reload it.
-                </p>
-              </div>
-              <div>
-                <div className="mono text-[10px] tracking-[0.3em] mb-1" style={{ color: "var(--accent)" }}>
-                  SPEND IT ANYWHERE WE PROCESS
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                  Your card works at every merchant on the CyberAdSpace processor.
-                </p>
-              </div>
-            </div>
-            <div className="mt-9 flex flex-wrap items-center gap-5">
-              <Link href="/payments" className="btn btn-cyan">
-                Explore CyberAdSpace Payments <span aria-hidden>→</span>
-              </Link>
-              <a
-                href="mailto:contact@cyberadspace.com?subject=Set%20up%20crypto%20payments%20for%20my%20business"
-                className="nav-link"
-              >
-                Or email us directly
-              </a>
-            </div>
-          </div>
-          <div className="reveal flex flex-col items-center gap-8">
-            <Image
-              src="/assets/cas-card.png"
-              alt="The reloadable CAS card by CyberAdSpace"
-              width={1064}
-              height={725}
-              className="cas-card-img"
-            />
-            <WebAuthConnect />
-          </div>
+      <section className="site-shell faq-section">
+        <div className="eyebrow">Before we build</div>
+        <div className="faq-list">
+          <details><summary>Can you work with my existing brand?</summary><p>Yes. You can start with an existing name, logo, or website. Tell us what should stay, what isn&apos;t working, and what you want to change.</p></details>
+          <details><summary>Do I need a full brand and a website?</summary><p>No. We can discuss a brand project, a website project, or both. The scope should fit what your business actually needs.</p></details>
+          <details><summary>How much does a project cost?</summary><p>Pricing depends on the deliverables, content, features, and complexity. Send a brief and any budget range you have in mind so we can discuss a suitable scope.</p></details>
+          <details><summary>What happens after the website is built?</summary><p>Domain, hosting, handoff, and any ongoing updates are discussed as part of your scope. We&apos;ll clarify responsibilities and any third-party costs before launch.</p></details>
         </div>
       </section>
-
-      {/* FILMS STRIP */}
-      <section
-        id="films-strip"
-        className="relative py-20 md:py-28 border-t border-b overflow-hidden"
-        style={{ borderColor: "var(--border)" }}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <div>
-              <div className="eyebrow mb-4">The Anthology · 2026</div>
-              <h2 className="display text-white font-bold text-3xl md:text-5xl leading-[0.95] max-w-2xl">
-                We&apos;re also making a movie.
-              </h2>
-              <p className="mt-4 max-w-xl text-base leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                Five short films set in the CyberAdSpace universe. Every
-                product in every scene is one of our brands. Nobody explains
-                anything.
-              </p>
-            </div>
-            <Link href="/films" className="btn btn-cyan self-start md:self-end">
-              See the Films <span aria-hidden>→</span>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6 reveal">
-            {FILMS.map((f) => (
-              <Link key={f.id} href="/films" className="poster block">
-                <Image
-                  src={f.poster}
-                  alt={f.title}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 20vw"
-                  className="object-cover"
-                />
-                <div className="poster-meta">
-                  <div className="flex items-center justify-between">
-                    <span className="mono text-[9px] tracking-[0.25em]" style={{ color: "var(--accent)" }}>
-                      NO. {f.id}
-                    </span>
-                    <span className="mono text-[9px] tracking-[0.2em]" style={{ color: "var(--text-muted)" }}>
-                      {f.runtime}
-                    </span>
-                  </div>
-                  <h3 className="display text-white font-bold text-lg md:text-xl leading-tight">
-                    {f.title}
-                  </h3>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* STUDIO */}
-      <section id="studio" className="relative py-24 md:py-32 px-6 md:px-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="reveal">
-            <div className="eyebrow mb-6">The Studio</div>
-            <h2 className="display text-white font-bold text-3xl md:text-5xl leading-[1.05] mb-10">
-              CyberAdSpace is a Florida studio that builds brands, ships
-              product, and makes short films about the whole thing.
-            </h2>
-          </div>
-          <div className="reveal grid md:grid-cols-2 gap-10 md:gap-14 text-base md:text-lg leading-relaxed" style={{ color: "var(--text-muted)" }}>
-            <p>
-              We started with a delivery truck. The idea was that people would
-              pay to advertise while we drove. Then we realized we already had
-              the brands. Then we realized we could put them all in one place.
-              This is that place.
-            </p>
-            <p>
-              Every brand on CyberAdSpace is owned or operated by us. They span
-              faith, cannabis, food, music, real estate, and more — all sharing
-              one universe, one aesthetic, and one address on the web.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* NOTIFY */}
-      <section
-        id="notify"
-        className="relative py-24 md:py-32 px-6 md:px-10 border-t"
-        style={{ borderColor: "var(--border)" }}
-      >
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="reveal">
-            <div className="eyebrow mb-6">Mission Control</div>
-            <h2 className="display text-white font-bold text-4xl md:text-6xl leading-[0.95] mb-6">
-              Get on the manifest.
-            </h2>
-            <p className="text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              One email when a new brand opens. One when the films drop. Zero
-              in between.
-            </p>
-          </div>
-          <NotifyForm />
-        </div>
-      </section>
-
-      {/* Scroll reveal */}
-      <Script id="reveal" strategy="afterInteractive">
-        {`
-          if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
-            const obs = new IntersectionObserver((entries) => {
-              entries.forEach((e) => {
-                if (e.isIntersecting) {
-                  e.target.classList.add('in');
-                  obs.unobserve(e.target);
-                }
-              });
-            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-            document.querySelectorAll('.reveal').forEach((el) => obs.observe(el));
-          } else {
-            document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
-          }
-        `}
-      </Script>
-    </>
+    </main>
   );
 }
