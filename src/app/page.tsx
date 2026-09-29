@@ -102,7 +102,7 @@ export default function Home() {
         <div className="site-shell">
           <div className="section-intro">
             <div><div className="eyebrow">The CyberAdSpace portfolio</div><h2 className="display">We built our brands.<br /><span>Now let&apos;s build yours.</span></h2></div>
-            <p>Explore {BRANDS.length} brands we&apos;ve created across faith, music, education, food, and wellness. Most of these are brands we built and own. One was built for a partner. Visit each brand to see more.</p>
+            <p>Explore {BRANDS.length} brands we&apos;ve created across faith, music, education, food, wellness, and civic causes. Most of these are brands we built and own. One was built for a partner. Visit each brand to see more.</p>
           </div>
           <div className="float-grid creation-portfolio">
             {BRANDS.map((brand, i) => (
