@@ -60,7 +60,7 @@ export const BRANDS: Brand[] = [
   {
     slug: "canamo-cafe",
     name: "Cáñamo Café",
-    tagline: "Colombian coffee, comfort food, hemp wellness.",
+    tagline: "Colombian coffee, panela, hemp wellness.",
     category: "Food · Café",
     accent: "#d1a06b",
     logo: "/assets/logos/logo-canamo-cafe-v2.png",
