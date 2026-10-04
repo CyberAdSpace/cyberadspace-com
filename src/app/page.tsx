@@ -112,7 +112,6 @@ export default function Home() {
                     <Image src={brand.logo} alt={`${brand.name} logo`} width={340} height={160} className="float-brand-img" sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 22vw" />
                   </span>
                   <h3 className="brand-name">{brand.name}</h3>
-                  <span className="brand-status mono">{brand.status}</span>
                   <span className="float-brand-tagline">{brand.tagline}</span>
                   <span className="brand-visit mono">Explore brand <span aria-hidden>↗</span></span>
                 </a>
