@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BRANDS } from "@/data/brands";
-import ProjectInquiry from "./_components/ProjectInquiry";
+import ProjectInquiry from "../_components/ProjectInquiry";
 
 const SERVICES = [
   {
