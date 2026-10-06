@@ -14,7 +14,7 @@
 .skip-link { position: absolute; left: 16px; top: -100px; background: #ffb84d; color: #04060d; padding: 14px; }
 .skip-link:focus { top: 10px; z-index: 50; }
 .mobile-navigation { display: none; }
-.creation-hero { padding-block: 172px 90px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center; min-height: 800px; }
+.creation-hero { padding-block: 172px 90px; display: grid; grid-template-columns: minmax(0, 880px); gap: 64px; align-items: center; min-height: 640px; }
 .hero-copy h1 { font-size: clamp(58px, 6.4vw, 92px); font-weight: 600; line-height: .99; letter-spacing: -.055em; margin: 26px 0 24px; }
 .hero-copy h1 span { color: #ffb84d; }
 .hero-line { font-size: clamp(21px, 2vw, 28px); color: #f5f6fa; }

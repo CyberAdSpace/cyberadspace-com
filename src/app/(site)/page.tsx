@@ -51,26 +51,6 @@ export default function Home() {
           </div>
           <p className="hero-footnote">New businesses. Existing brands. Your next chapter.</p>
         </div>
-        <div className="hero-work" aria-label="A selection of brands created by CyberAdSpace">
-          <div className="work-heading mono"><span>Ideas we brought to life</span><span aria-hidden>↗</span></div>
-          <a href="https://antriasacademy.com" target="_blank" rel="noopener noreferrer" className="work-feature">
-            <div className="work-image">
-              <Image src="/assets/logos/logo-antrias-academy.png" alt="Antria's Academy" width={340} height={160} priority />
-            </div>
-            <div className="work-caption"><span>Antria&apos;s Academy</span><span>Education · Music <span aria-hidden>↗</span></span></div>
-          </a>
-          <div className="work-pair">
-            <a href="https://thefaithvault.com" target="_blank" rel="noopener noreferrer">
-              <Image src="/assets/logos/logo-faith-vault.png" alt="The Faith Vault" width={220} height={160} />
-              <span>The Faith Vault <span aria-hidden>↗</span></span>
-            </a>
-            <a href="https://canamocafe.com" target="_blank" rel="noopener noreferrer">
-              <Image src="/assets/logos/logo-canamo-cafe-v2.png" alt="Cáñamo Café" width={220} height={160} />
-              <span>Cáñamo Café <span aria-hidden>↗</span></span>
-            </a>
-          </div>
-          <div className="work-note mono">Our own brands. Your project could be next.</div>
-        </div>
       </section>
 
       <div className="capability-strip">
