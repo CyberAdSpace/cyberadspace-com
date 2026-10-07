@@ -1,3 +1,4 @@
+import { xprConfigured } from "@/lib/xpr";
 import { blobConfigured, newOrder, saveOrder, PRICE_USD, type Intake, type Product } from "@/lib/orders";
 import { createCheckout, stripeConfigured } from "@/lib/stripe";
 import { sendMail, siteUrl, STUDIO_INBOX } from "@/lib/mail";
@@ -77,7 +78,11 @@ export async function POST(req: Request) {
   await saveOrder(order);
   await Promise.all([
     sendMail({ to: STUDIO_INBOX, replyTo: email, subject: `New brand order (awaiting payment): ${name}`, text: `${name} <${email}> submitted a Brand Starter order.\n\nIdea: ${intake.idea}\n\nArrange payment, then start it here: ${base}/admin/orders/${order.id}` }),
-    sendMail({ to: email, subject: "We got your brand order", text: `Hi ${name},\n\nThanks for your Brand Starter order with CyberAdSpace. We'll email you shortly with how to pay the $${PRICE_USD}. As soon as payment is in, we start building your brand.\n\nYou can check your order any time here:\n${orderPage}\n\nCyberAdSpace\n${STUDIO_INBOX}` }),
+    sendMail({ to: email, subject: "We got your brand order", text: xprConfigured()
+      ? `Hi ${name},\n\nThanks for your Brand Starter order with CyberAdSpace. You can pay the $${PRICE_USD} with your WebAuth wallet (${PRICE_USD} XMD) on your order page, or reply to this email for other ways to pay. As soon as payment is in, we start building your brand.\n\nYour order page:\n${orderPage}\n\nCyberAdSpace\n${STUDIO_INBOX}`
+      : `Hi ${name},\n\nThanks for your Brand Starter order with CyberAdSpace. We'll email you shortly with how to pay the $${PRICE_USD}. As soon as payment is in, we start building your brand.\n\nYou can check your order any time here:\n${orderPage}\n\nCyberAdSpace\n${STUDIO_INBOX}` }),
   ]);
+  // With wallet payments on, send the customer straight to their order page to pay.
+  if (xprConfigured()) return Response.json({ ok: true, next: `/order/${order.id}?t=${encodeURIComponent(order.token)}` });
   return Response.json({ ok: true, next: `/start/thanks?id=${order.id}&t=${order.token}` });
 }

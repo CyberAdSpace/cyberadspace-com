@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin";
+import { explorerTx } from "@/lib/xpr";
 import {
   getOrder, out, STEP_KEYS, STEP_LABELS, STATUS_LABEL, MAX_REVISIONS,
   type StepKey, type Order, type Brief, type NamesOut, type Kit, type LogoOut, type SiteOut, type StorefrontOut, type LaunchOut,
@@ -124,6 +125,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
       </div>
       {o.mock && <p className="form-error">MOCK mode: no OpenAI key was set, so this order has placeholder content. Add OPENAI_API_KEY in Vercel and redo the brief to rebuild it for real.</p>}
 
+      {o.xprTx && <p className={o.paid ? "muted" : "ok-note"}>WebAuth payment {o.paid ? "confirmed" : "submitted, not yet confirmed"}: <a href={explorerTx(o.xprTx)} target="_blank" rel="noopener noreferrer">view transaction ↗</a>{!o.paid && " Check it shows 350 XMD to your account with this order's id as the memo, then mark paid."}</p>}
       <div className="admin-actions">
         {!o.paid && (
           <form method="post" action={`/api/admin/orders/${o.id}`} className="inline-form">

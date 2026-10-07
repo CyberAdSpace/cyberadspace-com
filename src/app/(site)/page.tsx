@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { BRANDS } from "@/data/brands";
+import Link from "next/link";
 import ProjectInquiry from "../_components/ProjectInquiry";
+import { PRICE_USD } from "@/lib/orders";
+import { stripeConfigured } from "@/lib/stripe";
+import { xprConfigured } from "@/lib/xpr";
 
 const SERVICES = [
   {
@@ -23,6 +27,18 @@ const SERVICES = [
   },
 ];
 
+const STARTER = [
+  "5 brand name options, with a domain check and a basic trademark search",
+  "Logo: main, icon, and black-and-white versions",
+  "Brand kit: colors, fonts, tagline, and brand story",
+  "One-page website, hosted for you",
+  "Marketplace storefront with up to 5 products",
+  "Launch kit: 5 social posts, profile image, and banner",
+  "2 rounds of revisions, delivered within 72 hours of payment",
+];
+
+const CUSTOM = ["Multi-page websites", "Custom AI features, like a Q&A assistant", "Marketplaces and booking platforms", "Rebrands of an existing business"];
+
 const PROCESS = [
   ["Tell us the idea.", "Your business, your audience, what you need, and where you want to go. Bring a rough concept or an existing brand."],
   ["Define the project.", "We agree on the deliverables, budget, timeline, and what is needed to launch before the build begins."],
@@ -31,6 +47,9 @@ const PROCESS = [
 ];
 
 export default function Home() {
+  const card = stripeConfigured();
+  const wallet = xprConfigured();
+  const payNote = card && wallet ? "Pay by card or with your WebAuth wallet (XMD). " : card ? "Pay securely by card. " : wallet ? "Pay with your WebAuth wallet (XMD). " : "";
   return (
     <main id="main-content" className="creation-home">
       <section id="top" className="creation-hero site-shell">
@@ -46,7 +65,8 @@ export default function Home() {
             recognize and a website that makes it real.
           </p>
           <div className="hero-actions">
-            <a href="#contact" className="btn btn-primary">Start your project <span aria-hidden>↗</span></a>
+            <Link href="/start" className="btn btn-primary">Launch your brand · ${PRICE_USD} <span aria-hidden>↗</span></Link>
+            <a href="#pricing" className="text-link">See what&apos;s included <span aria-hidden>↓</span></a>
           </div>
           <p className="hero-footnote">New businesses. Existing brands. Your next chapter.</p>
         </div>
@@ -93,7 +113,30 @@ export default function Home() {
             </article>
           ))}
         </div>
-        <div className="scope-note"><span className="mono">Built around your brief.</span><p>Deliverables, pricing, integrations, and ongoing support are scoped for your project. No one-size-fits-all package.</p></div>
+      </section>
+
+      <section id="pricing" className="site-shell section-space">
+        <div className="section-intro">
+          <div><div className="eyebrow">Pricing</div><h2 className="display">One flat price to launch.<br /><span>A fixed quote for anything bigger.</span></h2></div>
+          <p>No hourly billing and no surprise invoices. You know the price before we start.</p>
+        </div>
+        <div className="price-grid">
+          <article className="price-card price-card-main">
+            <div className="mono price-label">Brand Starter</div>
+            <div className="price-amount display">${PRICE_USD}<span>one time</span></div>
+            <p className="price-lede">Everything a new business needs to look real and start selling.</p>
+            <ul className="price-list">{STARTER.map((item) => <li key={item}>{item}</li>)}</ul>
+            <Link href="/start" className="btn btn-primary">Launch your brand · ${PRICE_USD} <span aria-hidden>↗</span></Link>
+            <p className="price-fine">{payNote}Domain not included (about $12–$20 a year). 3.5% fee only on sales made through the CyberAdSpace Marketplace.</p>
+          </article>
+          <article className="price-card">
+            <div className="mono price-label">Custom builds</div>
+            <div className="price-amount display price-quote">Quoted up front</div>
+            <p className="price-lede">Bigger ideas get a fixed price in writing before any work begins.</p>
+            <ul className="price-list">{CUSTOM.map((item) => <li key={item}>{item}</li>)}</ul>
+            <a href="#contact" className="btn btn-ghost">Tell us your idea <span aria-hidden>↗</span></a>
+          </article>
+        </div>
       </section>
 
       <section id="operators" className="site-shell section-space">
@@ -125,7 +168,7 @@ export default function Home() {
             <h2 className="display">What have you<br />got in mind?</h2>
             <p>A business you&apos;re ready to launch. A brand that needs a new look. A website that needs to work harder. Start with the idea.</p>
             <a className="contact-email" href="mailto:Contact@CyberAdSpace.com">Contact@CyberAdSpace.com <span aria-hidden>↗</span></a>
-            <div className="contact-note"><span className="mono">A conversation, not a checkout.</span><p>We&apos;ll discuss scope and pricing before you commit to a project.</p></div>
+            <div className="contact-note"><span className="mono">Ready to launch?</span><p>The Brand Starter is ${PRICE_USD} and you can <Link href="/start">order it online</Link>. For anything bigger, tell us here and we&apos;ll send a fixed quote before you commit.</p></div>
           </div>
           <ProjectInquiry />
         </div>
@@ -136,7 +179,7 @@ export default function Home() {
         <div className="faq-list">
           <details><summary>Can you work with my existing brand?</summary><p>Yes. You can start with an existing name, logo, or website. Tell us what should stay, what isn&apos;t working, and what you want to change.</p></details>
           <details><summary>Do I need a full brand and a website?</summary><p>No. We can discuss a brand project, a website project, or both. The scope should fit what your business actually needs.</p></details>
-          <details><summary>How much does a project cost?</summary><p>Pricing depends on the deliverables, content, features, and complexity. Send a brief and any budget range you have in mind so we can discuss a suitable scope.</p></details>
+          <details><summary>How much does a project cost?</summary><p>The Brand Starter is ${PRICE_USD} flat: brand name, logo, brand kit, one-page website, marketplace storefront and launch kit. Bigger projects, like multi-page sites, custom AI features or marketplaces, get a fixed quote in writing before we begin.</p></details>
           <details><summary>What happens after the website is built?</summary><p>Domain, hosting, handoff, and any ongoing updates are discussed as part of your scope. We&apos;ll clarify responsibilities and any third-party costs before launch.</p></details>
         </div>
       </section>

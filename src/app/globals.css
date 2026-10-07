@@ -906,3 +906,25 @@ body { overflow-x: hidden; }
   .hero-brand-grid .float-brand-logo { height: 104px; }
   .hero-brand-grid .float-brand-img { max-height: 96px; }
 }
+
+/* Pricing */
+.price-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; margin-top: 56px; align-items: stretch; }
+.price-card { border: 1px solid rgba(255,255,255,.12); background: #080c14; border-radius: 4px; padding: 36px; display: flex; flex-direction: column; gap: 18px; }
+.price-card-main { border-color: rgba(255,184,77,.55); box-shadow: 0 0 60px rgba(255,184,77,.08); }
+.price-label { color: #ffb84d; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+.price-amount { font-size: clamp(54px, 6vw, 76px); font-weight: 600; letter-spacing: -.05em; line-height: 1; color: #f5f6fa; display: flex; align-items: baseline; gap: 14px; }
+.price-amount span { font-size: 14px; letter-spacing: .02em; color: #aeb5c6; font-weight: 400; }
+.price-quote { font-size: clamp(34px, 3.6vw, 46px); }
+.price-lede { color: #d6dae4; font-size: 16px; line-height: 1.6; }
+.price-list { list-style: none; padding: 0; margin: 4px 0 8px; display: grid; gap: 12px; flex: 1; align-content: start; }
+.price-list li { color: #aeb5c6; font-size: 15px; line-height: 1.55; padding-left: 26px; position: relative; }
+.price-list li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 10px; height: 6px; border-left: 2px solid #ffb84d; border-bottom: 2px solid #ffb84d; transform: rotate(-45deg); }
+.price-card .btn { align-self: flex-start; letter-spacing: .09em; }
+.price-fine { color: #7d8599; font-size: 13px; line-height: 1.6; }
+.contact-note a { color: #ffb84d; }
+.xpr-pay { display: grid; gap: 12px; justify-items: start; }
+@media (max-width: 900px) {
+  .price-grid { grid-template-columns: 1fr; margin-top: 36px; }
+  .price-card { padding: 26px 22px; }
+  .price-card .btn { align-self: stretch; justify-content: center; }
+}

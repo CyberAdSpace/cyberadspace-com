@@ -77,6 +77,7 @@ export type Order = {
   paid: boolean;
   paidVia?: string;
   stripeSessionId?: string;
+  xprTx?: string; // WebAuth (XPR Network) transaction id submitted for payment
   customer: { name: string; email: string };
   intake: Intake;
   slug?: string;

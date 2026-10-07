@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
 import crypto from "node:crypto";
-import { getOrder, out, MAX_REVISIONS, type Kit, type LogoOut, type NamesOut, type LaunchOut } from "@/lib/orders";
+import PayWithWebAuth from "./PayWithWebAuth";
+import { XPR_ACCOUNT, XPR_CHAIN_ID, XPR_ENDPOINTS, XMD_CONTRACT, xmdQuantity, xprConfigured } from "@/lib/xpr";
+import { getOrder, out, MAX_REVISIONS, PRICE_USD, type Kit, type LogoOut, type NamesOut, type LaunchOut } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Your brand order | CyberAdSpace", robots: { index: false, follow: false } };
 
 const STATUS_TEXT: Record<string, string> = {
-  awaiting_payment: "We're waiting on your payment. We'll email you how to pay; as soon as it's confirmed, we start building.",
+  awaiting_payment: "We're waiting on your payment. As soon as it's confirmed, we start building.",
   queued: "Payment received. Your brand is in line to be built.",
   generating: "Your brand is being built right now.",
   review: "Your brand is built and a person on our team is reviewing it.",
@@ -38,6 +40,16 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       {revision === "sent" && <p className="ok-note">Change request received. We&apos;ll email you when the update is ready.</p>}
       {revision === "invalid" && <p className="form-error">Please pick at least one part to change and describe the change.</p>}
 
+      {!o.paid && xprConfigured() && (
+        <section className="admin-card">
+          <h2>Pay with your WebAuth wallet</h2>
+          {o.xprTx ? (
+            <p className="muted">We received your payment and are confirming it. We&apos;ll email you as soon as it clears.</p>
+          ) : (
+            <PayWithWebAuth orderId={o.id} token={t} account={XPR_ACCOUNT} quantity={xmdQuantity(PRICE_USD)} chainId={XPR_CHAIN_ID} endpoints={XPR_ENDPOINTS} contract={XMD_CONTRACT} />
+          )}
+        </section>
+      )}
       {ready && kit && (
         <>
           <section className="admin-card">
