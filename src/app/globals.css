@@ -14,7 +14,7 @@
 .skip-link { position: absolute; left: 16px; top: -100px; background: #ffb84d; color: #04060d; padding: 14px; }
 .skip-link:focus { top: 10px; z-index: 50; }
 .mobile-navigation { display: none; }
-.creation-hero { padding-block: 172px 90px; display: grid; grid-template-columns: minmax(0, 880px); gap: 64px; align-items: center; min-height: 640px; }
+.creation-hero { padding-block: 172px 90px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 64px; align-items: center; min-height: 800px; }
 .hero-copy h1 { font-size: clamp(58px, 6.4vw, 92px); font-weight: 600; line-height: .99; letter-spacing: -.055em; margin: 26px 0 24px; }
 .hero-copy h1 span { color: #ffb84d; }
 .hero-line { font-size: clamp(21px, 2vw, 28px); color: #f5f6fa; }
@@ -885,4 +885,24 @@ body { overflow-x: hidden; }
   .bsite-hero-art img { width: 200px; }
   .bsite-mono.big { width: 160px; height: 160px; font-size: 72px; }
   .bsite-features { grid-template-columns: 1fr; gap: 22px; }
+}
+
+/* Hero brand panel: scrollable, two brands per row */
+.hero-brands { border: 1px solid rgba(255,255,255,.1); background: #080c14; border-radius: 4px; padding: 22px 6px 0 22px; min-width: 0; scroll-margin-top: 110px; }
+.hero-brands-title { font-size: 20px; font-weight: 600; color: #f5f6fa; letter-spacing: -.02em; margin: 0 16px 14px 0; }
+.hero-brands-scroll { max-height: 560px; overflow-y: auto; overscroll-behavior: contain; padding: 8px 16px 28px 0; scrollbar-width: thin; scrollbar-color: rgba(255,184,77,.45) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 44px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 44px), transparent 100%); }
+.hero-brands-scroll::-webkit-scrollbar { width: 6px; }
+.hero-brands-scroll::-webkit-scrollbar-thumb { background: rgba(255,184,77,.45); border-radius: 3px; }
+.float-grid.hero-brand-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 20px !important; }
+.hero-brand-grid .float-brand-logo { height: 132px; }
+.hero-brand-grid .float-brand-img { max-height: 120px; }
+.hero-brand-grid .float-brand-tagline { min-height: 0; }
+@media (max-width: 900px) {
+  .creation-hero { grid-template-columns: 1fr; min-height: 0; }
+  .hero-brands { padding: 18px 4px 0 16px; }
+  .hero-brands-title { text-align: center; }
+  .hero-brands-scroll { max-height: 520px; padding-right: 12px; }
+  .hero-brand-grid .float-brand-logo { height: 104px; }
+  .hero-brand-grid .float-brand-img { max-height: 96px; }
 }

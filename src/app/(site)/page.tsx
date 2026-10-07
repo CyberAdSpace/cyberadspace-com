@@ -47,10 +47,28 @@ export default function Home() {
           </p>
           <div className="hero-actions">
             <a href="#contact" className="btn btn-primary">Start your project <span aria-hidden>↗</span></a>
-            <a href="#brands" className="text-link">Brands We&apos;ve Created <span aria-hidden>↓</span></a>
           </div>
           <p className="hero-footnote">New businesses. Existing brands. Your next chapter.</p>
         </div>
+        <aside id="brands" className="hero-brands" aria-label="Brands We've Created">
+          <h2 className="hero-brands-title">Brands We&apos;ve Created</h2>
+          <div className="hero-brands-scroll">
+            <div className="float-grid creation-portfolio hero-brand-grid">
+              {BRANDS.map((brand, i) => (
+                <article key={brand.slug} className="float-brand" style={{ "--brand-accent": brand.accent, "--float-delay": `${(i % 5) * 0.9}s` } as React.CSSProperties}>
+                  <a href={brand.url} target="_blank" rel="noopener noreferrer" className="float-brand-link">
+                    <span className="float-brand-logo">
+                      <Image src={brand.logo} alt={`${brand.name} logo`} width={340} height={160} className="float-brand-img" sizes="(max-width: 900px) 42vw, 18vw" />
+                    </span>
+                    <h3 className="brand-name">{brand.name}</h3>
+                    <span className="float-brand-tagline">{brand.tagline}</span>
+                    <span className="brand-visit mono">Explore brand <span aria-hidden>↗</span></span>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </aside>
       </section>
 
       <div className="capability-strip">
@@ -76,28 +94,6 @@ export default function Home() {
           ))}
         </div>
         <div className="scope-note"><span className="mono">Built around your brief.</span><p>Deliverables, pricing, integrations, and ongoing support are scoped for your project. No one-size-fits-all package.</p></div>
-      </section>
-
-      <section id="brands" className="portfolio-section section-space">
-        <div className="site-shell">
-          <div className="section-intro">
-            <div><h2 className="display">Brands We&apos;ve Created</h2></div>
-          </div>
-          <div className="float-grid creation-portfolio">
-            {BRANDS.map((brand, i) => (
-              <article key={brand.slug} className="float-brand" style={{ "--brand-accent": brand.accent, "--float-delay": `${(i % 5) * 0.9}s` } as React.CSSProperties}>
-                <a href={brand.url} target="_blank" rel="noopener noreferrer" className="float-brand-link">
-                  <span className="float-brand-logo">
-                    <Image src={brand.logo} alt={`${brand.name} logo`} width={340} height={160} className="float-brand-img" sizes="(max-width: 640px) 42vw, (max-width: 1024px) 28vw, 22vw" />
-                  </span>
-                  <h3 className="brand-name">{brand.name}</h3>
-                  <span className="float-brand-tagline">{brand.tagline}</span>
-                  <span className="brand-visit mono">Explore brand <span aria-hidden>↗</span></span>
-                </a>
-              </article>
-            ))}
-          </div>
-        </div>
       </section>
 
       <section id="operators" className="site-shell section-space">
