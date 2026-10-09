@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="TheVendorSpace">
+  <rect width="48" height="48" rx="11" fill="#25507f"/>
+  <path d="M10 40V22a14 14 0 0 1 28 0v18z" fill="#f7f0e2"/>
+  <circle cx="24" cy="21" r="4.4" fill="#e8a52a"/>
+  <rect x="14" y="30" width="7.5" height="7.5" rx="1.4" fill="#c05a34"/>
+  <rect x="26.5" y="30" width="7.5" height="7.5" rx="1.4" fill="#2f6b4f"/>
+</svg>
