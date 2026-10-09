@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "kamslam.com", pathname: "/**" }],
+  },
   async redirects() {
     return [
       { source: "/payments", destination: "/", permanent: true },

@@ -69,6 +69,17 @@ export const BRANDS: Brand[] = [
     status: "Live",
   },
   {
+    slug: "kamslam",
+    name: "KamSlam",
+    tagline: "Pick a beat. Drop your verse.",
+    category: "Music · Beats",
+    accent: "#ff5a1f",
+    logo: "https://kamslam.com/logo-icon.webp",
+    url: "https://kamslam.com",
+    email: "KamSlam@CyberAdSpace.com",
+    status: "Live",
+  },
+  {
     slug: "the-divine-reader",
     name: "The Divine Reader",
     tagline: "Every sacred text, beautifully typeset.",
