@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>KamSlam</title>
+<link rel="icon" href="/logo-icon.webp" type="image/webp">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0c1726">
+<meta name="description" content="Record over a beat right on your phone and save your song. Free to record. $1 beats. Weekly Slams.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KamSlam">
+<meta property="og:url" content="https://kamslam.com/">
+<meta property="og:title" content="KamSlam · Pick a beat. Spit your verse. Drop a song.">
+<meta property="og:description" content="Record over a beat right on your phone and save your song. Free to record. $1 beats. Weekly Slams.">
+<meta property="og:image" content="https://kamslam.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --night:#0c1726;--panel:#132339;--panel-2:#192d48;--line:#26405f;--chalk:#f3efe4;--muted:#9db0c6;
+  --flare:#ff5a1f;--flare-ink:#1a0a03;--gold:#ffc53d;--ok:#4fd18b;--warn:#ffb020;--rec:#ff3b3b;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Barlow","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--night);color:var(--chalk);font-family:var(--body);font-size:16px;line-height:1.5;padding-inline:16px;
+  background-image:repeating-linear-gradient(90deg,transparent 0 119px,rgba(243,239,228,.035) 119px 121px)}
+[hidden]{display:none!important}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:var(--gold)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(12,23,38,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-inline:-16px;padding:10px 16px}
+.top .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{font-family:var(--display);font-weight:900;font-size:28px;font-style:italic;text-transform:uppercase;line-height:1;text-decoration:none;color:var(--chalk)}
+.logo span{color:var(--flare)}
+.logo{display:flex;align-items:center;gap:8px}
+.logo img{width:36px;height:36px;border-radius:8px}
+.hero-mark{width:150px;height:150px;border-radius:24px;justify-self:start}
+nav{display:flex;gap:14px;flex-wrap:wrap;font-weight:600;font-size:14px}
+nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--chalk)}
+.tag-test{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--flare-ink);background:var(--gold);border-radius:4px;padding:3px 7px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:var(--display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(48px,8.5vw,96px);line-height:.88;margin:10px 0 16px;text-wrap:balance}
+h1 em{color:var(--flare)}
+h2{font-family:var(--display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(36px,6vw,56px);line-height:.95;margin:6px 0 10px;text-wrap:balance}
+h3{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:26px;line-height:1;margin:0}
+.sub{color:var(--muted);max-width:60ch;margin:0 0 20px}
+.hero{padding-block:40px 24px;display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:end}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+.price-strip{display:grid;gap:10px}
+.price-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center}
+.price-card b{font-family:var(--display);font-size:40px;font-weight:900;line-height:1;grid-row:span 2}
+.price-card.ex{border-color:var(--flare)}
+.price-card.ex b{color:var(--flare)}
+.price-card span{font-weight:700}
+.price-card small{color:var(--muted);font-size:14px}
+section.block{padding-block:36px;border-top:1px solid var(--line)}
+.btn{cursor:pointer;border-radius:10px;padding:10px 16px;font-weight:700;font-size:15px;background:var(--panel-2);border:1px solid var(--line)}
+.btn:hover{border-color:var(--muted)}
+.btn.go{background:var(--flare);color:var(--flare-ink);border-color:var(--flare);font-family:var(--display);font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:.03em}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{cursor:pointer;background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:14px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--chalk);color:var(--night);border-color:var(--chalk);font-weight:700}
+.search{flex:1 1 200px;min-width:0;background:var(--night);border:2px solid var(--line);border-radius:999px;padding:6px 14px}
+.beats{display:grid;gap:8px}
+.beat{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.beat.sel{border-color:var(--gold)}
+.play{width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;background:var(--chalk);color:var(--night);display:grid;place-items:center}
+.play.on{background:var(--flare);color:var(--flare-ink)}
+.play svg{width:16px;height:16px}
+.bt{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;line-height:1.05;overflow-wrap:anywhere}
+.bv{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ba{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.ba .btn{padding:8px 11px;font-size:14px}
+.ba .ex{border-color:var(--flare);color:var(--flare)}
+@media (max-width:620px){.beat{grid-template-columns:44px minmax(0,1fr)}.ba{grid-column:1/-1;justify-content:flex-start}}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:24px;color:var(--muted);text-align:center}
+.more{margin-top:12px}
+/* studio */
+.studio{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:820px){.studio{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px;align-content:start;min-width:0}
+.now{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.now .bt{font-size:30px}
+.steps{margin:0;padding-left:20px;color:var(--muted);display:grid;gap:4px}
+.recbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;border-radius:12px;border:0;cursor:pointer;background:var(--rec);color:#fff;font-family:var(--display);font-size:26px;font-weight:900;text-transform:uppercase}
+.recbtn .dot{width:16px;height:16px;border-radius:50%;background:#fff}
+.recbtn.live{background:var(--chalk);color:var(--night)}
+.recbtn.live .dot{border-radius:3px;background:var(--rec)}
+.recbtn:disabled{opacity:.5;cursor:not-allowed}
+.timer{font-family:var(--mono);font-size:28px;text-align:center;font-variant-numeric:tabular-nums}
+.meter{height:10px;background:var(--night);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ok),var(--gold),var(--rec))}
+.slider{display:grid;grid-template-columns:90px 1fr 40px;gap:10px;align-items:center;font-size:14px}
+.slider output{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right}
+input[type=range]{width:100%;accent-color:var(--flare)}
+.msg{font-size:14px;color:var(--muted);margin:0}
+.msg.bad{color:var(--warn)}
+audio{width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+/* buy sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(5,10,18,.7);z-index:20;display:grid;place-items:center;padding:16px}
+.sheet{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;max-width:460px;width:100%;display:grid;gap:12px}
+.sheet .big{font-family:var(--display);font-size:52px;font-weight:900;line-height:1}
+.sheet ul{margin:0;padding-left:18px;color:var(--muted);font-size:15px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--flare);flex:none}
+.sheet .btn.go{width:100%;text-align:center}
+.sheet .err{color:var(--warn);font-size:14px;margin:0}
+.field{display:grid;gap:6px;font-size:14px;font-weight:700}
+.field input{background:var(--night);border:2px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-weight:400;color:inherit}
+.pledge-list{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px}
+.pledge-list b{color:var(--gold)}
+.sheet{max-height:calc(100dvh - 32px);overflow-y:auto}
+.crown{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:var(--gold);color:var(--flare-ink);border-radius:4px;padding:2px 6px;margin-left:6px}
+.entry .rep{background:none;border:0;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:4px}
+.testnote{background:var(--night);border:1px dashed var(--muted);border-radius:10px;padding:10px 12px;font-size:14px}
+/* slam + rules */
+.slamgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:820px){.slamgrid{grid-template-columns:1fr}}
+.entry{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.rank{font-family:var(--display);font-weight:900;font-size:24px;color:var(--gold);text-align:center}
+.entry small{display:block;color:var(--muted);font-size:13px}
+.entries{display:grid;gap:8px}
+.rules{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (max-width:700px){.rules{grid-template-columns:1fr}}
+.rule{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.rule b{display:block;font-family:var(--display);text-transform:uppercase;font-size:22px;margin-bottom:4px}
+.rule p{margin:0;color:var(--muted);font-size:15px}
+.fine{font-size:13px;color:var(--muted);max-width:72ch}
+footer{border-top:1px solid var(--line);padding-block:24px 40px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#"><img src="/logo-icon.webp" alt="" width="36" height="36">Kam<span>Slam</span></a>
+    <nav aria-label="Sections"><a href="#beats">Beats</a><a href="#studio">Studio</a><a href="#slam">Slam</a><a href="#rules">Rules</a></nav>
+    <span class="tag-test" id="testTag" hidden>Test mode</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Beats for everyone · Weekly Slams</div>
+      <h1>Pick a beat.<br>Record your verse.<br><em>Drop a song.</em></h1>
+      <p class="sub">Find a beat you like, record over it right here with your phone or laptop, and save the finished song. Every age is welcome, and every song keeps it uplifting. No app to download.</p>
+      <a class="btn go" href="#beats">Find a beat</a>
+    </div>
+    <div class="price-strip" aria-label="Pricing">
+      <img class="hero-mark" src="/logo-icon.webp" alt="KamSlam logo" width="150" height="150">
+      <div class="price-card"><b>$1</b><span>Use the beat</span><small>Make songs and videos with it. Others can buy it too.</small></div>
+      <div class="price-card ex"><b>$5</b><span>Make it exclusive</span><small>It comes off the store. Nobody new can buy it.</small></div>
+    </div>
+  </section>
+
+  <section class="block" id="beats">
+    <div class="eyebrow">The beat store</div>
+    <h2>Beats</h2>
+    <p class="sub">Tap play to hear a 45-second preview. Recording on the preview is free. Buy the beat for the full MP3 when you want to post your song.</p>
+    <div class="filters" id="filters" role="group" aria-label="Filter by vibe"></div>
+    <div class="filters"><input class="search" id="q" type="search" placeholder="Search beats" aria-label="Search beats"></div>
+    <div class="beats" id="beatList"><div class="empty">Loading beats…</div></div>
+    <button class="btn more" id="moreBtn" type="button" hidden>Show more beats</button>
+  </section>
+
+  <section class="block" id="studio">
+    <div class="eyebrow">Studio</div>
+    <h2>Record over the beat</h2>
+    <div class="studio">
+      <div class="panel">
+        <div class="now"><span class="bv">Beat</span><span class="bt" id="studioBeat">Pick a beat above</span></div>
+        <ol class="steps">
+          <li>Put on headphones so the beat doesn't leak into your mic.</li>
+          <li>Hit record. The beat starts and your mic records.</li>
+          <li>Hit stop, listen back, adjust the levels, save your song.</li>
+        </ol>
+        <button class="recbtn" id="recBtn" type="button" disabled><span class="dot"></span><span id="recLabel">Record</span></button>
+        <div class="timer" id="timer">0:00</div>
+        <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+        <p class="msg" id="studioMsg">Pick a beat with "Record on it" to start.</p>
+      </div>
+      <div class="panel">
+        <h3>Your take</h3>
+        <div class="slider"><label for="vVol">Voice</label><input id="vVol" type="range" min="0" max="200" value="110"><output id="vOut">110%</output></div>
+        <div class="slider"><label for="bVol">Beat</label><input id="bVol" type="range" min="0" max="150" value="80"><output id="bOut">80%</output></div>
+        <div class="slider"><label for="sync">Sync fix</label><input id="sync" type="range" min="-200" max="300" value="0"><output id="sOut">0 ms</output></div>
+        <audio id="mixPlayer" controls hidden></audio>
+        <div class="row">
+          <a class="btn go" id="saveBtn" href="#" download="kamslam-song.wav" hidden>Save my song</a>
+          <button class="btn" id="slamBtn" type="button" hidden>Enter it in the Slam</button>
+        </div>
+        <p class="msg" id="takeMsg">Your song shows up here after you record. It stays on your device unless you choose to enter it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="slam">
+    <div class="eyebrow" id="slamWeek">Weekly Slam</div>
+    <h2>This week's Slam</h2>
+    <p class="sub">Record on the Slam beat in the Studio, then tap "Enter it in the Slam." Every entry is reviewed before it goes up, and only uplifting songs make the board. Judges pick a weekly winner. Entering is for ages 13 and up; anyone can record and save songs.</p>
+    <div class="slamgrid">
+      <div class="panel">
+        <div class="now"><span class="bv">Slam beat</span><span class="bt" id="slamBeat">Red Zone 1</span></div>
+        <button class="btn go" id="slamRecord" type="button">Record on the Slam beat</button>
+        <p class="fine">Songs on the board follow the <a href="/terms.html">KamSlam Pledge</a>. See something that doesn't? Tap Report.</p>
+      </div>
+      <div class="entries" id="entries"><div class="empty">No entries on the board yet. Be the first.</div></div>
+    </div>
+  </section>
+
+  <section class="block" id="rules">
+    <div class="eyebrow">The KamSlam Pledge</div>
+    <h2>Keep it yours, keep it uplifting</h2>
+    <div class="rules">
+      <div class="rule"><b>My voice only</b><p>Record yourself. No one else's voice, no AI copies of someone's voice, no recording people without their OK.</p></div>
+      <div class="rule"><b>My words only</b><p>Write your own lyrics. Don't copy other songs.</p></div>
+      <div class="rule"><b>Keep it uplifting</b><p>No hate, bullying, put-downs, threats, violence, weapons, drugs or explicit content. No disses at real people.</p></div>
+      <div class="rule"><b>Keep it private</b><p>Never say your address, school, phone number or last name in a song, or anyone else's.</p></div>
+    </div>
+    <p class="fine">Everyone signs the Pledge before recording, buying or entering. $1 license: use the beat in your own songs and videos, including posting online; others can buy it too. $5 exclusive: the beat comes off the store; earlier buyers keep their license. Anyone under 18 needs a parent or guardian to check out. <a href="/terms.html">Full pledge, terms and privacy</a>.</p>
+  </section>
+
+</main>
+
+<div class="sheet-bg" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="bv" id="sheetBeat"></div>
+    <div class="big" id="sheetTitle"></div>
+    <ul id="sheetList"></ul>
+    <label class="check" id="parentRow"><input type="checkbox" id="parentOk"><span>I'm 18 or older, or I'm a parent or guardian making this purchase.</span></label>
+    <button class="btn go" id="payBtn" type="button" disabled>Checkout</button>
+    <p class="err" id="payErr" hidden></p>
+    <div class="testnote" id="sheetNote">Secure checkout by Stripe: card, Apple Pay or Google Pay. The full MP3 downloads right after you pay.</div>
+    <div class="row"><button class="btn" id="sheetClose" type="button">Close</button></div>
+  </div>
+</div>
+
+<div class="sheet-bg" id="pledgeSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pledgeTitle">
+    <div class="bv">One time, takes 10 seconds</div>
+    <div class="big" id="pledgeTitle" style="font-size:40px">Sign the KamSlam Pledge</div>
+    <ol class="pledge-list">
+      <li><b>My voice only.</b> No one else's voice, and no AI copies of anyone's voice.</li>
+      <li><b>My words only.</b> I write my own lyrics.</li>
+      <li><b>Keep it uplifting.</b> No hate, bullying, put-downs, violence, drugs or explicit content.</li>
+      <li><b>Keep it private.</b> No addresses, schools, phone numbers or last names.</li>
+      <li><b>Respect the community.</b> Songs that break the Pledge get removed.</li>
+    </ol>
+    <label class="field">Type your name to sign<input id="pledgeName" maxlength="60" autocomplete="name"></label>
+    <label class="check"><input type="checkbox" id="pledgeOk"><span>I agree to the <a href="/terms.html" target="_blank">KamSlam Pledge and terms</a>. If I'm under 13, a parent or guardian is helping me.</span></label>
+    <button class="btn go" id="pledgeBtn" type="button" disabled>Sign the Pledge</button>
+    <div class="row"><button class="btn" id="pledgeClose" type="button">Not now</button></div>
+  </div>
+</div>
+
+<div class="sheet-bg" id="entrySheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="entryTitle">
+    <div class="bv" id="entryBeat"></div>
+    <div class="big" id="entryTitle" style="font-size:40px">Enter the Slam</div>
+    <label class="field">Stage name (shown on the board)<input id="stageName" maxlength="24" placeholder="Gamer tag or artist name"></label>
+    <label class="check"><input type="checkbox" id="age13"><span>I'm 13 or older.</span></label>
+    <label class="check"><input type="checkbox" id="ownOk"><span>This is my own voice and my own words, and it keeps the KamSlam Pledge.</span></label>
+    <button class="btn go" id="entryBtn" type="button" disabled>Send for review</button>
+    <p class="msg" id="entryMsg" aria-live="polite"></p>
+    <div class="row"><button class="btn" id="entryClose" type="button">Close</button></div>
+  </div>
+</div>
+
+<div class="sheet-bg" id="paidSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="paidTitle">
+    <div class="bv">Thanks for your purchase</div>
+    <div class="big" id="paidTitle">Checking payment…</div>
+    <p class="msg" id="paidMsg">One second while we confirm with the payment company.</p>
+    <a class="btn go" id="paidDl" href="#" hidden>Download the MP3</a>
+    <p class="fine" id="paidFine" hidden>Bookmark this page. The download button works again any time from this link. Your receipt comes by email from Stripe.</p>
+    <div class="row"><button class="btn" id="paidClose" type="button">Back to the store</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+const VIBES={all:'All',hype:'Hype',drill:'Drill',chill:'Chill',arcade:'Arcade',bounce:'Jersey club',afro:'Afrobeats',halloween:'Halloween'};
+const PLAY='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3l12 7-12 7z" fill="currentColor"/></svg>';
+const STOP='<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="1.5" fill="currentColor"/></svg>';
+const $=id=>document.getElementById(id);
+let beats=[],vibe='all',q='',shown=24,playingUrl=null,selected=null;
+const player=new Audio();player.preload='none';
+player.onended=()=>{playingUrl=null;renderList()};
+
+/* ---------- beat list ---------- */
+const filters=$('filters');
+Object.entries(VIBES).forEach(([k,v])=>{const b=document.createElement('button');b.className='chip';b.type='button';b.textContent=v;b.dataset.v=k;b.setAttribute('aria-pressed',k==='all');b.onclick=()=>{vibe=k;shown=24;filters.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.v===k));renderList()};filters.appendChild(b)});
+$('q').oninput=e=>{q=e.target.value.trim().toLowerCase();shown=24;renderList()};
+$('moreBtn').onclick=()=>{shown+=24;renderList()};
+
+function visible(){return beats.filter(b=>(vibe==='all'||b.vibe===vibe)&&(!q||b.title.toLowerCase().includes(q)))}
+function renderList(){
+  const list=$('beatList');list.innerHTML='';
+  const v=visible();
+  if(!beats.length){list.innerHTML='<div class="empty">New beats are dropping soon. Check back in a bit.</div>';$('moreBtn').hidden=true;return}
+  if(!v.length){list.innerHTML='<div class="empty">No beats match that. Try another vibe.</div>';$('moreBtn').hidden=true;return}
+  v.slice(0,shown).forEach(b=>{
+    const row=document.createElement('div');row.className='beat'+(selected&&selected.url===b.url?' sel':'');
+    const on=playingUrl===b.url;
+    row.innerHTML='<button class="play'+(on?' on':'')+'" type="button"></button><div style="min-width:0"><div class="bt"></div><div class="bv"></div></div><div class="ba"><button class="btn" type="button" data-a="rec">Record on it</button><button class="btn" type="button" data-a="one">$1</button><button class="btn ex" type="button" data-a="five">$5 Exclusive</button></div>';
+    const p=row.querySelector('.play');p.innerHTML=on?STOP:PLAY;p.setAttribute('aria-label',(on?'Stop ':'Play ')+b.title);
+    row.querySelector('.bt').textContent=b.title;
+    row.querySelector('.bv').textContent=VIBES[b.vibe]||b.vibe;
+    p.onclick=()=>togglePlay(b);
+    row.querySelector('[data-a=rec]').onclick=()=>pickForStudio(b);
+    row.querySelector('[data-a=one]').onclick=()=>openSheet(b,1);
+    row.querySelector('[data-a=five]').onclick=()=>openSheet(b,5);
+    list.appendChild(row);
+  });
+  $('moreBtn').hidden=v.length<=shown;
+}
+function togglePlay(b){
+  if(playingUrl===b.url){player.pause();playingUrl=null}
+  else{stopTake();player.src=b.url;player.play().catch(()=>{});playingUrl=b.url}
+  renderList();
+}
+fetch('/api/beats').then(r=>r.json()).then(d=>{beats=d.beats||[];renderList();setSlamBeat()}).catch(()=>{$('beatList').innerHTML='<div class="empty">Could not load beats. Refresh to try again.</div>'});
+
+/* ---------- buy sheet + checkout ---------- */
+let cfg={payments:false,test:true},buying=null;
+fetch('/api/config').then(r=>r.json()).then(c=>{cfg=c;$('testTag').hidden=!c.test;syncPay()}).catch(()=>{$('testTag').hidden=false});
+function syncPay(){
+  const on=cfg.payments;
+  $('parentRow').hidden=!on;
+  $('payBtn').disabled=!on||!$('parentOk').checked;
+  $('sheetNote').textContent=on
+    ?(cfg.test?'Test checkout: use card 4242 4242 4242 4242, any future date, any CVC. No real money moves.':'Secure checkout by Stripe: card, Apple Pay or Google Pay. The full MP3 downloads right after you pay.')
+    :'Checkout opens soon. A parent will check out securely with card, Apple Pay or Google Pay, and the full MP3 downloads right after.';
+}
+function openSheet(b,price){
+  buying={b,price};
+  $('sheetBeat').textContent=b.title;
+  $('sheetTitle').textContent=price===1?'$1 · Use it':'$5 · Exclusive';
+  $('sheetList').innerHTML=price===1
+    ?'<li>Full MP3 of the beat</li><li>Use it in your songs and videos, and post them</li><li>Other people can buy this beat too</li>'
+    :'<li>Full MP3 of the beat</li><li>The beat comes off the store after you buy</li><li>Anyone who bought it before keeps their $1 license</li>';
+  $('payBtn').textContent='Checkout · $'+price;$('parentOk').checked=false;$('payErr').hidden=true;syncPay();
+  $('sheet').hidden=false;$('sheetClose').focus();
+}
+$('parentOk').onchange=syncPay;
+$('payBtn').onclick=()=>requirePledge(doPay);
+async function doPay(){
+  if(!buying)return;const btn=$('payBtn');btn.disabled=true;btn.textContent='Opening checkout…';$('payErr').hidden=true;
+  try{
+    const r=await fetch('/api/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({vibe:buying.b.vibe,title:buying.b.title,tier:buying.price,parent:true})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.url)throw new Error(j.error||'Checkout could not start. Try again.');
+    location.href=j.url;
+  }catch(e){$('payErr').textContent=e.message;$('payErr').hidden=false;btn.textContent='Checkout · $'+buying.price;syncPay()}
+}
+$('sheetClose').onclick=()=>{$('sheet').hidden=true};
+$('sheet').onclick=e=>{if(e.target.id==='sheet')$('sheet').hidden=true};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['sheet','paidSheet','pledgeSheet','entrySheet'].forEach(i=>{$(i).hidden=true})}});
+
+/* ---------- KamSlam Pledge ---------- */
+const PLEDGE_V='2026-10-07';let pledge=null,afterPledge=null;
+try{const p=JSON.parse(localStorage.getItem('kamslamPledge')||'null');if(p&&p.v===PLEDGE_V)pledge=p}catch(e){}
+function requirePledge(next){if(pledge){next();return}afterPledge=next;$('pledgeName').value='';$('pledgeOk').checked=false;syncPledge();$('pledgeSheet').hidden=false;$('pledgeName').focus()}
+function syncPledge(){$('pledgeBtn').disabled=!($('pledgeOk').checked&&$('pledgeName').value.trim().length>=2)}
+$('pledgeName').oninput=syncPledge;$('pledgeOk').onchange=syncPledge;
+$('pledgeBtn').onclick=()=>{pledge={name:$('pledgeName').value.trim(),v:PLEDGE_V,at:new Date().toISOString()};try{localStorage.setItem('kamslamPledge',JSON.stringify(pledge))}catch(e){}
+  $('pledgeSheet').hidden=true;const n=afterPledge;afterPledge=null;if(n)n()};
+$('pledgeClose').onclick=()=>{$('pledgeSheet').hidden=true;afterPledge=null};
+
+/* ---------- Slam entries ---------- */
+const lame=()=>window.lamejs?Promise.resolve():new Promise((ok,bad)=>{const add=(src,fail)=>{const t=document.createElement('script');t.src=src;t.onload=ok;t.onerror=fail;document.head.appendChild(t)};
+  add('https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js',()=>add('https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js',()=>bad(new Error('Could not load the song encoder.'))))});
+function toMp3(buf){
+  const n=buf.length,sr=buf.sampleRate,ch=[buf.getChannelData(0),buf.getChannelData(buf.numberOfChannels>1?1:0)];
+  const pcm=ch.map(d=>{const o=new Int16Array(n);for(let i=0;i<n;i++){const v=Math.max(-1,Math.min(1,d[i]));o[i]=v<0?v*0x8000:v*0x7FFF}return o});
+  const enc=new lamejs.Mp3Encoder(2,sr,128),parts=[];
+  for(let i=0;i<n;i+=1152){const m=enc.encodeBuffer(pcm[0].subarray(i,i+1152),pcm[1].subarray(i,i+1152));if(m.length)parts.push(new Uint8Array(m))}
+  const e=enc.flush();if(e.length)parts.push(new Uint8Array(e));return new Blob(parts,{type:'audio/mpeg'});
+}
+function syncEntry(){$('entryBtn').disabled=!($('age13').checked&&$('ownOk').checked&&/^[A-Za-z0-9 _.\-']{2,24}$/.test($('stageName').value.trim()))}
+['stageName','age13','ownOk'].forEach(id=>$(id).addEventListener(id==='stageName'?'input':'change',syncEntry));
+function openEntry(){if(!lastMix)return;$('entryBeat').textContent=selected?selected.title:'';$('entryMsg').textContent='';$('entryBtn').hidden=false;syncEntry();$('entrySheet').hidden=false}
+$('entryClose').onclick=()=>{$('entrySheet').hidden=true};
+$('entryBtn').onclick=async()=>{
+  const btn=$('entryBtn');btn.disabled=true;const m=$('entryMsg');
+  try{
+    m.textContent='Getting your song ready…';await lame();const mp3=toMp3(lastMix);
+    if(mp3.size>8*1024*1024)throw new Error('That take is too long to enter. Keep entries under about 4 minutes.');
+    const id=Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>'abcdefghijklmnopqrstuvwxyz0123456789'[x%36]).join('');
+    m.textContent='Uploading…';
+    const {upload}=await import('https://esm.sh/@vercel/blob@2.8.1/client');
+    await upload('entries/pending/'+id+'.mp3',mp3,{access:'public',handleUploadUrl:'/api/entry-upload',contentType:'audio/mpeg',clientPayload:JSON.stringify({pledge:true,age13:true})});
+    const r=await fetch('/api/entries',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id,stageName:$('stageName').value.trim(),beat:selected?selected.title:'',signedName:pledge.name,age13:true,pledge:true})});
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Could not send your entry.');
+    m.textContent='Sent! Your song shows on the board once it passes review.';btn.hidden=true;
+  }catch(e){m.textContent=e.message||'Could not send your entry. Try again.';syncEntry()}
+};
+const board=new Audio();let boardId=null;
+function loadBoard(){fetch('/api/entries').then(r=>r.json()).then(d=>{const list=$('entries');const es=d.entries||[];if(!es.length)return;list.innerHTML='';
+  es.forEach(e=>{const row=document.createElement('div');row.className='entry';
+    row.innerHTML='<button class="play" type="button"></button><div><b></b><small></small></div><button class="rep" type="button">Report</button>';
+    const p=row.querySelector('.play');p.innerHTML=PLAY;p.setAttribute('aria-label','Play '+e.stageName);
+    p.onclick=()=>{if(boardId===e.id){board.pause();boardId=null;p.innerHTML=PLAY;return}list.querySelectorAll('.play').forEach(x=>{x.innerHTML=PLAY});board.src=e.audio;board.play().catch(()=>{});boardId=e.id;p.innerHTML=STOP};
+    row.querySelector('b').textContent=e.stageName;if(e.winner){const c=document.createElement('span');c.className='crown';c.textContent='Winner';row.querySelector('b').after(c)}
+    row.querySelector('small').textContent=e.beat?'on '+e.beat:'';
+    const rp=row.querySelector('.rep');rp.onclick=async()=>{rp.disabled=true;rp.textContent='Sending…';
+      try{const r=await fetch('/api/report',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({type:'report',entry:e.id})});if(!r.ok)throw 0;rp.textContent='Reported. Thanks.'}catch(x){rp.disabled=false;rp.textContent='Report'}};
+    list.appendChild(row)})}).catch(()=>{})}
+board.onended=()=>{boardId=null;document.querySelectorAll('#entries .play').forEach(x=>{x.innerHTML=PLAY})};
+loadBoard();
+
+/* ---------- after payment ---------- */
+const paidId=new URLSearchParams(location.search).get('paid');
+async function showPaid(tries){
+  $('paidSheet').hidden=false;
+  try{
+    const r=await fetch('/api/download?session_id='+encodeURIComponent(paidId),{cache:'no-store'});const j=await r.json();
+    if(r.status===402&&tries<6){setTimeout(()=>showPaid(tries+1),2500);return}
+    if(!r.ok)throw new Error(j.error||'Could not confirm the payment.');
+    $('paidTitle').textContent=j.title;
+    $('paidMsg').textContent=j.tier===5?'Exclusive: this beat is now off the store. It’s yours.':'Your $1 license is ready. Make something hard.';
+    const a=$('paidDl');a.href=j.download;a.hidden=false;$('paidFine').hidden=false;
+  }catch(e){$('paidTitle').textContent='Hold up';$('paidMsg').textContent=e.message}
+}
+if(paidId)showPaid(0);
+$('paidClose').onclick=()=>{$('paidSheet').hidden=true};
+
+/* ---------- studio ---------- */
+let lastMix=null,ctx,beatBuf=null,vocalBuf=null,stream=null,recording=false,pcm=[],recLen=0,firstAt=null,peak=0,recNode=null,micSrc=null,micSink=null,vocalOffset=0,mr=null,mrChunks=[],mrAt=null,beatSrc=null,startAt=0,tick=null,meterRaf=0,analyser=null,mixUrl=null;
+function msg(t,bad){const m=$('studioMsg');m.textContent=t;m.classList.toggle('bad',!!bad)}
+async function ensureCtx(){if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')await ctx.resume()}
+async function pickForStudio(b){
+  selected=b;renderList();player.pause();playingUrl=null;
+  $('studioBeat').textContent=b.title;$('recBtn').disabled=true;msg('Loading the beat…');
+  document.getElementById('studio').scrollIntoView({behavior:'smooth'});
+  try{await ensureCtx();const r=await fetch(b.url);if(!r.ok)throw 0;beatBuf=await ctx.decodeAudioData(await r.arrayBuffer());$('recBtn').disabled=false;msg(b.preview?'Ready. This is the free 45-second preview. Headphones on, then hit Record.':'Ready. Headphones on, then hit Record.')}
+  catch(e){beatBuf=null;msg('That beat would not load. Try another one.',true)}
+}
+$('recBtn').onclick=()=>recording?stopRec():requirePledge(startRec);
+async function startRec(){
+  if(!beatBuf)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg('This browser cannot record. Try Chrome or Safari on a phone or computer.',true);return}
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:true}})}
+  catch(e){msg('Mic is blocked. Allow the microphone for this site in your browser settings, then try again.',true);return}
+  /* fresh audio engine after the mic is on: iPhones record silence otherwise */
+  try{if(ctx)await ctx.close()}catch(e){}
+  ctx=new (window.AudioContext||window.webkitAudioContext)();try{await ctx.resume()}catch(e){}
+  micSrc=ctx.createMediaStreamSource(stream);analyser=ctx.createAnalyser();analyser.fftSize=512;micSrc.connect(analyser);
+  pcm=[];recLen=0;firstAt=null;peak=0;recording=true;
+  /* capture path A: raw samples through the audio engine */
+  const BUF=4096;recNode=ctx.createScriptProcessor(BUF,1,1);
+  recNode.onaudioprocess=e=>{
+    e.outputBuffer.getChannelData(0).fill(0);
+    if(!recording)return;
+    if(firstAt===null)firstAt=ctx.currentTime-BUF/ctx.sampleRate;
+    pcm.push(new Float32Array(e.inputBuffer.getChannelData(0)));recLen+=BUF;
+  };
+  micSink=ctx.createGain();micSink.gain.value=0;micSrc.connect(recNode);recNode.connect(micSink);micSink.connect(ctx.destination);
+  /* capture path B: the browser's own recorder (works when path A gets silence, e.g. Bluetooth on iPhone) */
+  mrChunks=[];mr=null;mrAt=null;
+  if(window.MediaRecorder){try{mr=new MediaRecorder(stream);mr.ondataavailable=e=>{if(e.data&&e.data.size)mrChunks.push(e.data)};mr.onstart=()=>{mrAt=ctx.currentTime};mr.start(250)}catch(e){mr=null}}
+  beatSrc=ctx.createBufferSource();beatSrc.buffer=beatBuf;const g=ctx.createGain();g.gain.value=.9;beatSrc.connect(g);g.connect(ctx.destination);
+  startAt=ctx.currentTime+0.15;beatSrc.start(startAt);
+  beatSrc.onended=()=>{if(recording)stopRec()};
+  $('recBtn').classList.add('live');$('recLabel').textContent='Stop';msg('Recording. Spit your verse.');
+  tick=setInterval(()=>{const s=Math.max(0,Math.floor(ctx.currentTime-startAt));$('timer').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')},250);
+  const data=new Uint8Array(analyser.fftSize);
+  const loop=()=>{analyser.getByteTimeDomainData(data);let m=0;for(const x of data)m=Math.max(m,Math.abs(x-128));$('meter').style.width=Math.min(100,m/1.1)+'%';meterRaf=requestAnimationFrame(loop)};loop();
+}
+async function stopRec(){
+  if(!recording)return;
+  recording=false;
+  try{beatSrc&&beatSrc.stop()}catch(e){}
+  clearInterval(tick);cancelAnimationFrame(meterRaf);$('meter').style.width='0';
+  $('recBtn').classList.remove('live');$('recLabel').textContent='Record again';
+  if(mr&&mr.state!=='inactive'){await new Promise(r=>{mr.onstop=r;try{mr.stop()}catch(e){r()}setTimeout(r,3000)})}
+  try{micSrc&&micSrc.disconnect();recNode&&recNode.disconnect()}catch(e){}
+  if(stream)stream.getTracks().forEach(t=>t.stop());
+  finishTake();
+}
+function stopTake(){if(recording)stopRec();$('mixPlayer').pause()}
+function stats(buf){let pk=0,sq=0,n=0;for(let c=0;c<buf.numberOfChannels;c++){const d=buf.getChannelData(c);for(let i=0;i<d.length;i+=4){const a=Math.abs(d[i]);if(a>pk)pk=a;sq+=d[i]*d[i];n++}}return{peak:pk,rms:Math.sqrt(sq/Math.max(1,n))}}
+async function finishTake(){
+  msg('Mixing your song…');
+  try{
+    const cands=[];
+    if(recLen){const buf=ctx.createBuffer(1,recLen,ctx.sampleRate);const ch=buf.getChannelData(0);let o=0;for(const c of pcm){ch.set(c,o);o+=c.length}cands.push({buf,off:(firstAt===null?startAt:firstAt)-startAt})}
+    if(mrChunks.length){try{const blob=new Blob(mrChunks,{type:(mr&&mr.mimeType)||''});const buf=await ctx.decodeAudioData(await blob.arrayBuffer());cands.push({buf,off:(mrAt===null?startAt:mrAt)-startAt})}catch(e){}}
+    cands.forEach(c=>Object.assign(c,stats(c.buf)));
+    cands.sort((x,y)=>y.rms-x.rms);
+    const best=cands[0];
+    if(!best||best.peak<0.003){msg('We did not hear your mic. Try again with wired headphones or no headphones, and make sure this site is allowed to use the microphone.',true);return}
+    /* boost quiet vocals so they sit on top of the beat */
+    const gain=Math.min(20,0.9/best.peak);
+    vocalBuf=ctx.createBuffer(1,best.buf.length,best.buf.sampleRate);const out=vocalBuf.getChannelData(0);const nc=best.buf.numberOfChannels;
+    for(let c=0;c<nc;c++){const d=best.buf.getChannelData(c);for(let i=0;i<d.length;i++)out[i]+=d[i]*gain/nc}
+    vocalOffset=Math.max(-1,Math.min(1,best.off));
+    peak=best.peak;
+    await remix();
+    msg('Done. Mic level '+Math.max(1,Math.round(best.peak*100))+'%. Play your take below. To hear just your voice, slide Beat to 0.')}
+  catch(e){msg('Could not mix that take. Try recording again.',true)}
+}
+async function remix(){
+  if(!vocalBuf||!beatBuf)return;
+  const sr=beatBuf.sampleRate,len=Math.min(beatBuf.duration,Math.max(0,vocalOffset)+vocalBuf.duration+0.5);
+  const off=new OfflineAudioContext(2,Math.ceil(len*sr),sr);
+  const b=off.createBufferSource();b.buffer=beatBuf;const bg=off.createGain();bg.gain.value=$('bVol').value/100;
+  const fade=Math.max(0,len-1.2);bg.gain.setValueAtTime(bg.gain.value,fade);bg.gain.linearRampToValueAtTime(0,len);
+  b.connect(bg);bg.connect(off.destination);b.start(0);
+  const v=off.createBufferSource();v.buffer=vocalBuf;const vg=off.createGain();vg.gain.value=$('vVol').value/100;
+  const comp=off.createDynamicsCompressor();comp.threshold.value=-20;comp.ratio.value=3;
+  v.connect(vg);vg.connect(comp);comp.connect(off.destination);
+  const lat=(ctx.baseLatency||0)+(ctx.outputLatency||0.04)+($('sync').value/1000);
+  const place=vocalOffset-lat;
+  if(place>=0)v.start(place);else v.start(0,Math.min(-place,vocalBuf.duration-0.01));
+  const out=await off.startRendering();lastMix=out;
+  if(mixUrl)URL.revokeObjectURL(mixUrl);
+  mixUrl=URL.createObjectURL(toWav(out));
+  const p=$('mixPlayer');p.src=mixUrl;p.hidden=false;
+  const s=$('saveBtn');s.href=mixUrl;s.download='KamSlam - '+(selected?selected.title:'song')+'.wav';s.hidden=false;
+  $('slamBtn').hidden=false;$('takeMsg').textContent='Saved songs are WAV files. Your take stays on this device unless you enter it.';
+}
+let rt;['vVol','bVol','sync'].forEach(id=>$(id).addEventListener('input',()=>{
+  $('vOut').textContent=$('vVol').value+'%';$('bOut').textContent=$('bVol').value+'%';$('sOut').textContent=$('sync').value+' ms';
+  clearTimeout(rt);rt=setTimeout(remix,300)}));
+function toWav(buf){
+  const ch=buf.numberOfChannels,sr=buf.sampleRate,n=buf.length,bytes=44+n*ch*2,ab=new ArrayBuffer(bytes),dv=new DataView(ab);
+  const w=(o,s)=>{for(let i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i))};
+  w(0,'RIFF');dv.setUint32(4,bytes-8,true);w(8,'WAVE');w(12,'fmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,ch,true);
+  dv.setUint32(24,sr,true);dv.setUint32(28,sr*ch*2,true);dv.setUint16(32,ch*2,true);dv.setUint16(34,16,true);w(36,'data');dv.setUint32(40,n*ch*2,true);
+  const data=[];for(let c=0;c<ch;c++)data.push(buf.getChannelData(c));
+  let o=44;for(let i=0;i<n;i++)for(let c=0;c<ch;c++){const s=Math.max(-1,Math.min(1,data[c][i]));dv.setInt16(o,s<0?s*0x8000:s*0x7FFF,true);o+=2}
+  return new Blob([ab],{type:'audio/wav'});
+}
+$('slamBtn').onclick=()=>requirePledge(openEntry);
+
+/* ---------- slam ---------- */
+(()=>{const d=new Date(),day=(d.getDay()+6)%7,mon=new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);$('slamWeek').textContent='Weekly Slam · Week of '+mon.toLocaleDateString('en-US',{month:'short',day:'numeric'})})();
+function setSlamBeat(){const b=beats.find(x=>x.title==='Red Zone 1')||beats.find(x=>x.vibe==='hype')||beats[0];if(b){$('slamBeat').textContent=b.title;$('slamRecord').onclick=()=>pickForStudio(b)}else{$('slamRecord').disabled=true}}
+})();
+</script>
+</body>
+</html>

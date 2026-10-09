@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>KamSlam · Add Beats</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Barlow:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{--night:#0c1726;--panel:#132339;--line:#26405f;--chalk:#f3efe4;--muted:#9db0c6;--flare:#ff5a1f;--gold:#ffc53d;--ok:#4fd18b;--bad:#ff7a7a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--chalk);font:16px/1.5 Barlow,system-ui,sans-serif;padding:24px 16px 60px}
+.wrap{max-width:760px;margin:0 auto;display:grid;gap:18px}
+h1{font:900 italic 44px/1 "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;margin:0}
+h1 span{color:var(--flare)}
+h2{font:900 24px/1.1 "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;margin:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px}
+label{font-weight:700;font-size:14px}
+input[type=password],select{width:100%;background:var(--night);color:inherit;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+.drop{border:2px dashed var(--muted);border-radius:12px;padding:28px 16px;text-align:center;color:var(--muted);cursor:pointer}
+.drop.over{border-color:var(--flare);color:var(--chalk)}
+.btn{cursor:pointer;border:0;border-radius:10px;padding:12px 18px;font:900 20px "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;background:var(--flare);color:#1a0a03}
+.btn.alt{background:var(--gold)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.note{font-size:14px;color:var(--muted);margin:0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+td select{padding:4px 6px;font-size:13px}
+.st{font-family:"JetBrains Mono",monospace;font-size:12px;white-space:nowrap}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.wait{color:var(--gold)}
+.tbl{overflow-x:auto;max-height:420px;overflow-y:auto}
+.ent{border-top:1px solid var(--line);padding:12px 0;display:grid;gap:6px}
+.ent audio{width:100%}
+.ent .acts{display:flex;gap:8px;flex-wrap:wrap}
+.sm{cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font:700 14px Barlow,sans-serif;background:var(--night);color:var(--chalk)}
+.sm.yes{background:var(--ok);color:#06210f;border-color:var(--ok)}.sm.no{border-color:var(--bad);color:var(--bad)}
+.tag{font:12px "JetBrains Mono",monospace;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Kam<span>Slam</span> · Add beats</h1>
+  <p class="note">Private page. The store plays a 45-second preview of each beat. The full MP3 is saved at a hidden address and only unlocks after someone pays.</p>
+
+  <div class="card">
+    <label for="code">Passcode</label>
+    <input id="code" type="password" autocomplete="current-password" placeholder="The ADMIN_CODE you set in Vercel">
+  </div>
+
+  <div class="card">
+    <h2>Slam review</h2>
+    <p class="note">Listen to each entry. Approve only songs that keep the KamSlam Pledge: their own voice, their own words, uplifting.</p>
+    <button class="btn alt" id="loadReview" type="button">Load entries</button>
+    <div id="review"></div>
+  </div>
+
+  <div class="card" id="protectCard" hidden>
+    <h2>Protect beats already in the store</h2>
+    <p class="note" id="protectNote"></p>
+    <button class="btn alt" id="protectBtn" type="button">Protect them now</button>
+    <p class="note st" id="protectStatus"></p>
+  </div>
+
+  <div class="card">
+    <h2>Add new beats</h2>
+    <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose MP3 files">Drag MP3 files here, or tap to choose</div>
+    <input id="files" type="file" accept="audio/mpeg,.mp3" multiple hidden>
+    <div class="tbl"><table id="list"></table></div>
+    <p class="note" id="summary">No files yet.</p>
+    <button class="btn" id="go" type="button" disabled>Upload to KamSlam</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+<script>window.lamejs||document.write('<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"><\/script>')</script>
+<script type="module">
+import { upload } from 'https://esm.sh/@vercel/blob@2.8.1/client';
+
+const PREVIEW_SECONDS = 45;
+const VIBES = { hype:'Hype / game day', drill:'Drill', chill:'Chill', arcade:'Arcade / gaming', bounce:'Jersey club bounce', afro:'Afrobeats', halloween:'Halloween' };
+const KNOWN = {
+  hype:['Red Zone','Fourth Quarter','Friday Lights','Kickoff','Blitz Mode','Pick Six','Hail Mary','Overtime','Two Minute Drill','End Zone','Goal Line','Game Winner','Stadium Lights'],
+  drill:['Cold Route','Night Practice','Film Room','Film Study','Cold Front','Late Hit','Off Season','Sideline','Midnight Reps','Blind Side','Black Ice'],
+  chill:['Lobby Music','After Practice','Couch Co-op','Bus Ride Home','Rainy Respawn','Low Battery','Sunday Recovery','Study Hall','Night Lobby'],
+  arcade:['Victory Lap','Respawn','Level Up','Speedrun','Final Circle','Combo Breaker','Boss Fight','Power Up','Loading Screen'],
+  bounce:['Bounce Pass','Juke Move','Spin Move','Celebration Dance'],
+  afro:['Halftime Show','Victory Parade','Tailgate','Homecoming'],
+  halloween:['Spooky Season','Graveyard Shift','Ghost Route','Haunted Huddle','Trick Play','Candy Run','Full Moon Lobby','Witching Hour','Creep Mode','Jack O Lantern']
+};
+const lookup = {};
+for (const [v, names] of Object.entries(KNOWN)) names.forEach(n => lookup[n.toLowerCase()] = v);
+
+const $ = id => document.getElementById(id);
+const clean = name => name.replace(/\.mp3$/i,'').replace(/[^A-Za-z0-9 '&-]/g,'').replace(/\s+/g,' ').trim().slice(0,60);
+const guess = title => lookup[title.replace(/\s+\d+$/,'').toLowerCase()] || '';
+const GOOD_NAME = /^[A-Za-z0-9 '&-]+ [12]\.mp3$/i;
+
+/* ---------- 45-second preview maker (runs in this browser) ---------- */
+async function makePreview(arrayBuffer){
+  const dec = new OfflineAudioContext(2, 44100, 44100);
+  const buf = await dec.decodeAudioData(arrayBuffer);
+  const sr = 44100, n = Math.min(buf.length, PREVIEW_SECONDS * sr), fade = Math.min(n, Math.round(2.5 * sr));
+  const ch = [buf.getChannelData(0), buf.getChannelData(buf.numberOfChannels > 1 ? 1 : 0)];
+  const pcm = ch.map(d => { const o = new Int16Array(n); for (let i = 0; i < n; i++) { let s = d[i]; if (i > n - fade) s *= (n - i) / fade; s = Math.max(-1, Math.min(1, s)); o[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; } return o; });
+  const enc = new lamejs.Mp3Encoder(2, sr, 128), parts = [];
+  for (let i = 0; i < n; i += 1152) { const m = enc.encodeBuffer(pcm[0].subarray(i, i + 1152), pcm[1].subarray(i, i + 1152)); if (m.length) parts.push(new Uint8Array(m)); }
+  const end = enc.flush(); if (end.length) parts.push(new Uint8Array(end));
+  return new Blob(parts, { type: 'audio/mpeg' });
+}
+window.__makePreview = makePreview;
+
+/* ---------- helpers ---------- */
+const withTimeout = (p, ms, ac) => { const t = setTimeout(() => ac && ac.abort(), ms); return p.finally(() => clearTimeout(t)); };
+async function sendFile(path, body, code){
+  const ac = new AbortController();
+  return withTimeout(upload(path, body, { access:'public', handleUploadUrl:'/api/upload', contentType:'audio/mpeg', clientPayload: JSON.stringify({ code }), abortSignal: ac.signal }), 120000, ac);
+}
+async function admin(action, code, extra = {}){
+  const r = await fetch('/api/admin', { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action, code, ...extra }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'Admin step failed');
+  return j;
+}
+async function retry(fn, tries = 3){ let err; for (let i = 0; i < tries; i++) { try { return await fn(i); } catch (e) { err = e; if (/passcode/i.test(e.message || '')) throw e; } } throw err; }
+function needCode(){ const c = $('code').value.trim(); if (!c) { $('code').focus(); } return c; }
+
+/* ---------- what is already in the store ---------- */
+let store = new Map();
+async function loadStore(){
+  try { const r = await fetch('/api/beats?fresh=' + Date.now(), { cache:'no-store' }); const j = await r.json();
+        store = new Map((j.beats || []).map(b => [(b.vibe + '/' + b.title).toLowerCase(), b])); } catch {}
+  const legacy = [...store.values()].filter(b => !b.preview);
+  $('protectCard').hidden = !legacy.length;
+  $('protectNote').textContent = `${legacy.length} beat${legacy.length === 1 ? '' : 's'} in the store still play the full file, so anyone could save it for free. This makes a 45-second preview for each one and moves the full file to a hidden address. Keep this tab open until it finishes.`;
+  return legacy;
+}
+let storePromise = loadStore();
+
+$('protectBtn').onclick = async () => {
+  const code = needCode(); if (!code) { $('protectStatus').textContent = 'Enter the passcode first.'; return; }
+  $('protectBtn').disabled = true;
+  try { await admin('ping', code); } catch (e) { $('protectStatus').textContent = e.message; $('protectBtn').disabled = false; return; }
+  const legacy = await loadStore(); let done = 0, failed = 0;
+  for (const b of legacy) {
+    $('protectStatus').textContent = `Protecting ${done + failed + 1} of ${legacy.length}: ${b.title}`;
+    try {
+      await retry(async () => {
+        const src = await (await fetch(b.url, { cache:'no-store' })).arrayBuffer();
+        const prev = await makePreview(src);
+        await sendFile(`previews/${b.vibe}/${b.title}.mp3`, prev, code);
+        await admin('migrate', code, { vibe: b.vibe, title: b.title });
+      });
+      done++;
+    } catch (e) { failed++; if (/passcode/i.test(e.message)) break; }
+  }
+  $('protectStatus').textContent = failed ? `${done} protected, ${failed} did not finish. Tap the button again to retry those.` : `All ${done} protected.`;
+  $('protectBtn').disabled = false; await loadStore();
+};
+
+/* ---------- Slam review ---------- */
+const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+async function loadReview(){
+  const code = needCode(); const box = $('review'); if (!code) { box.innerHTML = '<p class="note">Enter the passcode first.</p>'; return; }
+  box.innerHTML = '<p class="note">Loading…</p>';
+  try {
+    const d = await admin('review', code);
+    const nameOf = id => (d.approved.find(e => e.id === id) || {}).stageName || id;
+    let h = `<h2 style="margin-top:12px">Waiting for review (${d.pending.length})</h2>`;
+    h += d.pending.length ? '' : '<p class="note">Nothing waiting.</p>';
+    for (const e of d.pending) h += `<div class="ent"><b>${esc(e.stageName)}</b><span class="tag">on ${esc(e.beat)} · ${esc((e.submittedAt||'').slice(0,16).replace('T',' '))}</span>
+      <span class="tag">Pledge signed by: ${e.pledge ? esc(e.pledge.signedName) + ' · 13+ confirmed · v' + esc(e.pledge.version) : 'missing'}</span>
+      <audio controls preload="none" src="${esc(e.audio)}"></audio>
+      <div class="acts"><button class="sm yes" data-a="approve" data-id="${esc(e.id)}">Approve</button><button class="sm no" data-a="reject" data-id="${esc(e.id)}">Reject</button></div></div>`;
+    h += `<h2 style="margin-top:18px">Reports and messages (${d.inbox.length})</h2>`;
+    h += d.inbox.length ? '<button class="sm" data-a="clearInbox">Clear all</button>' : '<p class="note">Inbox is empty.</p>';
+    for (const m of d.inbox) h += `<div class="ent"><span class="tag">${esc(m.type)} · ${esc((m.at||'').slice(0,16).replace('T',' '))}</span>${m.type === 'report' ? `<span>Report on <b>${esc(nameOf(m.entry))}</b></span>` : `<span>${esc(m.text)}</span>${m.reply ? `<span class="tag">Reply to: ${esc(m.reply)}</span>` : ''}`}</div>`;
+    h += `<h2 style="margin-top:18px">On the board (${d.approved.length})</h2>`;
+    for (const e of d.approved) h += `<div class="ent"><b>${esc(e.stageName)}${e.winner ? ' 👑' : ''}</b><span class="tag">on ${esc(e.beat)}</span>
+      <audio controls preload="none" src="${esc(e.audio)}"></audio>
+      <div class="acts"><button class="sm" data-a="winner" data-id="${esc(e.id)}">${e.winner ? 'Remove winner' : 'Make winner'}</button><button class="sm no" data-a="remove" data-id="${esc(e.id)}">Take down</button></div></div>`;
+    box.innerHTML = h;
+  } catch (e) { box.innerHTML = `<p class="note bad">${esc(e.message)}</p>`; }
+}
+$('loadReview').onclick = loadReview;
+$('review').onclick = async ev => {
+  const b = ev.target.closest('button[data-a]'); if (!b) return;
+  b.disabled = true; b.textContent = '…';
+  try { await admin(b.dataset.a, needCode(), b.dataset.id ? { id: b.dataset.id } : {}); } catch (e) { alert(e.message); }
+  loadReview();
+};
+
+/* ---------- add new beats ---------- */
+const rows = []; let skipped = 0;
+async function add(files){
+  files = Array.from(files);
+  $('summary').textContent = 'Checking what is already in the store…';
+  await storePromise;
+  for (const f of files){
+    if (!/\.mp3$/i.test(f.name)) continue;
+    if (!GOOD_NAME.test(f.name)) { skipped++; continue; }
+    const title = clean(f.name);
+    if (!title || rows.some(r => r.title === title)) { skipped++; continue; }
+    const vibe = guess(title);
+    const have = vibe && store.get((vibe + '/' + title).toLowerCase());
+    const already = !!(have && have.preview);
+    rows.push({ file:f, title, vibe, status: already ? 'Live' : 'Ready', already });
+  }
+  render();
+}
+function render(){
+  const t = $('list'); t.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td'); td1.textContent = r.title;
+    const td2 = document.createElement('td');
+    const sel = document.createElement('select'); sel.setAttribute('aria-label','Vibe for '+r.title);
+    sel.innerHTML = '<option value="">Pick vibe</option>' + Object.entries(VIBES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+    sel.value = r.vibe; sel.onchange = () => { r.vibe = sel.value; summary(); };
+    td2.appendChild(sel);
+    const td3 = document.createElement('td'); td3.className = 'st ' + (r.status==='Live'?'ok':/fail|wrong|not|timed|missing|bad/i.test(r.status)?'bad':/…/.test(r.status)?'wait':'');
+    td3.textContent = r.status;
+    tr.append(td1,td2,td3); t.appendChild(tr);
+  });
+  summary();
+}
+function summary(){
+  const ready = rows.filter(r => r.status!=='Live');
+  const missing = ready.filter(r => !r.vibe).length;
+  const pre = rows.filter(r=>r.already).length;
+  $('summary').textContent = rows.length ? `${rows.length} files · ${rows.filter(r=>r.status==='Live').length} live` + (pre?` (${pre} were already in the store)`:'') + ` · ${ready.length} to upload` + (missing?` · ${missing} need a vibe`:'') + (skipped?` · ${skipped} duplicates skipped`:'') : (skipped?`${skipped} files skipped. Only names ending in " 1.mp3" or " 2.mp3" are added.`:'No files yet.');
+  $('go').disabled = !ready.length || missing > 0;
+}
+const drop = $('drop'), input = $('files');
+drop.onclick = () => input.click();
+drop.onkeydown = e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); input.click(); } };
+input.onchange = () => add(input.files);
+drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
+drop.ondragleave = () => drop.classList.remove('over');
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); add(e.dataTransfer.files); };
+
+$('go').onclick = async () => {
+  const code = needCode(); if (!code) { $('summary').textContent = 'Enter the passcode first.'; return; }
+  $('go').disabled = true;
+  try { await admin('ping', code); } catch (e) { $('summary').textContent = e.message; $('go').disabled = false; return; }
+  for (const r of rows) {
+    if (r.status === 'Live') continue;
+    try {
+      await retry(async (i) => {
+        r.status = (i ? `Retry ${i}: ` : '') + 'Making preview…'; render();
+        const prev = await makePreview(await r.file.arrayBuffer());
+        r.status = (i ? `Retry ${i}: ` : '') + 'Uploading…'; render();
+        await sendFile(`full/${r.vibe}/${r.title}.mp3`, r.file, code);
+        await sendFile(`previews/${r.vibe}/${r.title}.mp3`, prev, code);
+        await admin('finalize', code, { vibe: r.vibe, title: r.title });
+      });
+      r.status = 'Live';
+    } catch (e) {
+      r.status = (e && e.name === 'AbortError') ? 'Timed out' : ((e && e.message) || 'Upload failed').slice(0, 60);
+      if (/passcode/i.test(r.status)) { render(); break; }
+    }
+    render();
+  }
+  const left = rows.filter(r => r.status !== 'Live').length;
+  summary();
+  $('summary').textContent += left ? ` · ${left} did not finish. Click Upload again to retry just those.` : ' · All done!';
+  loadStore();
+};
+</script>
+</body>
+</html>

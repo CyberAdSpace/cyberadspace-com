@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KamSlam Pledge &amp; Terms</title>
+<link rel="icon" href="/logo-icon.webp" type="image/webp">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Barlow:wght@400;600;700&display=swap">
+<style>
+:root{--night:#0c1726;--panel:#132339;--line:#26405f;--chalk:#f3efe4;--muted:#9db0c6;--flare:#ff5a1f;--gold:#ffc53d;--ok:#4fd18b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--chalk);font:16px/1.6 Barlow,system-ui,sans-serif;padding:24px 16px 60px}
+.wrap{max-width:760px;margin:0 auto}
+a{color:var(--gold)}
+h1{font:900 italic clamp(40px,8vw,64px)/.95 "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;margin:16px 0 8px}
+h1 em{color:var(--flare)}
+h2{font:900 28px/1.1 "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;margin:36px 0 8px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:12px 0}
+.pledge li{margin:8px 0}
+.pledge b{color:var(--gold)}
+.muted{color:var(--muted);font-size:14px}
+textarea,input{width:100%;background:var(--night);color:inherit;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+textarea{min-height:110px}
+.btn{cursor:pointer;border:0;border-radius:10px;padding:12px 18px;font:900 20px "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;background:var(--flare);color:#1a0a03;margin-top:10px}
+.back{display:inline-block;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/">&larr; Back to KamSlam</a>
+  <h1>The KamSlam <em>Pledge</em></h1>
+  <p class="muted">Version 2026-10-07. Everyone signs this before recording, buying a beat, or entering a Slam.</p>
+
+  <div class="card pledge">
+    <p>KamSlam is for every age. The beats and songs made here should lift people up. When I use KamSlam, I promise:</p>
+    <ol>
+      <li><b>My voice only.</b> I record myself. I won't use anyone else's voice, an AI copy of someone's voice, or a recording of someone without their OK.</li>
+      <li><b>My words only.</b> I write my own lyrics. I won't copy other people's songs or lyrics.</li>
+      <li><b>Keep it uplifting.</b> No hate, bullying, put-downs, threats, violence, weapons, drugs, or explicit content. No disses aimed at real people.</li>
+      <li><b>Keep it private.</b> I won't share my address, school, phone number, or last name in a song, and I won't share anyone else's.</li>
+      <li><b>Respect the community.</b> I'll report songs that break these rules, and I understand KamSlam can remove songs and block entries that do.</li>
+    </ol>
+  </div>
+
+  <h2>Beat licenses</h2>
+  <div class="card">
+    <p><b>$1 license:</b> you get the full MP3 and can use the beat in your own songs and videos, including posting them online. It's non-exclusive, so other people can buy the same beat.</p>
+    <p><b>$5 exclusive:</b> you get the full MP3 and the beat comes off the KamSlam store, so no new licenses are sold. Anyone who bought it before keeps their $1 license.</p>
+    <p>Every license requires following the KamSlam Pledge. You can't resell or give away the beat file itself. A parent or guardian completes purchases for anyone under 18. Payments are handled by Stripe. Because beats are digital downloads, sales are final, but if something goes wrong (a double charge, or two people buying the same exclusive at the same moment) we'll refund you.</p>
+  </div>
+
+  <h2>Slam entries</h2>
+  <div class="card">
+    <p>You must be 13 or older to enter a Slam. Anyone can record and save songs on their own device without entering.</p>
+    <p>Every entry is reviewed before it appears on the Slam board. We only post songs that follow the Pledge, and we can take any song down at any time. You keep ownership of your vocals and lyrics. By entering, you let KamSlam play and display your entry on kamslam.com and share it in KamSlam posts about the Slam.</p>
+    <p>Want your entry taken down? Use the contact form below with your stage name and we'll remove it.</p>
+  </div>
+
+  <h2>Privacy</h2>
+  <div class="card">
+    <p><b>Recording and saving a song</b> happens on your device. Nothing is uploaded unless you enter a Slam.</p>
+    <p><b>Slam entries:</b> we keep your song, your stage name, and the name you signed the Pledge with. Only your stage name and song are shown publicly.</p>
+    <p><b>Purchases:</b> Stripe collects payment details and email for the receipt. KamSlam never sees full card numbers.</p>
+    <p>We don't sell your information. We don't knowingly collect personal information from children under 13; if you think a child under 13 sent us an entry, contact us and we'll delete it.</p>
+  </div>
+
+  <h2>Contact us</h2>
+  <div class="card">
+    <form id="contact">
+      <label for="msg">Message</label>
+      <textarea id="msg" maxlength="1000" required placeholder="Questions, take-down requests, or a song you think breaks the Pledge"></textarea>
+      <label for="reply">How should we reply? (optional email)</label>
+      <input id="reply" maxlength="120" placeholder="you@example.com">
+      <button class="btn" type="submit">Send</button>
+      <p class="muted" id="sent" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+<script>
+document.getElementById('contact').onsubmit=async e=>{
+  e.preventDefault();const s=document.getElementById('sent');s.textContent='Sending…';
+  try{const r=await fetch('/api/report',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({type:'message',text:document.getElementById('msg').value,reply:document.getElementById('reply').value})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error||'Could not send.');s.textContent='Sent. Thank you!';e.target.reset()}
+  catch(err){s.textContent=err.message}
+};
+</script>
+</body>
+</html>
