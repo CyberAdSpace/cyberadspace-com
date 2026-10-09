@@ -21,7 +21,7 @@ export const BRANDS: Brand[] = [
     accent: "#f0c674",
     logo: "/assets/logos/logo-faith-vault.png",
     url: "https://thefaithvault.com",
-    email: "Contact@thefaithvault.com",
+    email: "Contact@TheFaithVault.com",
     status: "Live",
   },
   {
@@ -32,7 +32,7 @@ export const BRANDS: Brand[] = [
     accent: "#e8c37a",
     logo: "/assets/logos/logo-scripture-guide.png",
     url: "https://thescriptureguide.com",
-    email: "Contact@thescriptureguide.com",
+    email: "Contact@TheScriptureGuide.com",
     status: "Live",
   },
   {
@@ -43,7 +43,7 @@ export const BRANDS: Brand[] = [
     accent: "#e8b878",
     logo: "/assets/logos/logo-religion-relief-v2.png",
     url: "https://religionrelief.com",
-    email: "Music@religionrelief.com",
+    email: "Music@ReligionRelief.com",
     status: "Live",
   },
   {
@@ -54,7 +54,7 @@ export const BRANDS: Brand[] = [
     accent: "#7fbfff",
     logo: "/assets/logos/logo-antrias-academy.png",
     url: "https://antriasacademy.com",
-    email: "Music@antriasacademy.com",
+    email: "Music@AntriasAcademy.com",
     status: "Live",
   },
   {
@@ -65,7 +65,7 @@ export const BRANDS: Brand[] = [
     accent: "#c5a3ff",
     logo: "/assets/logos/logo-elevated-remedies.png",
     url: "https://elevatedremedies.world",
-    email: "Music@elevatedremedies.world",
+    email: "Music@ElevatedRemedies.world",
     status: "Live",
   },
   {
@@ -76,7 +76,7 @@ export const BRANDS: Brand[] = [
     accent: "#ff5a1f",
     logo: "https://kamslam.com/logo-icon.webp",
     url: "https://kamslam.com",
-    email: "KamSlam@CyberAdSpace.com",
+    email: "Contact@KamSlam.com",
     status: "Live",
   },
   {
@@ -87,7 +87,7 @@ export const BRANDS: Brand[] = [
     accent: "#d4a64a",
     logo: "/assets/logos/logo-divine-reader.png",
     url: "https://thedivinereader.com",
-    email: "Contact@thedivinereader.com",
+    email: "Contact@TheDivineReader.com",
     status: "Live",
   },
   {
@@ -98,7 +98,7 @@ export const BRANDS: Brand[] = [
     accent: "#b8413a",
     logo: "/assets/logos/logo-founding-times.png",
     url: "https://foundingtimes.com",
-    email: "FoundingTimes@CyberAdSpace.com",
+    email: "Contact@FoundingTimes.com",
     status: "Live",
   },
   {
@@ -109,7 +109,7 @@ export const BRANDS: Brand[] = [
     accent: "#b7410e",
     logo: "/assets/logos/logo-national-cannabis-union-v2.png",
     url: "https://nationalcannabisunion.com",
-    email: "NationalCannabisUnion@CyberAdSpace.com",
+    email: "Contact@NationalCannabisUnion.com",
     status: "Live",
   },
   {
@@ -120,7 +120,7 @@ export const BRANDS: Brand[] = [
     accent: "#4caf6e",
     logo: "/assets/logos/logo-thevendorspace.png",
     url: "https://thevendorspace.com",
-    email: "TheVendorSpace@CyberAdSpace.com",
+    email: "Contact@TheVendorSpace.com",
     status: "Live",
   },
   {
@@ -131,7 +131,7 @@ export const BRANDS: Brand[] = [
     accent: "#f0b429",
     logo: "/assets/logos/logo-palm-polish.png",
     url: "https://palmpolish.com",
-    email: "PalmPolish@CyberAdSpace.com",
+    email: "Contact@PalmPolish.com",
     status: "Early access",
   },
   {
@@ -142,7 +142,7 @@ export const BRANDS: Brand[] = [
     accent: "#d1a06b",
     logo: "/assets/logos/logo-canamo-cafe-v2.png",
     url: "https://canamocafe.com",
-    email: "CanamoCafe@CyberAdSpace.com",
+    email: "Contact@CanamoCafe.com",
     status: "Launching soon",
   },
   {
@@ -153,7 +153,7 @@ export const BRANDS: Brand[] = [
     accent: "#c9a227",
     logo: "/assets/logos/logo-hemp-cookies.png",
     url: "https://thehempcookies.com",
-    email: "TheHempCookies@CyberAdSpace.com",
+    email: "Hello@TheHempCookies.com",
     status: "Launching soon",
   },
   {
@@ -164,7 +164,7 @@ export const BRANDS: Brand[] = [
     accent: "#8fd14f",
     logo: "/assets/logos/logo-green-oven.png",
     url: "https://thegreenoven.co",
-    email: "TheGreenOven@CyberAdSpace.com",
+    email: "Contact@TheGreenOven.co",
     status: "Concept",
   },
   {
@@ -175,7 +175,7 @@ export const BRANDS: Brand[] = [
     accent: "#e88c1a",
     logo: "/assets/logos/logo-solar-splashing.png",
     url: "https://solarsplashing.com",
-    email: "SolarSplashing@CyberAdSpace.com",
+    email: "Contact@SolarSplashing.com",
     status: "Concept",
   },
 ];
