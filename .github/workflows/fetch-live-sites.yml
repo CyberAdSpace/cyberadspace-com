@@ -1,0 +1,18 @@
+name: fetch-live-sites
+on:
+  push:
+    branches: [fetch-live-sites]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p live
+          for u in kamslam.com/index.html kamslam.com/terms.html kamslam.com/admin.html thegreenoven.co/index.html nationalcannabisunion.com/index.html; do
+            f="live/$(echo $u | tr '/' '_')"; curl -sSL -A "Mozilla/5.0" "https://$u" -o "$f"; echo "$u $(wc -c < $f)";
+          done
+          git config user.name CyberAdSpace; git config user.email Contact@CyberAdSpace.com
+          git add live && git commit -m "Snapshot of live pages" && git push
