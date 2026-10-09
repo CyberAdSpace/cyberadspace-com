@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import crypto from "node:crypto";
 import PayWithWebAuth from "./PayWithWebAuth";
+import AgentArcade from "../../../_components/AgentArcade";
 import { XPR_ACCOUNT, XPR_CHAIN_ID, XPR_ENDPOINTS, XMD_CONTRACT, xmdQuantity, xprConfigured } from "@/lib/xpr";
 import { getOrder, out, MAX_REVISIONS, PRICE_USD, type Kit, type LogoOut, type NamesOut, type LaunchOut } from "@/lib/orders";
 
@@ -39,6 +40,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       <p className="start-lede">{STATUS_TEXT[o.status]}</p>
       {revision === "sent" && <p className="ok-note">Change request received. We&apos;ll email you when the update is ready.</p>}
       {revision === "invalid" && <p className="form-error">Please pick at least one part to change and describe the change.</p>}
+      {o.paid && !ready && <section className="admin-card"><h2>Watch your agents work</h2><AgentArcade orderId={o.id} token={t} /></section>}
 
       {!o.paid && xprConfigured() && (
         <section className="admin-card">
