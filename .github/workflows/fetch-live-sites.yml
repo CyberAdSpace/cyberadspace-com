@@ -10,9 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          mkdir -p live
-          for u in kamslam.com/index.html kamslam.com/terms.html kamslam.com/admin.html thegreenoven.co/index.html nationalcannabisunion.com/index.html; do
-            f="live/$(echo $u | tr '/' '_')"; curl -sSL -A "Mozilla/5.0" "https://$u" -o "$f"; echo "$u $(wc -c < $f)";
-          done
+          rm -rf live && mkdir -p mirror && cd mirror
+          wget -q -e robots=off -m -p -E -k -nH --no-parent -U "Mozilla/5.0" https://thevendorspace.netlify.app/ || true
+          wget -q -e robots=off -nH -x -U "Mozilla/5.0" https://thevendorspace.netlify.app/_redirects https://thevendorspace.netlify.app/robots.txt https://thevendorspace.netlify.app/sitemap.xml https://thevendorspace.netlify.app/favicon.ico || true
+          cd .. && find mirror -type f | head -100 && du -sh mirror
           git config user.name CyberAdSpace; git config user.email Contact@CyberAdSpace.com
-          git add live && git commit -m "Snapshot of live pages" && git push
+          git add -A mirror live .github && git commit -m "Snapshot of TheVendorSpace" && git push
