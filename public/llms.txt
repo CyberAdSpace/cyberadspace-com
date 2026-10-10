@@ -1,0 +1,38 @@
+# Cyber Ad Space
+
+> Cyber Ad Space (CyberAdSpace) builds brands and websites with AI, guided by people. It sells a $350 Brand Starter and custom builds quoted in writing, runs the CyberAdSpace Marketplace, and created every brand listed below.
+
+Contact: Contact@CyberAdSpace.com
+
+## Services
+
+- [Brand Starter, $350 one time](https://cyberadspace.com/start): 5 brand name options with a domain availability check and a basic trademark search; logo (main, icon and black-and-white); brand kit (colors, fonts, tagline, brand story); one-page website hosted for you; Marketplace storefront with up to 5 products; launch kit (5 social posts, profile image and banner); 2 rounds of revisions; delivered within 72 hours of payment. AI builds each piece and a person reviews it. Domain not included (about $12-$20 a year). No sales or income are promised.
+- [Custom builds](https://cyberadspace.com/#pricing): multi-page websites, custom AI features like a Q&A assistant, marketplaces and booking platforms, and rebrands. Fixed quote in writing before work begins.
+- [Run one of our brands](https://cyberadspace.com/#operators): some brands are looking for an operator who runs it and keeps the large majority of what it earns, under a private written agreement.
+- [CyberAdSpace Marketplace](https://cyberadspace.com/marketplace): brands created through CyberAdSpace and their products. 3.5% fee only on sales made through the Marketplace.
+- [Moon base](https://cyberadspace.com/live): every brand in its dome and the AI agents that build new brands, working live.
+
+## Brands
+
+- [The Faith Vault](https://thefaithvault.com): Nine traditions. Twenty-one languages. One vault. Status: Live.
+- [The Scripture Guide](https://thescriptureguide.com): Ask anything, answered across nine faiths. Status: Live.
+- [Religion Relief](https://religionrelief.com): AI worship music, composed for your soul. Status: Live.
+- [Antria's Academy](https://antriasacademy.com): Educational songs for little learners. Status: Live.
+- [Elevated Remedies](https://elevatedremedies.world): Genre-less records and AI song creation. Status: Live.
+- [KamSlam](https://kamslam.com): Pick a beat. Drop your verse. Status: Live.
+- [Why Is This Taxed?](https://cyberadspace.com/why-is-this-taxed): Every tax rule has a family tree. Status: Live · beta.
+- [The Divine Reader](https://thedivinereader.com): Every sacred text, beautifully typeset. Status: Live.
+- [FoundingTimes](https://foundingtimes.com): Read the founders. Ask. Sign the declaration. Status: Live.
+- [The National Cannabis Union](https://nationalcannabisunion.com): One plant. One number. One deadline. Status: Live.
+- [TheVendorSpace](https://thevendorspace.com): Where farms meet food trucks. Status: Live.
+- [Palm Polish](https://palmpolish.com): Mobile detailing, booked in minutes. Status: Early access.
+- [Cáñamo Café](https://canamocafe.com): Planned cafés in Dade City, FL and Bogotá with single-estate Colombian coffee and panela. Status: Launching soon; nothing is for sale online yet.
+- [The Hemp Cookies](https://thehempcookies.com): Six planned cookie flavors made with hemp seeds and hemp protein, for adults 21+. Status: Launching soon; nothing is for sale.
+- [The Green Oven](https://thegreenoven.co): A concept brand for hemp-seed crust pizzas and thick shakes, offered to an operator. Status: Concept; not open, nothing for sale.
+- [SolarSplashing](https://solarsplashing.com): A concept brand for rooftop solar and custom pools, looking for a licensed contractor to run it. Status: Concept; doesn't sell or install anything.
+
+## Optional
+
+- [Chat assistant](https://cyberadspace.com/chat/widget.js): brand sites can carry an AI assistant that answers only from that brand's published facts. Conversations aren't stored.
+- [Privacy Policy](https://cyberadspace.com/privacy.html)
+- [Terms](https://cyberadspace.com/terms.html)

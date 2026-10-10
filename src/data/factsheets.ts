@@ -20,6 +20,21 @@ const HEMP_RULES = [
 ];
 
 export const FACTS: Record<string, FactSheet> = {
+  cyberadspace: {
+    status: "Live. Cyber Ad Space (CyberAdSpace) builds brands and websites with AI, guided by people. It created every brand in this family.",
+    offers: [
+      "Brand Starter, ordered online at cyberadspace.com/start: 5 brand name options with a domain availability check and a basic trademark search; logo (main, icon and black-and-white versions); brand kit (colors, fonts, tagline, short brand story); one-page website hosted on cyberadspace.com or on your own domain; CyberAdSpace Marketplace storefront with up to 5 products; launch kit (5 social posts, profile image and banner); 2 rounds of revisions; delivery within 72 hours of payment",
+      "AI builds each piece and a person reviews every piece before it reaches the customer",
+      "Custom builds, quoted in writing before work begins: multi-page websites, custom AI features like a Q&A assistant, marketplaces and booking platforms, rebrands of an existing business",
+      "CyberAdSpace Marketplace (cyberadspace.com/marketplace): brands created through CyberAdSpace and their products. Online checkout is coming soon; each brand page has a way to get in touch",
+      "Run one of our brands: some brands are looking for an operator who runs it and keeps the large majority of what it earns, with a small license fee to CyberAdSpace, under a private written agreement",
+      "The moon base at cyberadspace.com/live shows every brand in its dome and the AI agents that build new brands, working live",
+    ],
+    pricing: "Brand Starter is $350 one time. The domain is not included (about $12-$20 a year). Also not included: extra pages, custom AI features, product photos, printing, trademark registration and inventory. 3.5% fee only on sales made through the CyberAdSpace Marketplace, nothing on sales made elsewhere. Custom builds get a fixed quote up front.",
+    audience: "New businesses, existing brands that need a new look, and people who want to run one of the CyberAdSpace brands.",
+    contact: "Contact@CyberAdSpace.com",
+    avoid: ["Promising sales or income", "Delivery times or prices other than those listed", "Discounts, payment plans or guarantees (none are stated)", "Details about customers or orders"],
+  },
   "the-faith-vault": {
     status: "Live. A free hub for three faith tools: The Scripture Guide, The Divine Reader and Religion Relief.",
     offers: ["Scripture Guide: ask a faith question and compare nine traditions, with links to passages", "Divine Reader: sacred books in several languages, reading progress saved", "Religion Relief: create original faith-inspired songs"],

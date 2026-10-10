@@ -56,3 +56,20 @@ export async function image(prompt: string): Promise<Buffer> {
   if (!b64) throw new Error("The image model didn't return an image.");
   return Buffer.from(b64, "base64");
 }
+
+export type ChatTurn = { role: "user" | "assistant"; content: string };
+
+/** Plain-text chat reply (used by the brand chat agents). Short and fast by design. */
+export async function chatText(system: string, messages: ChatTurn[], opts: { maxTokens?: number } = {}): Promise<string> {
+  const model = TEXT_MODEL();
+  const body: Record<string, unknown> = {
+    model,
+    messages: [{ role: "system", content: system }, ...messages],
+    max_completion_tokens: opts.maxTokens ?? 1200,
+  };
+  // gpt-5 family reasoning models: keep reasoning minimal so replies stay quick and cheap.
+  if (/^gpt-5(-mini|-nano)?$/.test(model)) body.reasoning_effort = "minimal";
+  const json = await call("chat/completions", body, 45_000);
+  const text: string = json?.choices?.[0]?.message?.content ?? "";
+  return text.trim();
+}
