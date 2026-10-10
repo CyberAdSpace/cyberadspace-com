@@ -31,6 +31,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     <main id="main-content" className="site-shell section-space admin-page">
       <div className="admin-head">
         <h1 className="display admin-title">Brand orders</h1>
+        <p className="muted"><Link href="/admin/crews">Agent crews: review drafts and run agents →</Link></p>
         <form method="post" action="/api/admin/login"><input type="hidden" name="logout" value="1" /><button className="text-link" type="submit">Sign out</button></form>
       </div>
       <ul className="admin-checks">

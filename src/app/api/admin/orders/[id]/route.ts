@@ -1,4 +1,5 @@
 import { after } from "next/server";
+import { ensureCrews } from "@/lib/crews";
 import { isAdmin } from "@/lib/admin";
 import { getOrder, saveOrder, log, listOrders, slugify, STEP_KEYS, DEPENDENTS, STEP_LABELS, out, MAX_REVISIONS, type StepKey, type NamesOut } from "@/lib/orders";
 import { runPipeline, queueRedo } from "@/lib/agent";
@@ -71,6 +72,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       order.status = "delivered";
       log(order, "Delivered to customer", note);
       await saveOrder(order);
+      after(() => ensureCrews().then(() => undefined)); // the new brand gets its own agent crew
       const name = out<NamesOut>(order, "names")?.selected ?? "your brand";
       const base = siteUrl();
       const left = MAX_REVISIONS - order.revisionsUsed;

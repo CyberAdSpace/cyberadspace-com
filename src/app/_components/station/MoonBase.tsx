@@ -2,12 +2,20 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BRANDS } from "@/data/brands";
-import { AGENTS, ROOMS, WORLD, brandsFor, type AgentDef, type Room } from "./rooms";
+import { AGENTS, ROOMS, WORLD, podsFor, roomForProject, type AgentDef, type Pod, type Room } from "./rooms";
 
 type StepState = "pending" | "running" | "done" | "error";
 type Feed = { live: boolean; orders: { code: string; status: string; steps: Record<string, StepState> }[] };
 type Status = "working" | "idle" | "oncall" | "reviewing";
-type Sel = { kind: "room"; id: string } | { kind: "agent"; id: string } | null;
+type Sel = { kind: "room"; id: string } | { kind: "agent"; id: string } | { kind: "crew"; slug: string; id: string } | null;
+type CrewStatus = "working" | "idle" | "standby";
+type PublicCrew = {
+  project: { slug: string; name: string; tagline: string; url: string; source: "studio" | "client" };
+  agents: { id: string; name: string; job: string; cadence: string; status: CrewStatus; note?: string; lastRunAt?: string }[];
+  work: { agent: string; title: string; body: string; at: string }[];
+};
+const CREW_TEXT: Record<CrewStatus, string> = { working: "Working", idle: "Idle", standby: "Standby" };
+const ago = (s?: string) => { if (!s) return "never"; const m = Math.round((Date.now() - Date.parse(s)) / 60000); return m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} hr ago` : `${Math.round(m / 1440)} days ago`; };
 
 const STATUS_TEXT: Record<Status, string> = { working: "Working", idle: "Idle", oncall: "On call", reviewing: "Reviewing" };
 
@@ -93,6 +101,18 @@ export default function MoonBase() {
   const selRef = useRef<Sel>(null);
   const buildingRef = useRef(0);
   useEffect(() => { selRef.current = sel; }, [sel]);
+  const [crews, setCrews] = useState<PublicCrew[]>([]);
+  const crewsRef = useRef<PublicCrew[]>([]);
+  const clientPods: Pod[] = useMemo(() => crews.filter((c) => c.project.source === "client").map((c) => ({ slug: c.project.slug, name: c.project.name, tagline: c.project.tagline, accent: "#ffb84d", status: "Live", url: c.project.url })), [crews]);
+  const clientPodsRef = useRef<Pod[]>([]);
+  useEffect(() => { crewsRef.current = crews; clientPodsRef.current = clientPods; }, [crews, clientPods]);
+  useEffect(() => {
+    let stop = false;
+    const pull = async () => { try { const r = await fetch("/api/crews", { cache: "no-store" }); if (r.ok && !stop) setCrews((await r.json()).crews ?? []); } catch { /* keep last */ } };
+    pull();
+    const id = setInterval(pull, 15000);
+    return () => { stop = true; clearInterval(id); };
+  }, []);
 
   useEffect(() => {
     let stop = false;
@@ -118,6 +138,9 @@ export default function MoonBase() {
   const building = (feed?.orders ?? []).filter((o) => o.status === "queued" || o.status === "generating" || Object.values(o.steps).includes("running")).length;
   useEffect(() => { buildingRef.current = building; }, [building]);
   const working = AGENTS.filter((a) => a.kind === "builder" && statuses[a.id] === "working").length;
+  const crewAgents = crews.reduce((n, c) => n + c.agents.length, 0);
+  const crewWorking = crews.reduce((n, c) => n + c.agents.filter((a) => a.status === "working").length, 0);
+  const crewFor = (slug: string) => crews.find((c) => c.project.slug === slug);
   const liveBrands = BRANDS.filter((b) => b.status.startsWith("Live")).length;
 
   useEffect(() => {
@@ -186,7 +209,7 @@ export default function MoonBase() {
         ctx.fillStyle = d.color; ctx.fillText(d.name.toUpperCase(), d.x, d.y - d.r - 16);
 
         // brand pods
-        const bs = brandsFor(d);
+        const bs = podsFor(d, clientPodsRef.current);
         bs.forEach((b, i) => {
           const p = podSpot(d, i, bs.length);
           const hv = hover.current === "brand:" + b.slug;
@@ -233,6 +256,34 @@ export default function MoonBase() {
         ctx.font = "600 11px ui-monospace, Menlo, monospace"; ctx.fillStyle = st === "working" || st === "reviewing" ? "#ffb84d" : "rgba(226,230,237,.8)";
         ctx.fillText(a.name, w.x, w.y + 14);
       }
+      // project crews: small astronauts working around their brand's terminal
+      for (const cr of crewsRef.current) {
+        const room = roomForProject(cr.project.slug, cr.project.source); if (!room) continue;
+        const ps = podsFor(room, clientPodsRef.current); const pi = ps.findIndex((x) => x.slug === cr.project.slug); if (pi < 0) continue;
+        const home = podSpot(room, pi, ps.length);
+        cr.agents.forEach((ag, k) => {
+          const key = `crew:${cr.project.slug}:${ag.id}`;
+          let w = walkers[key];
+          if (!w) { const a0 = (k / 3) * Math.PI * 2; w = walkers[key] = { x: home.x + Math.cos(a0) * 30, y: home.y + 34 + Math.sin(a0) * 10, tx: home.x, ty: home.y + 30, wait: Math.random() * 2, face: 1 }; }
+          const busy = ag.status === "working";
+          if (!still) {
+            const dx = w.tx - w.x, dy = w.ty - w.y, dist = Math.hypot(dx, dy);
+            if (dist > 1) { const sp = (busy ? 40 : 14) * dt; w.x += (dx / dist) * Math.min(sp, dist); w.y += (dy / dist) * Math.min(sp, dist); if (Math.abs(dx) > 0.4) w.face = dx > 0 ? 1 : -1; }
+            else { w.wait -= dt; if (w.wait <= 0) { const aa = Math.random() * Math.PI * 2; const rr = busy ? 8 : 18 + Math.random() * 22; w.tx = home.x + Math.cos(aa) * rr * 1.4; w.ty = home.y + 30 + Math.sin(aa) * rr * 0.6; w.wait = busy ? 0.3 : 2 + Math.random() * 4; } }
+          }
+          const px = 2, bob = !still && busy ? Math.abs(Math.sin(t * 12 + k)) * 2 : 0;
+          const ox = w.x - 3.5 * px, oy = w.y - 9 * px - bob;
+          const col = busy ? "#ffb84d" : ag.status === "standby" ? "#6b7280" : room.color;
+          ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.beginPath(); ctx.ellipse(w.x, w.y + 1, 6, 2, 0, 0, Math.PI * 2); ctx.fill();
+          ASTRO.forEach((row, j) => { for (let i = 0; i < 7; i++) { const ch = row[w.face > 0 ? i : 6 - i]; if (ch === "0") continue; ctx.fillStyle = ch === "2" ? "#0b0e16" : col; ctx.fillRect(ox + i * px, oy + j * px, px, px); } });
+          if (busy && !still) { ctx.fillStyle = "#fff3c4"; for (let q = 0; q < 2; q++) { const aa = t * 9 + q * 3; ctx.fillRect(w.x + Math.cos(aa) * 9, w.y - 20 + Math.sin(aa) * 4, 2, 2); } }
+          const sl = sel?.kind === "crew" && sel.slug === cr.project.slug && sel.id === ag.id;
+          if (sl || hover.current === key) {
+            ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(w.x, w.y - 9, 13, 0, Math.PI * 2); ctx.stroke();
+            ctx.font = "600 10px ui-monospace, Menlo, monospace"; ctx.fillStyle = "#e2e6ed"; ctx.fillText(ag.name, w.x, w.y + 11);
+          }
+        });
+      }
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
@@ -248,7 +299,8 @@ export default function MoonBase() {
     const hit = (sx: number, sy: number): string | null => {
       const p = toWorld(sx, sy);
       for (const a of AGENTS) { const w = walkers[a.id]; if (Math.hypot(p.x - w.x, p.y - (w.y - 14)) < 22) return "agent:" + a.id; }
-      for (const d of ROOMS) { const bs = brandsFor(d); for (let i = 0; i < bs.length; i++) { const q = podSpot(d, i, bs.length); if (Math.abs(p.x - q.x) < 32 && Math.abs(p.y - q.y) < 30) return "brand:" + bs[i].slug; } }
+      for (const key of Object.keys(walkers)) { if (!key.startsWith("crew:")) continue; const w = walkers[key]; if (Math.hypot(p.x - w.x, p.y - (w.y - 9)) < 12) return key; }
+      for (const d of ROOMS) { const bs = podsFor(d, clientPodsRef.current); for (let i = 0; i < bs.length; i++) { const q = podSpot(d, i, bs.length); if (Math.abs(p.x - q.x) < 32 && Math.abs(p.y - q.y) < 30) return "brand:" + bs[i].slug; } }
       for (const d of ROOMS) if (Math.hypot(p.x - d.x, p.y - d.y) < d.r) return "room:" + d.id;
       return null;
     };
@@ -269,8 +321,9 @@ export default function MoonBase() {
         const h = hit(p.x, p.y);
         if (!h) setSel(null);
         else if (h.startsWith("agent:")) setSel({ kind: "agent", id: h.slice(6) });
+        else if (h.startsWith("crew:")) { const [, slug, id] = h.split(":"); setSel({ kind: "crew", slug, id }); }
         else if (h.startsWith("room:")) setSel({ kind: "room", id: h.slice(5) });
-        else { const slug = h.slice(6); const room = ROOMS.find((r) => r.brands.includes(slug)); if (room) setSel({ kind: "room", id: room.id }); }
+        else { const slug = h.slice(6); const room = slug.startsWith("client-") ? roomById("clients") : ROOMS.find((r) => r.brands.includes(slug)); if (room) setSel({ kind: "room", id: room.id }); }
       }
     };
     const wheel = (e: WheelEvent) => { e.preventDefault(); const p = local(e); zoomAt(p.x, p.y, e.deltaY < 0 ? 1.12 : 1 / 1.12); };
@@ -284,14 +337,17 @@ export default function MoonBase() {
   const zoom = (f: number) => box.current?.dispatchEvent(new CustomEvent("moonzoom", { detail: f }));
   const room = sel?.kind === "room" ? ROOMS.find((r) => r.id === sel.id) : null;
   const agent = sel?.kind === "agent" ? AGENTS.find((a) => a.id === sel.id) : null;
+  const crewSel = sel?.kind === "crew" ? crewFor(sel.slug) : undefined;
+  const crewAgent = sel?.kind === "crew" ? crewSel?.agents.find((a) => a.id === sel.id) : undefined;
 
   return (
     <div className="moon">
       <div className="moon-hud" role="status">
-        <span><b>{BRANDS.length}</b> brands on the base</span>
+        <span><b>{BRANDS.length + clientPods.length}</b> brands on the base</span>
+        <span><b>{AGENTS.length + crewAgents}</b> agents</span>
         <span><b>{liveBrands}</b> live sites</span>
         <span><b>{building}</b> builds in progress</span>
-        <span className={working ? "is-on" : ""}><b>{working}</b> of 7 builders working</span>
+        <span className={working + crewWorking ? "is-on" : ""}><b>{working + crewWorking}</b> working now</span>
       </div>
       <div ref={box} className="moon-screen">
         <canvas ref={canvas} role="img" aria-label="Map of the Cyber Ad Space moon base. Domes hold brands; agents walk between them. Use the list below the map for the same information." />
@@ -301,12 +357,14 @@ export default function MoonBase() {
           <button type="button" onClick={() => zoom(0)} aria-label="Show the whole base">⤢</button>
         </div>
         {!sel && <p className="moon-tip">Drag to explore, pinch or use + to zoom. Tap a dome or an agent.</p>}
-        {(room || agent) && (
+        {(room || agent || crewAgent) && (
           <aside className={`moon-panel${room ? " moon-terminal" : ""}`} aria-live="polite" style={room ? ({ "--t": room.color } as React.CSSProperties) : undefined}>
             <button type="button" className="moon-close" onClick={() => setSel(null)} aria-label="Close">×</button>
             {room && (() => {
-              const bs = brandsFor(room), crew = AGENTS.filter((a) => a.room === room.id);
-              const busy = crew.filter((a) => statuses[a.id] === "working" || statuses[a.id] === "reviewing").length;
+              const bs = podsFor(room, clientPods), crew = AGENTS.filter((a) => a.room === room.id);
+              const domeCrews = bs.map((b) => crewFor(b.slug)).filter((c): c is PublicCrew => Boolean(c));
+              const busy = crew.filter((a) => statuses[a.id] === "working" || statuses[a.id] === "reviewing").length + domeCrews.reduce((n, c) => n + c.agents.filter((a) => a.status === "working").length, 0);
+              const work = domeCrews.flatMap((c) => c.work.map((w) => ({ ...w, project: c.project.name }))).sort((x, y) => y.at.localeCompare(x.at)).slice(0, 8);
               const orders = (feed?.orders ?? []).filter((o) => o.status !== "delivered");
               return (
                 <>
@@ -318,7 +376,7 @@ export default function MoonBase() {
                   <div className="term-stats">
                     {bs.length > 0 && <div><b>{bs.length}</b><small>Brands</small></div>}
                     {bs.length > 0 && <div><b>{bs.filter((b) => b.status.startsWith("Live")).length}</b><small>Live sites</small></div>}
-                    <div><b>{crew.length}</b><small>Crew</small></div>
+                    <div><b>{crew.length + domeCrews.reduce((n, c) => n + c.agents.length, 0)}</b><small>Agents</small></div>
                     <div><b>{busy}</b><small>Working now</small></div>
                     {room.id === "factory" && <div><b>{orders.length}</b><small>Open orders</small></div>}
                   </div>
@@ -328,13 +386,49 @@ export default function MoonBase() {
                       <div className="term-grid">
                         {bs.map((b) => (
                           <a key={b.slug} className="term-card" href={b.url} target="_blank" rel="noopener noreferrer" style={{ "--a": b.accent } as React.CSSProperties}>
-                            <span className="term-logo">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={b.logo} alt="" loading="lazy" /></span>
+                            <span className="term-logo">{b.logo ? <>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={b.logo} alt="" loading="lazy" /></> : <span className="term-initial">{b.name.slice(0, 1)}</span>}</span>
                             <b>{b.name}</b>
                             <small>{b.tagline}</small>
                             <span className={`term-status${b.status.startsWith("Live") ? " is-live" : ""}`}>{b.status}</span>
                           </a>
                         ))}
                       </div>
+                    </section>
+                  )}
+                  {room.id === "clients" && !bs.length && <p className="term-empty">No client brands delivered yet. The first brand built through cyberadspace.com/start lands here with its own crew.</p>}
+                  {domeCrews.length > 0 && (
+                    <section>
+                      <h3 className="term-h">Brand crews</h3>
+                      <div className="term-crews">
+                        {domeCrews.map((c) => (
+                          <div key={c.project.slug} className="term-crew">
+                            <b>{c.project.name}</b>
+                            <ul>
+                              {c.agents.map((a) => (
+                                <li key={a.id}>
+                                  <button type="button" onClick={() => setSel({ kind: "crew", slug: c.project.slug, id: a.id })}>{a.name}</button>
+                                  <span className={`moon-pill s-${a.status}`}>{CREW_TEXT[a.status]}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+                  {domeCrews.length > 0 && (
+                    <section>
+                      <h3 className="term-h">Latest work</h3>
+                      {work.length ? (
+                        <ul className="term-work">
+                          {work.map((w, i) => (
+                            <li key={i}>
+                              <small>{w.project} · {w.agent} · {ago(w.at)}</small>
+                              <details><summary>{w.title}</summary><p>{w.body}</p></details>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : <p className="term-empty">No approved work yet. Drafts appear here after a person approves them.</p>}
                     </section>
                   )}
                   {room.id === "factory" && (
@@ -358,18 +452,31 @@ export default function MoonBase() {
                     </section>
                   )}
                   <section>
-                    <h3 className="term-h">Crew</h3>
+                    <h3 className="term-h">Station crew</h3>
                     <ul className="moon-list">
                       {crew.map((a) => (
                         <li key={a.id}><span className="moon-dot" style={{ background: a.color }} /><span className="moon-li-main"><b>{a.name}</b><small>{a.role}</small></span><span className={`moon-pill s-${statuses[a.id]}`}>{STATUS_TEXT[statuses[a.id]]}</span></li>
                       ))}
-                      {!crew.length && <li><span /><span className="moon-li-main"><small>No agents stationed here. These brands run as live websites.</small></span><span /></li>}
+                      {!crew.length && <li><span /><span className="moon-li-main"><small>No station agents here. Each brand above has its own crew.</small></span><span /></li>}
                     </ul>
                   </section>
                   {room.id === "factory" && <a className="moon-cta" href="#factory-floor" onClick={() => setSel(null)}>Watch the factory floor ↓</a>}
                 </>
               );
             })()}
+            {crewAgent && crewSel && (
+              <>
+                <div className="moon-kicker">Agent · {crewSel.project.name}</div>
+                <h2>{crewAgent.name}</h2>
+                <p>{crewAgent.job}.</p>
+                <p><span className={`moon-pill s-${crewAgent.status}`}>{CREW_TEXT[crewAgent.status]}</span></p>
+                <p className="moon-note">{crewAgent.cadence}. Last run: {ago(crewAgent.lastRunAt)}.{crewAgent.note ? ` ${crewAgent.note}.` : ""}</p>
+                {crewSel.work.filter((w) => w.agent === crewAgent.name).slice(0, 2).map((w, i) => (
+                  <div key={i} className="term-work-one"><small>{ago(w.at)}</small><b>{w.title}</b><p>{w.body}</p></div>
+                ))}
+                <a className="moon-cta" href={crewSel.project.url} target="_blank" rel="noopener noreferrer">Visit {crewSel.project.name} ↗</a>
+              </>
+            )}
             {agent && (
               <>
                 <div className="moon-kicker" style={{ color: agent.color }}>{agent.kind === "person" ? "Person" : "Agent"} · {roomById(agent.room).name}</div>
@@ -386,7 +493,7 @@ export default function MoonBase() {
       <details className="moon-text">
         <summary>Base directory (text version)</summary>
         {ROOMS.map((r) => (
-          <p key={r.id}><b>{r.name}:</b> {[...brandsFor(r).map((b) => `${b.name} (${b.status})`), ...AGENTS.filter((a) => a.room === r.id).map((a) => `${a.name}, ${a.role.toLowerCase()} (${STATUS_TEXT[statuses[a.id]].toLowerCase()})`)].join("; ") || r.blurb}</p>
+          <p key={r.id}><b>{r.name}:</b> {[...podsFor(r, clientPods).map((b) => `${b.name} (${b.status}; crew: ${crewFor(b.slug)?.agents.map((a) => `${a.name} ${CREW_TEXT[a.status].toLowerCase()}`).join(", ") ?? "not set up yet"})`), ...AGENTS.filter((a) => a.room === r.id).map((a) => `${a.name}, ${a.role.toLowerCase()} (${STATUS_TEXT[statuses[a.id]].toLowerCase()})`)].join("; ") || r.blurb}</p>
         ))}
       </details>
     </div>

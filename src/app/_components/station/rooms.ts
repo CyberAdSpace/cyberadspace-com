@@ -32,6 +32,7 @@ export const ROOMS: Room[] = [
   { id: "market", name: "Market Dock", blurb: "Marketplaces where vendors, farms and customers meet.", x: 1350, y: 700, r: 160, color: "#5fd39a", brands: ["the-vendor-space", "palm-polish"] },
   { id: "greenhouse", name: "Hemp Greenhouse", blurb: "Hemp foods, coffee and wellness brands.", x: 560, y: 940, r: 140, color: "#8bd450", brands: ["canamo-cafe", "the-hemp-cookies", "the-green-oven"] },
   { id: "home", name: "Home Bay", blurb: "Homes, property and the people who care for them.", x: 1060, y: 950, r: 130, color: "#e88c1a", brands: ["solar-splashing"] },
+  { id: "clients", name: "Client Colony", blurb: "Brands Cyber Ad Space built for customers. Every one gets its own agent crew the day it's delivered.", x: 1460, y: 985, r: 105, color: "#e2e6ed", brands: [] },
 ];
 
 export const AGENTS: AgentDef[] = [
@@ -50,4 +51,16 @@ export const AGENTS: AgentDef[] = [
 
 export function brandsFor(room: Room): Brand[] {
   return room.brands.map((s) => BRANDS.find((b) => b.slug === s)).filter((b): b is Brand => Boolean(b));
+}
+
+export type Pod = { slug: string; name: string; tagline: string; accent: string; status: string; url: string; logo?: string };
+
+/** What sits in a dome: studio brands from the brand list, or delivered client brands for the Client Colony. */
+export function podsFor(room: Room, clients: Pod[] = []): Pod[] {
+  if (room.id === "clients") return clients;
+  return brandsFor(room).map((b) => ({ slug: b.slug, name: b.name, tagline: b.tagline, accent: b.accent, status: b.status, url: b.url, logo: b.logo }));
+}
+
+export function roomForProject(slug: string, source: "studio" | "client"): Room | undefined {
+  return source === "client" ? ROOMS.find((r) => r.id === "clients") : ROOMS.find((r) => r.brands.includes(slug));
 }

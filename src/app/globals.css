@@ -1014,3 +1014,28 @@ body { overflow-x: hidden; }
   .term-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .term-builds li { grid-template-columns: 1fr; gap: 4px; }
 }
+
+/* Admin: agent crews */
+.crew-draft { border-top: 1px solid rgba(255,255,255,.1); padding-block: 16px; display: grid; gap: 8px; }
+.crew-draft h3 { margin: 0; font-size: 18px; }
+.crew-draft pre { white-space: pre-wrap; font: 14px/1.6 system-ui, sans-serif; color: #e2e6ed; background: rgba(255,255,255,.04); padding: 12px; margin: 0; }
+.crew-table-wrap { overflow-x: auto; }
+.crew-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.crew-table th, .crew-table td { text-align: left; vertical-align: top; padding: 10px 8px; border-top: 1px solid rgba(255,255,255,.08); }
+.crew-table small { color: #9aa3b8; }
+.crew-table .btn { padding: 6px 10px; font-size: 12px; min-height: 0; }
+.moon-pill.s-standby { color: #6b7280; border-style: dashed; }
+.term-initial { font: 700 40px ui-monospace, Menlo, monospace; color: var(--a); }
+.term-crews { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.term-crew { border: 1px solid rgba(255,255,255,.1); padding: 10px 12px; display: grid; gap: 6px; font-family: system-ui, sans-serif; }
+.term-crew ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.term-crew li { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.term-crew button { background: none; border: 0; padding: 0; color: #e2e6ed; font: 13px system-ui, sans-serif; cursor: pointer; text-align: left; }
+.term-crew button:hover, .term-crew button:focus-visible { color: var(--t, #5fd39a); text-decoration: underline; outline: none; }
+.term-work { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-family: system-ui, sans-serif; }
+.term-work li { border-top: 1px solid rgba(255,255,255,.08); padding-top: 8px; display: grid; gap: 2px; }
+.term-work small { color: #9aa3b8; font-size: 12px; }
+.term-work summary { cursor: pointer; color: #e2e6ed; font-size: 14px; }
+.term-work p, .term-work-one p { white-space: pre-wrap; font-size: 13px !important; color: #ccd2df; margin: 6px 0 0; }
+.term-work-one { display: grid; gap: 2px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 8px; }
+.term-work-one small { color: #9aa3b8; }
