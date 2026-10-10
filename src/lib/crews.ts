@@ -167,8 +167,8 @@ async function runSiteCheck(p: Project): Promise<Output> {
 }
 
 async function runContent(p: Project, a: CrewAgent): Promise<Output> {
-  const r = await chatJSON<{ title?: string; body?: string }>(`You are the ${a.name} agent for a small brand built by Cyber Ad Space. Your job: ${a.job}.\n${RULES}`, `${brief(p)}\n\n${PROMPTS[a.kind as Exclude<AgentKind, "sitecheck">]}`);
-  return { id: crypto.randomBytes(6).toString("hex"), agentId: a.id, at: new Date().toISOString(), title: String(r.title || `${a.name} draft`).slice(0, 140), body: String(r.body || "").slice(0, 4000), status: "draft" };
+  const r = await chatJSON<{ title?: string; body?: string }>(`You are the ${a.name} agent for a small brand built by Cyber Ad Space. Your job: ${a.job}.\n${RULES}`, `${brief(p)}\n\n${PROMPTS[a.kind as Exclude<AgentKind, "sitecheck">]}\n\nThe "title" must be a short label of 8 words or fewer. Put all the writing in "body".`);
+  return { id: crypto.randomBytes(6).toString("hex"), agentId: a.id, at: new Date().toISOString(), title: String(r.title || `${a.name} draft`).split(/\s+/).slice(0, 12).join(" ").slice(0, 90), body: String(r.body || "").slice(0, 4000), status: "draft" };
 }
 
 function trimOutputs(c: Crew) {
