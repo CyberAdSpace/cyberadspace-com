@@ -8,7 +8,7 @@ import { put, get } from "@vercel/blob";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { aiConfigured } from "./ai";
-import { allCrews, runAgent, CAS_SLUG, type Crew, type CrewAgent } from "./crews";
+import { allCrews, ensureCrews, runAgent, CAS_SLUG, type Crew, type CrewAgent } from "./crews";
 
 const FILE = "engine/state.json";
 const LOCAL = () => process.env.LOCAL_STORE_DIR;
@@ -16,7 +16,7 @@ const SPACING_MS = 4 * 60_000;
 const DAILY_AI_JOBS = () => Number(process.env.ENGINE_DAILY_JOBS || 150);
 const CONTINUOUS: Record<string, number> = { counsel: 30 * 60_000, chief: 3 * 3600_000 }; // agent id on the CAS crew -> how often it works
 
-export type EngineState = { lastTickAt?: string; day: string; aiJobs: number; lastJob?: { at: string; project: string; agent: string; title?: string }; ticks: number };
+export type EngineState = { lastTickAt?: string; lastEnsureAt?: string; day: string; aiJobs: number; lastJob?: { at: string; project: string; agent: string; title?: string }; ticks: number };
 
 async function readState(): Promise<EngineState> {
   const blank = { day: "", aiJobs: 0, ticks: 0 };
@@ -64,7 +64,10 @@ export async function tick(source: string): Promise<{ ran?: string; skipped?: st
   if (st.lastTickAt && now - Date.parse(st.lastTickAt) < SPACING_MS) return { skipped: "spacing" };
   if (st.day !== today()) { st.day = today(); st.aiJobs = 0; }
   st.lastTickAt = new Date(now).toISOString(); st.ticks = (st.ticks ?? 0) + 1;
+  const ensure = !st.lastEnsureAt || now - Date.parse(st.lastEnsureAt) > 3600_000;
+  if (ensure) st.lastEnsureAt = st.lastTickAt;
   await saveState(st); // claim this tick before doing any work
+  if (ensure) await ensureCrews().catch(() => undefined); // new projects and newly designed agents join within the hour
 
   const crews = await allCrews();
   // free work: hourly site checks
@@ -78,6 +81,7 @@ export async function tick(source: string): Promise<{ ran?: string; skipped?: st
       const o = await runAgent(job.c.project.slug, job.a.id).catch(() => null);
       ran = `${job.c.project.name} · ${job.a.name}`;
       const s2 = await readState();
+      s2.lastEnsureAt = s2.lastEnsureAt ?? st.lastEnsureAt;
       s2.aiJobs = (s2.day === today() ? s2.aiJobs : 0) + 1; s2.day = today();
       s2.lastJob = { at: new Date().toISOString(), project: job.c.project.name, agent: job.a.name, title: o?.title };
       await saveState(s2);
