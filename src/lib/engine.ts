@@ -3,20 +3,24 @@
 //  - re-checks any site not checked in the last hour (free, no AI)
 //  - runs ONE AI job: the most overdue scheduled agent, else continuous work
 //    (AI Counsel studies every 30 min, Mini Me reviews and tests every hour).
-// A global spacing (4 min) and a daily job budget keep costs bounded.
+// One job at a time (a lock), a short debounce, and a daily job budget keep costs bounded.
+// When a job finishes and more work is waiting, the engine starts the next tick itself (chaining),
+// so it never depends on visitors. Hourly Vercel crons restart the chain when it goes idle.
 import { put, get } from "@vercel/blob";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { aiConfigured } from "./ai";
 import { allCrews, ensureCrews, runAgent, CAS_SLUG, type Crew, type CrewAgent } from "./crews";
+import { siteUrl } from "./mail";
 
 const FILE = "engine/state.json";
 const LOCAL = () => process.env.LOCAL_STORE_DIR;
-const SPACING_MS = 4 * 60_000;
+const DEBOUNCE_MS = 45_000; // visitors poll every few seconds; ignore ticks closer than this
+const LOCK_MS = 6 * 60_000; // a job holds the engine at most this long
 const DAILY_AI_JOBS = () => Number(process.env.ENGINE_DAILY_JOBS || 150);
 const CONTINUOUS: Record<string, number> = { counsel: 30 * 60_000, chief: 60 * 60_000 }; // agent id on the CAS crew -> how often it works
 
-export type EngineState = { lastTickAt?: string; lastEnsureAt?: string; day: string; aiJobs: number; lastJob?: { at: string; project: string; agent: string; title?: string }; ticks: number };
+export type EngineState = { lastTickAt?: string; runningUntil?: string; lastEnsureAt?: string; day: string; aiJobs: number; lastJob?: { at: string; project: string; agent: string; title?: string }; ticks: number };
 
 async function readState(): Promise<EngineState> {
   const blank = { day: "", aiJobs: 0, ticks: 0 };
@@ -57,15 +61,17 @@ function pickJob(crews: Crew[], now: number): { c: Crew; a: CrewAgent } | null {
   return null;
 }
 
-/** One engine tick. Safe to call often: it does nothing if another tick ran in the last 4 minutes. */
+/** One engine tick. Safe to call often: it does nothing while a job is running or within 45 seconds of the last tick. */
 export async function tick(source: string): Promise<{ ran?: string; skipped?: string }> {
   const now = Date.now();
   const st = await readState();
-  if (st.lastTickAt && now - Date.parse(st.lastTickAt) < SPACING_MS) return { skipped: "spacing" };
+  if (st.runningUntil && Date.parse(st.runningUntil) > now) return { skipped: "busy" };
+  if (source !== "chain" && st.lastTickAt && now - Date.parse(st.lastTickAt) < DEBOUNCE_MS) return { skipped: "debounce" };
   if (st.day !== today()) { st.day = today(); st.aiJobs = 0; }
   st.lastTickAt = new Date(now).toISOString(); st.ticks = (st.ticks ?? 0) + 1;
   const ensure = !st.lastEnsureAt || now - Date.parse(st.lastEnsureAt) > 3600_000;
   if (ensure) st.lastEnsureAt = st.lastTickAt;
+  st.runningUntil = new Date(now + LOCK_MS).toISOString();
   await saveState(st); // claim this tick before doing any work
   if (ensure) await ensureCrews().catch(() => undefined); // new projects and newly designed agents join within the hour
 
@@ -75,6 +81,7 @@ export async function tick(source: string): Promise<{ ran?: string; skipped?: st
   const checks = Promise.allSettled(stale);
 
   let ran: string | undefined;
+  let more = false;
   if (aiConfigured() && st.aiJobs < DAILY_AI_JOBS()) {
     const job = pickJob(crews, now);
     if (job) {
@@ -84,10 +91,14 @@ export async function tick(source: string): Promise<{ ran?: string; skipped?: st
       s2.lastEnsureAt = s2.lastEnsureAt ?? st.lastEnsureAt;
       s2.aiJobs = (s2.day === today() ? s2.aiJobs : 0) + 1; s2.day = today();
       s2.lastJob = { at: new Date().toISOString(), project: job.c.project.name, agent: job.a.name, title: o?.title };
+      s2.runningUntil = undefined;
       await saveState(s2);
+      more = s2.aiJobs < DAILY_AI_JOBS() && pickJob(await allCrews(), Date.now()) !== null;
     }
   }
   await checks;
-  void source;
+  if (!ran) { const s3 = await readState(); s3.runningUntil = undefined; await saveState(s3); }
+  // chain: start the next job now instead of waiting for a visitor or the next scheduled ping
+  if (more) await fetch(`${siteUrl()}/api/tick?chain=1`, { signal: AbortSignal.timeout(8000), headers: { "User-Agent": "CAS engine chain" } }).catch(() => undefined);
   return ran ? { ran } : { skipped: stale.length ? undefined : "nothing due" };
 }
