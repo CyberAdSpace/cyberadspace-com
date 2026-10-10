@@ -279,3 +279,12 @@ export function toPublic(c: Crew): PublicCrew {
       .map((o) => ({ agent: c.agents.find((a) => a.id === o.agentId)?.name ?? "Agent", title: o.title, body: o.body.slice(0, 600), at: o.at })),
   };
 }
+
+/** Drafts waiting for a person, for the review tools. */
+export async function pendingDrafts() {
+  const crews = await allCrews();
+  return crews.flatMap((c) => c.outputs.filter((o) => o.status === "draft").map((o) => ({
+    slug: c.project.slug, project: c.project.name, category: c.project.category, url: c.project.url,
+    agent: c.agents.find((a) => a.id === o.agentId)?.name ?? o.agentId, id: o.id, at: o.at, title: o.title, body: o.body,
+  })));
+}
