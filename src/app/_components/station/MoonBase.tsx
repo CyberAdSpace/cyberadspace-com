@@ -460,7 +460,6 @@ export default function MoonBase() {
                       {!crew.length && <li><span /><span className="moon-li-main"><small>No station agents here. Each brand above has its own crew.</small></span><span /></li>}
                     </ul>
                   </section>
-                  {room.id === "factory" && <a className="moon-cta" href="#factory-floor" onClick={() => setSel(null)}>Watch the factory floor ↓</a>}
                 </>
               );
             })()}
@@ -484,7 +483,6 @@ export default function MoonBase() {
                 <p>{agent.role}.</p>
                 <p><span className={`moon-pill s-${statuses[agent.id]}`}>{STATUS_TEXT[statuses[agent.id]]}</span></p>
                 <p className="moon-note">{agent.note}</p>
-                {agent.kind === "builder" && <a className="moon-cta" href="#factory-floor">See its work on the factory floor ↓</a>}
               </>
             )}
           </aside>
