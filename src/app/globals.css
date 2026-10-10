@@ -1025,3 +1025,25 @@ body { overflow-x: hidden; }
 .term-work p, .term-work-one p { white-space: pre-wrap; font-size: 13px !important; color: #ccd2df; margin: 6px 0 0; }
 .term-work-one { display: grid; gap: 2px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 8px; }
 .term-work-one small { color: #9aa3b8; }
+
+/* Admin: security audit */
+.audit-site h2 small { font-size: 14px; font-weight: 400; }
+.audit-site.g-problem { border-left: 3px solid #ff5a4f; }
+.audit-site.g-attention { border-left: 3px solid #ffb84d; }
+.audit-site.g-clear { border-left: 3px solid #5fd39a; }
+.audit-checks { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; font-size: 13px; }
+.audit-checks li { display: grid; gap: 2px; }
+.audit-checks .s-pass b { color: #5fd39a; } .audit-checks .s-info b { color: #9aa3b8; } .audit-checks .s-warn b { color: #ffb84d; } .audit-checks .s-fail b { color: #ff5a4f; }
+.audit-checks span { color: #ccd2df; }
+
+/* Journal */
+.journal-page { padding-top: 140px; max-width: 760px; }
+.journal-list { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 4px; }
+.journal-list a { display: grid; gap: 4px; padding: 16px 0; border-top: 1px solid rgba(255,255,255,.1); color: inherit; text-decoration: none; }
+.journal-list a:hover b { color: #ffb84d; }
+.journal-list small { color: #9aa3b8; font-size: 12px; }
+.journal-list b { font-size: 19px; }
+.journal-list span { color: #aeb5c6; font-size: 14px; }
+.journal-post h2 { font-size: 22px; margin: 28px 0 8px; }
+.journal-post p { font-size: 17px; line-height: 1.75; color: #dfe3ea; margin: 0 0 14px; max-width: 65ch; }
+.crew-draft-pre { white-space: pre-wrap; font: 14px/1.6 system-ui, sans-serif; color: #e2e6ed; margin: 0; }

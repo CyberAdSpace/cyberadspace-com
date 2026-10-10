@@ -100,17 +100,17 @@ export const FACTS: Record<string, FactSheet> = {
   },
   "founding-times": {
     status: "Live and free.",
-    offers: ["Ask the Founders: answers from 1776–1791 sources, with citations", "Library of public-domain founding documents", "Question bank and guided tours of Convention debates", "A declaration people can sign"],
+    offers: ["Ask the Founders: answers from 1776–1791 founding-era sources, with citations", "Reading Room of public-domain founding documents", "The Bank: a searchable archive of past questions and answers", "The Convention Room: guided tours of the Convention debates, open to everyone"],
     pricing: "Free.",
     audience: "Curious citizens.",
-    avoid: ["Telling readers which laws are unlawful or giving legal conclusions", "Partisan framing", "Saying signing has legal force"],
+    avoid: ["Telling readers which laws are unlawful or giving legal conclusions", "Partisan framing", "Signing, declarations, signatories or on-chain records (removed from the site)"],
   },
   "national-cannabis-union": {
     status: "Live. A policy site about the federal hemp redefinition.",
-    offers: ["Explains the federal law that changes the legal definition of hemp", "Invites people to read the law and sign a free Declaration"],
+    offers: ["Explains the federal law that changes the legal definition of hemp (Section 781)", "Effective dates, per H.R. 6500 / P.L. 119-103: the exclusion of synthesized cannabinoids takes effect November 12, 2026; the rest of the redefinition takes effect December 11, 2026", "Invites people to read the law and sign a free Declaration"],
     pricing: "Free.",
     audience: "The public and hemp and cannabis stakeholders.",
-    avoid: ["Ballot measures (not what NCU does)", "Stating effective dates (being corrected on the site)", "Legal advice", "Selling or promoting products"],
+    avoid: ["Ballot measures (not what NCU does)", "Any effective date other than the two above", "Legal advice", "Selling or promoting products"],
   },
   "the-vendor-space": {
     status: "Live booking site.",

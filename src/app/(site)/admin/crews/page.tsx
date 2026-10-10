@@ -19,7 +19,7 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
 
   return (
     <main id="main-content" className="site-shell section-space admin-page">
-      <div className="eyebrow"><Link href="/admin">Brand orders</Link> · Agent crews</div>
+      <div className="eyebrow"><Link href="/admin">Brand orders</Link> · Agent crews · <Link href="/admin/audit">Security audit</Link> · <Link href="/journal">Journal</Link></div>
       <h1 className="display admin-title">Agent crews</h1>
       <p className="start-lede">Every project gets its own crew, designed by the system from the project&apos;s details. Site Watch checks each site daily. Writing agents draft weekly, and nothing they write shows on the moon base until you approve it here.</p>
       {msg && <p className="ok-note">{msg}</p>}
@@ -52,6 +52,17 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
           </article>
         ))}
       </section>
+
+      {(() => {
+        const books = crews.find((c) => c.project.slug === "cyberadspace")?.outputs.find((o) => o.agentId === "books");
+        return books ? (
+          <section className="admin-card">
+            <h2>Books ({when(books.at)})</h2>
+            <pre className="crew-draft-pre">{books.body}</pre>
+            <p className="muted">Private. Only you see this; it's also emailed each morning.</p>
+          </section>
+        ) : null;
+      })()}
 
       <section className="admin-card">
         <h2>Crews</h2>

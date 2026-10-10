@@ -1,5 +1,5 @@
 import { after } from "next/server";
-import { allCrews, ensureCrews, runDue, storageReady, toPublic } from "@/lib/crews";
+import { allCrews, chatActivity, ensureCrews, runDue, storageReady, toPublic } from "@/lib/crews";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -16,7 +16,8 @@ export async function GET() {
       crews = await allCrews();
       after(() => runDue(0, true).then(() => undefined));
     }
-    return Response.json({ crews: crews.map(toPublic) }, { headers: { "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30" } });
+    const activity = await chatActivity();
+    return Response.json({ crews: crews.map((c) => toPublic(c, activity)) }, { headers: { "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30" } });
   } catch {
     return Response.json({ crews: [] });
   }

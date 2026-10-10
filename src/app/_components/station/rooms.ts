@@ -55,9 +55,11 @@ export type Pod = { slug: string; name: string; tagline: string; accent: string;
 /** What sits in a dome: studio brands from the brand list, or delivered client brands for the Client Colony. */
 export function podsFor(room: Room, clients: Pod[] = []): Pod[] {
   if (room.id === "clients") return clients;
+  if (room.id === "deck") return [{ slug: "cyberadspace", name: "Cyber Ad Space", tagline: "We build brands & websites, and the agents that run them.", accent: "#ffb84d", status: "Live", url: "https://cyberadspace.com", logo: "/assets/logos/logo-cyberadspace.png" }];
   return brandsFor(room).map((b) => ({ slug: b.slug, name: b.name, tagline: b.tagline, accent: b.accent, status: b.status, url: b.url, logo: b.logo }));
 }
 
 export function roomForProject(slug: string, source: "studio" | "client"): Room | undefined {
+  if (slug === "cyberadspace") return ROOMS.find((r) => r.id === "deck");
   return source === "client" ? ROOMS.find((r) => r.id === "clients") : ROOMS.find((r) => r.brands.includes(slug));
 }
