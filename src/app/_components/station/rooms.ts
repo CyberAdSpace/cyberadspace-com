@@ -44,9 +44,6 @@ export const AGENTS: AgentDef[] = [
   { id: "store", name: "Store", role: "Sets up the marketplace storefront", room: "factory", color: "#b39cf0", kind: "builder", step: "storefront", note: "Works when a paid order reaches the storefront step." },
   { id: "launch", name: "Launch", role: "Writes the launch kit and social posts", room: "factory", color: "#8bd450", kind: "builder", step: "launch", note: "Works when a paid order reaches the launch step." },
   { id: "review", name: "Reviewer", role: "A person on the Cyber Ad Space team", room: "deck", color: "#e2e6ed", kind: "person", note: "Checks every brand before delivery: name search, logo, claims, phone layout, prices." },
-  { id: "guide", name: "Guide", role: "Answers questions on The Scripture Guide", room: "faith", color: "#f0c674", kind: "oncall", note: "On call. Answers when a visitor asks on the site." },
-  { id: "founder", name: "Founder", role: "Answers questions on FoundingTimes", room: "civic", color: "#7fbfff", kind: "oncall", note: "On call. Answers when a visitor asks on the site." },
-  { id: "taxlookup", name: "Lookup", role: "Matches tax questions to reviewed entries on Why Is This Taxed?", room: "civic", color: "#5fc49a", kind: "oncall", note: "On call. Answers only from reviewed entries." },
 ];
 
 export function brandsFor(room: Room): Brand[] {
