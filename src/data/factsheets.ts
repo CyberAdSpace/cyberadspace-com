@@ -73,7 +73,7 @@ export const FACTS: Record<string, FactSheet> = {
     pricing: "Creating and previewing is free. Full song $8.88. Optional streaming release $5.55.",
     audience: "Parents and grandparents of toddlers and preschoolers. Posts speak to adults, never directly to children.",
     contact: "Music@antriasacademy.com",
-    avoid: ["Collecting or asking for children's personal details", "Talking directly to kids or urging kids to sign up"],
+    avoid: ["An AI agent asking for a child's name or personal details (parents add names to their own songs on the site)", "Talking directly to kids or urging kids to sign up"],
   },
   "elevated-remedies": {
     status: "Live. Record label, artist collective and AI music studio.",
@@ -81,7 +81,7 @@ export const FACTS: Record<string, FactSheet> = {
     pricing: "Previews free. Unlock a song $8.88. Optional publishing $5.55. No subscription.",
     audience: "Anyone with a song to make: hip-hop, R&B, soul, gospel, electronic, Latin, lo-fi.",
     contact: "Music@elevatedremedies.world",
-    avoid: ["Medical meanings of 'remedy'", "Mentioning specific releases or artists (none are listed yet)"],
+    avoid: ["Medical meanings of 'remedy'", "Inventing releases, artists or chart results"],
   },
   kamslam: {
     status: "Live.",
@@ -149,7 +149,7 @@ export const FACTS: Record<string, FactSheet> = {
     offers: ["Planned hemp-seed crust pizzas and thick shakes"],
     pricing: "None.",
     audience: "Prospective operators. Posts must say it's a concept.",
-    contact: "Contact@CyberAdSpace.com",
+    contact: "Contact@TheGreenOven.co",
     avoid: [...HEMP_RULES, "Inviting anyone to eat, order or visit"],
   },
   "solar-splashing": {

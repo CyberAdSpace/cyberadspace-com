@@ -71,7 +71,11 @@ function certDaysLeft(host: string): Promise<{ days: number; issuer: string } | 
 function attrValues(html: string, tag: string, attr: string): string[] {
   const out: string[] = [];
   const re = new RegExp(`<${tag}\\b[^>]*?\\s${attr}\\s*=\\s*["']([^"']+)["']`, "gi");
-  for (let m = re.exec(html); m; m = re.exec(html)) out.push(m[1]);
+  for (let m = re.exec(html); m; m = re.exec(html)) {
+    const v = m[1].replace(/&amp;/g, "&").trim();
+    if (v.includes("${") || v.includes("{{")) continue; // template code, not a real URL
+    out.push(v);
+  }
   return out;
 }
 
@@ -127,17 +131,20 @@ export async function auditSite(t: AuditTarget): Promise<SiteAudit> {
   add("frame", "Clickjacking protection", h.get("x-frame-options") || /frame-ancestors/.test(csp) ? "pass" : "info", h.get("x-frame-options") || /frame-ancestors/.test(csp) ? "Set." : "Other sites could show this site inside a frame.");
   add("csp", "Content Security Policy", csp ? "pass" : "info", csp ? "Set." : "No Content Security Policy.");
 
+  // markup without inline scripts, so code inside <script> isn't mistaken for page links
+  const markup = home.text.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (m) => (m.match(/^<script\b[^>]*>/i)?.[0] ?? "") + "</script>");
+
   // mixed content
-  const insecure = [...attrValues(home.text, "script", "src"), ...attrValues(home.text, "img", "src"), ...attrValues(home.text, "link", "href"), ...attrValues(home.text, "iframe", "src")].filter((u) => u.startsWith("http://"));
+  const insecure = [...attrValues(markup, "script", "src"), ...attrValues(markup, "img", "src"), ...attrValues(markup, "link", "href"), ...attrValues(markup, "iframe", "src")].filter((u) => u.startsWith("http://"));
   add("mixed", "No insecure (http://) resources", insecure.length ? "warn" : "pass", insecure.length ? `${insecure.length} resource${insecure.length === 1 ? "" : "s"} load over plain HTTP, e.g. ${insecure[0].slice(0, 80)}.` : "All resources load over HTTPS.");
 
   // links and assets
   const resolve = (u: string) => { try { return new URL(u, base); } catch { return null; } };
-  const hrefs = attrValues(home.text, "a", "href").filter((u) => !/^(mailto:|tel:|sms:|javascript:|#)/i.test(u));
+  const hrefs = attrValues(markup, "a", "href").filter((u) => !/^(mailto:|tel:|sms:|javascript:|#)/i.test(u));
   const internal = new Set<string>(), external = new Set<string>();
   for (const u of hrefs) { const x = resolve(u); if (!x || !/^https?:$/.test(x.protocol)) continue; x.hash = ""; (x.host === base.host ? internal : external).add(x.toString()); }
   const assets = new Set<string>();
-  for (const u of [...attrValues(home.text, "script", "src"), ...attrValues(home.text, "img", "src"), ...attrValues(home.text, "link", "href")]) { const x = resolve(u); if (x && x.host === base.host) assets.add(x.toString()); }
+  for (const u of [...attrValues(markup, "script", "src"), ...attrValues(markup, "img", "src"), ...attrValues(markup, "link", "href")]) { const x = resolve(u); if (x && x.host === base.host) assets.add(x.toString()); }
 
   const internalList = [...internal].filter((u) => u !== base.toString()).slice(0, 20);
   const assetList = [...assets].slice(0, 25);
@@ -156,7 +163,7 @@ export async function auditSite(t: AuditTarget): Promise<SiteAudit> {
   add("external", "Outbound links work", brokenExt.length ? "warn" : "pass", brokenExt.length ? `${brokenExt.length} may be broken: ${brokenExt.slice(0, 3).map(({ u, r }) => `${new URL(u).host} (${r.status || "no answer"})`).join(", ")}.` : `${extRes.length} checked.`);
 
   // forms
-  const actions = attrValues(home.text, "form", "action");
+  const actions = attrValues(markup, "form", "action");
   const formRes = await Promise.all(actions.slice(0, 5).map(async (a) => { const x = resolve(a); if (!x) return null; const r = await fetchText(x.toString(), { maxBytes: 20_000 }); return { a: x.toString(), r }; }));
   const badForms = formRes.filter((f): f is { a: string; r: Fetched } => !!f && (f.r.status === 404 || f.r.status === 0));
   if (actions.length) add("forms", "Forms point somewhere real", badForms.length ? "fail" : "pass", badForms.length ? `Form posts to ${badForms[0].a} which ${badForms[0].r.status === 404 ? "doesn't exist (404)" : "didn't answer"}.` : `${actions.length} form${actions.length === 1 ? "" : "s"} checked.`);
@@ -183,7 +190,7 @@ export async function auditSite(t: AuditTarget): Promise<SiteAudit> {
   if (facts && aiConfigured()) {
     try {
       const r = await chatJSON<{ issues?: { severity?: string; problem?: string; quote?: string }[] }>(
-        "You audit a brand's live home page against its official fact sheet. Report ONLY real problems: statements on the page that contradict the fact sheet, anything the fact sheet's 'Never say or imply' list forbids, health or medical claims, invented statistics or reviews, and dates that contradict the fact sheet. Don't report style issues or missing information. Return {\"issues\": [{\"severity\": \"fail\" | \"warn\", \"problem\": short plain sentence, \"quote\": exact short quote from the page}]}. Return an empty list if the page is consistent.",
+        "You audit a brand's live home page against its fact sheet. Fact sheets are short summaries: the page may include true details the fact sheet doesn't mention, and the fact sheet's 'Never say or imply' list is a rule for AI writers, not for the site, so don't flag either. Flag ONLY these, and only when the quote clearly shows it: (1) health, medical, healing-as-treatment, wellness, sleep, relaxation or mood claims about a product (severity fail for hemp or cannabinoid products, otherwise warn); (2) statements that contradict the brand's status, such as offering quotes, sales, bookings or service when the fact sheet says it's a concept or coming soon (fail); (3) dates, prices or contact details that contradict the fact sheet (warn); (4) testimonials, reviews or statistics that look invented (warn). Marketing tone, taglines and extra true detail are fine. Return {\"issues\": [{\"severity\": \"fail\" | \"warn\", \"problem\": short plain sentence, \"quote\": exact short quote from the page}]}. Return an empty list if nothing qualifies.",
         `FACT SHEET for ${t.name}:\n${facts}\n\nHOME PAGE TEXT:\n${visibleText(home.text).slice(0, 7000)}`,
       );
       const issues = (r.issues ?? []).filter((i) => i.problem).slice(0, 5);
