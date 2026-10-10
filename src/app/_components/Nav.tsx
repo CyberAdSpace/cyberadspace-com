@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Wordmark from "./Wordmark";
 
-const LINKS = [["Services", "/#services"], ["Brands We've Created", "/#brands"], ["Pricing", "/#pricing"], ["How it works", "/#process"], ["Agents at work", "/live"]];
+const LINKS = [["Services", "/#services"], ["Brands We've Created", "/#brands"], ["Pricing", "/#pricing"], ["How it works", "/#process"], ["Planet CAS", "/planet"]];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);

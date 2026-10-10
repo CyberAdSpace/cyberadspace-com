@@ -12,6 +12,7 @@ export default function LivePage() {
       <div className="eyebrow">Agents at work</div>
       <h1 className="display admin-title">The Cyber Ad Space moon base</h1>
       <p className="start-lede">Every brand we&apos;ve built lives in a dome on the base. The Brand Factory in the center is where seven agents build new brands for customers, and their status comes from real orders. Tap a dome to see its brands, or tap an agent to see what it&apos;s doing.</p>
+      <p className="hero-actions"><Link href="/planet" className="btn">Walk Planet CAS →</Link><span className="muted">The same live feeds, as a world you can walk through.</span></p>
       <MoonBase />
       <p className="hero-actions"><Link href="/start" className="btn btn-primary">Start your brand</Link><span className="muted">Your order page shows your own build live.</span></p>
     </main>
