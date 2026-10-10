@@ -944,3 +944,41 @@ body { overflow-x: hidden; }
 .arcade-log time { color: #ffb84d; margin-right: 8px; font-variant-numeric: tabular-nums; }
 .arcade-legend { font-size: 12px; color: #9aa3b8; margin: 0; }
 .live-page { padding-top: 140px; }
+
+/* Moon base (/live) */
+.moon { display: grid; gap: 12px; margin-block: 24px; }
+.moon-hud { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13px; color: #aeb5c6; }
+.moon-hud b { color: #e2e6ed; font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; margin-right: 4px; }
+.moon-hud .is-on b { color: #ffb84d; }
+.moon-screen { position: relative; height: min(78vh, 760px); min-height: 460px; background: #05070f; border: 1px solid rgba(255,255,255,.14); overflow: hidden; touch-action: none; }
+.moon-screen canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.moon-zoom { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 6px; }
+.moon-zoom button { width: 40px; height: 40px; background: rgba(10,14,24,.85); color: #e2e6ed; border: 1px solid rgba(255,255,255,.2); font-size: 18px; cursor: pointer; }
+.moon-zoom button:hover, .moon-zoom button:focus-visible { border-color: #ffb84d; color: #ffb84d; outline: none; }
+.moon-tip { position: absolute; right: 12px; bottom: 12px; margin: 0; font-size: 12px; color: #9aa3b8; background: rgba(10,14,24,.7); padding: 6px 10px; pointer-events: none; }
+.moon-panel { position: absolute; top: 12px; right: 12px; bottom: 12px; width: min(360px, calc(100% - 24px)); overflow: auto; background: rgba(8,11,20,.95); border: 1px solid rgba(255,255,255,.18); padding: 18px; display: grid; gap: 10px; align-content: start; backdrop-filter: blur(6px); }
+.moon-panel h2 { font-size: 22px; margin: 0; }
+.moon-panel p { margin: 0; font-size: 14px; color: #ccd2df; line-height: 1.55; }
+.moon-kicker { font: 600 11px ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; }
+.moon-close { position: absolute; top: 8px; right: 8px; width: 36px; height: 36px; background: none; border: 0; color: #e2e6ed; font-size: 22px; cursor: pointer; }
+.moon-list { list-style: none; margin: 4px 0 0; padding: 0; display: grid; }
+.moon-list li { display: grid; grid-template-columns: 10px 1fr auto; gap: 10px; align-items: center; padding-block: 10px; border-top: 1px solid rgba(255,255,255,.08); }
+.moon-dot { width: 10px; height: 10px; border-radius: 50%; }
+.moon-li-main { display: grid; min-width: 0; }
+.moon-li-main small, .moon-li-end small { color: #9aa3b8; font-size: 12px; }
+.moon-li-end { display: grid; justify-items: end; gap: 2px; font-size: 13px; }
+.moon-li-end a, .moon-cta { color: #ffb84d; text-decoration: none; }
+.moon-li-end a:hover, .moon-cta:hover { text-decoration: underline; }
+.moon-pill { font: 600 11px ui-monospace, Menlo, monospace; padding: 3px 8px; border: 1px solid currentColor; color: #9aa3b8; white-space: nowrap; }
+.moon-pill.s-working, .moon-pill.s-reviewing { color: #ffb84d; }
+.moon-pill.s-oncall { color: #7fbfff; }
+.moon-note { font-size: 13px !important; color: #9aa3b8 !important; }
+.moon-text { font-size: 13px; color: #aeb5c6; }
+.moon-text summary { cursor: pointer; color: #ccd2df; }
+.moon-text p { margin: 6px 0 0; }
+.factory-floor { margin-top: 48px; scroll-margin-top: 112px; }
+@media (max-width: 640px) {
+  .moon-screen { height: 70vh; min-height: 420px; }
+  .moon-panel { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-height: 62%; }
+  .moon-tip { top: 10px; bottom: auto; left: 10px; right: 10px; text-align: center; }
+}
