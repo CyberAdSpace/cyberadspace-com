@@ -6,11 +6,12 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { BRANDS } from "@/data/brands";
+import { factSheetText } from "@/data/factsheets";
 import { aiConfigured, chatJSON } from "./ai";
-import { blobConfigured, listOrders, out, type Kit, type NamesOut } from "./orders";
+import { blobConfigured, listOrders, out, type Kit, type NamesOut, type StorefrontOut } from "./orders";
 import { sendMail, siteUrl, STUDIO_INBOX } from "./mail";
 
-export type Project = { slug: string; name: string; tagline: string; category: string; url: string; source: "studio" | "client" };
+export type Project = { slug: string; name: string; tagline: string; category: string; url: string; source: "studio" | "client"; facts?: string };
 
 export type AgentKind = "sitecheck" | "social" | "devotional" | "songwriter" | "explainer" | "outreach" | "products" | "local";
 
@@ -79,6 +80,13 @@ export async function allProjects(): Promise<Project[]> {
         category: "Client brand",
         url: `${siteUrl()}/b/${o.slug}`,
         source: "client" as const,
+        facts: [
+          "Status: Live. A brand built by Cyber Ad Space for a customer.",
+          o.intake?.idea ? `What it is: ${o.intake.idea}` : "",
+          o.intake?.audience ? `Audience: ${o.intake.audience}` : "",
+          (out<StorefrontOut>(o, "storefront")?.products ?? []).length ? `Products:\n- ${out<StorefrontOut>(o, "storefront")!.products.map((x) => `${x.name} (${x.price})`).join("\n- ")}` : "",
+          "Never say or imply: sales numbers, reviews, awards or anything not listed here",
+        ].filter(Boolean).join("\n"),
       }));
   }
   return [...studio, ...clients];
@@ -92,7 +100,7 @@ function specialist(p: Project): { kind: AgentKind; name: string; job: string } 
   if (/civic|history|tax|union|policy/.test(c)) return { kind: "explainer", name: "Explainer", job: "Drafts a weekly explainer outline, with sources a person must check" };
   if (/market|vendor|booking/.test(c)) return { kind: "outreach", name: "Outreach Writer", job: "Drafts a weekly message to recruit vendors or partners" };
   if (/food|café|cafe|edible|cannabis|hemp|cookie/.test(c)) return { kind: "products", name: "Product Writer", job: "Drafts product copy and flags anything that sounds like a health claim" };
-  if (/home|solar|pool|real estate|property/.test(c)) return { kind: "local", name: "Local Writer", job: "Drafts a weekly local post for Hernando, Pasco and Citrus County homeowners" };
+  if (/home|solar|pool|real estate|property/.test(c)) return { kind: "local", name: "Local Writer", job: "Drafts a weekly local post for the brand's own service area" };
   return { kind: "explainer", name: "Explainer", job: "Drafts a weekly explainer outline, with sources a person must check" };
 }
 
@@ -115,7 +123,14 @@ export async function ensureCrews(): Promise<{ created: string[]; total: number 
   for (const p of projects) {
     const c = await readCrew(p.slug);
     if (!c) { await saveCrew(designCrew(p)); created.push(p.name); }
-    else if (JSON.stringify(c.project) !== JSON.stringify(p)) { c.project = p; await saveCrew(c); }
+    else {
+      // keep project details and agent job descriptions current with the latest design
+      const fresh = designCrew(p);
+      let changed = JSON.stringify(c.project) !== JSON.stringify(p);
+      c.project = p;
+      for (const a of c.agents) { const f = fresh.agents.find((x) => x.id === a.id); if (f && (f.job !== a.job || f.name !== a.name)) { a.job = f.job; a.name = f.name; changed = true; } }
+      if (changed) await saveCrew(c);
+    }
   }
   return { created, total: projects.length };
 }
@@ -135,10 +150,11 @@ function nextRun(a: CrewAgent, from = new Date()): string {
 }
 
 // ---------- running ----------
-const RULES = `Rules: Write in plain, warm, specific language. Never invent facts, statistics, reviews, testimonials, prices or customer names. Never make health or medical claims. Never copy lyrics, other brands' slogans or anyone's work. If something needs checking, say so. This is a DRAFT for a person to review before anything is published.`;
+const RULES = `Rules: Use ONLY the facts in the brand's fact sheet. If something isn't in the fact sheet, don't state or imply it. Respect the fact sheet's status: if the brand is a concept or coming soon, never write as if it's open, selling or taking customers. Obey every "Never say or imply" line. Write in plain, warm, specific language. Never invent facts, statistics, reviews, testimonials, prices or customer names. Never make health or medical claims. Never copy lyrics, other brands' slogans or anyone's work. If something needs checking, say so. This is a DRAFT for a person to review before anything is published.`;
 
 function brief(p: Project) {
-  return `Brand: ${p.name}\nTagline: ${p.tagline || "(none)"}\nCategory: ${p.category}\nWebsite: ${p.url}`;
+  const facts = p.facts ?? factSheetText(p.slug) ?? "No fact sheet yet. Only restate the brand name, tagline and website; make no other claims.";
+  return `Brand: ${p.name}\nTagline: ${p.tagline || "(none)"}\nCategory: ${p.category}\nWebsite: ${p.url}\n\nFACT SHEET (the only facts you may use):\n${facts}`;
 }
 
 const PROMPTS: Record<Exclude<AgentKind, "sitecheck">, string> = {
@@ -148,7 +164,7 @@ const PROMPTS: Record<Exclude<AgentKind, "sitecheck">, string> = {
   explainer: "Draft an outline for one new explainer article that fits this brand: a headline, 4-6 section points, and a list of the official sources a person should check before publishing. Return {\"title\": string, \"body\": string}.",
   outreach: "Draft one short outreach message (under 140 words) inviting a local vendor or partner to join this marketplace. Be clear about what they get; no promises about income. Return {\"title\": string, \"body\": string}.",
   products: "Draft a short brand or product description (under 120 words) for this brand, then a 'Compliance check' line listing any words a reviewer should double-check for health claims or legal limits. Return {\"title\": string, \"body\": string}.",
-  local: "Draft one local social post (under 100 words) for homeowners in Hernando, Pasco and Citrus County, Florida, that fits this brand. Return {\"title\": string, \"body\": string}.",
+  local: "Draft one local social post (under 100 words) for the area and audience named in the fact sheet. Return {\"title\": string, \"body\": string}.",
 };
 
 async function runSiteCheck(p: Project): Promise<Output> {
