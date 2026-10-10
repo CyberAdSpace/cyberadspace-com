@@ -108,6 +108,19 @@ async function writeJSON(p: string, data: unknown) {
   await put(p, text, { access: "private", contentType: "application/json", addRandomSuffix: false, allowOverwrite: true, cacheControlMaxAge: 60 });
 }
 
+// ---------- lessons from Mini Me's tests ----------
+// When Mini Me catches a brand's chat agent making a mistake, the lesson is saved here and
+// added to that agent's rules from the next message on.
+export async function chatLessons(slug: string): Promise<string[]> {
+  return (await readJSON<{ lessons: string[] }>(`chat-lessons/${slug}.json`))?.lessons ?? [];
+}
+export async function addChatLesson(slug: string, lesson: string) {
+  const cur = await chatLessons(slug);
+  const text = lesson.replace(/\s+/g, " ").trim().slice(0, 300);
+  if (!text || cur.some((l) => l.toLowerCase() === text.toLowerCase())) return;
+  await writeJSON(`chat-lessons/${slug}.json`, { lessons: [text, ...cur].slice(0, 15) });
+}
+
 /** Calendar day in Eastern time, YYYY-MM-DD. */
 export function today(d = new Date()) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
@@ -175,13 +188,14 @@ async function recordActivity(slug: string) {
 }
 
 // ---------- prompt ----------
-export function systemPrompt(b: ChatBrand): string {
+export function systemPrompt(b: ChatBrand, lessons: string[] = []): string {
   const facts = factSheetText(b.slug) ?? "";
   const extra: string[] = [];
   if (HEMP.has(b.slug)) extra.push("This is a hemp brand. Nothing is for sale. Make no health, wellness or effect claims of any kind. Its audience is adults 21 and over only.");
   if (CONCEPT.has(b.slug)) extra.push("This is a concept brand. It is not open and does not sell, install, serve or quote anything. Say so plainly if asked.");
   if (b.slug === "antrias-academy") extra.push("Speak to parents and grandparents, never to children. Never ask for, repeat or store a child's name, age, school, photo or any other personal detail. If someone shares one, don't repeat it; answer generally.");
   if (b.slug === "why-is-this-taxed") extra.push("You may describe what the site covers, but never tell anyone what they owe or how to handle their own taxes.");
+  for (const l of lessons) extra.push(`Lesson from testing: ${l}`);
   return [
     `You are the AI assistant on the website of ${b.name} (${b.url}). Tagline: "${b.tagline}".`,
     "",
@@ -236,7 +250,7 @@ export async function answer(b: ChatBrand, messages: ChatTurn[], ip: string): Pr
 
   let text: string;
   try {
-    text = stub ? `(stub) You asked about ${b.name}: "${messages[messages.length - 1].content.slice(0, 80)}". See ${b.url} or email ${b.contact}.` : await chatText(systemPrompt(b), messages);
+    text = stub ? `(stub) You asked about ${b.name}: "${messages[messages.length - 1].content.slice(0, 80)}". See ${b.url} or email ${b.contact}.` : await chatText(systemPrompt(b, await chatLessons(b.slug)), messages);
   } catch (e) {
     console.error("chat: AI call failed", (e as Error).message);
     return { reply: `Sorry, something went wrong on my end. Please try again, or email ${b.contact}.`, unavailable: true };

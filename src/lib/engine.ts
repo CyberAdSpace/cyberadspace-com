@@ -2,7 +2,7 @@
 // Every "tick" (from visitors watching the moon base / Planet CAS, the heartbeat, or cron):
 //  - re-checks any site not checked in the last hour (free, no AI)
 //  - runs ONE AI job: the most overdue scheduled agent, else continuous work
-//    (AI Counsel studies every 30 min, Mini Me reviews every 3 hours).
+//    (AI Counsel studies every 30 min, Mini Me reviews and tests every hour).
 // A global spacing (4 min) and a daily job budget keep costs bounded.
 import { put, get } from "@vercel/blob";
 import fs from "node:fs/promises";
@@ -14,7 +14,7 @@ const FILE = "engine/state.json";
 const LOCAL = () => process.env.LOCAL_STORE_DIR;
 const SPACING_MS = 4 * 60_000;
 const DAILY_AI_JOBS = () => Number(process.env.ENGINE_DAILY_JOBS || 150);
-const CONTINUOUS: Record<string, number> = { counsel: 30 * 60_000, chief: 3 * 3600_000 }; // agent id on the CAS crew -> how often it works
+const CONTINUOUS: Record<string, number> = { counsel: 30 * 60_000, chief: 60 * 60_000 }; // agent id on the CAS crew -> how often it works
 
 export type EngineState = { lastTickAt?: string; lastEnsureAt?: string; day: string; aiJobs: number; lastJob?: { at: string; project: string; agent: string; title?: string }; ticks: number };
 

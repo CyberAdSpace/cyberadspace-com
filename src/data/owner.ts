@@ -11,3 +11,13 @@ export const OWNER_PROFILE = `
 - Budget about $2,000 to invest and about 20 hours a week. Favors cheap, fast demand tests before spending. Never wants fake reviews, misleading claims or spam.
 - Not named Anthony; don't assume a name.
 `.trim();
+
+// Things Mini Me should keep driving to a resolution with its agents (AI Counsel, Compliance, Brand Developers).
+export const WATCH_LIST = [
+  "Cáñamo Café's site lists a coming-soon 21+ infused range: CBD, CBG and CBN tinctures (1,800 mg each) and chocolate squares (540 mg per square). Whether these can legally be sold after the federal hemp changes (Nov 12 and Dec 11, 2026) and under Florida's hemp rules is unresolved.",
+  "The Hemp Cookies plans CBD, CBG, CBN, CBC and CBT cookies (21+). FDA's position on cannabinoids in food and the federal hemp changes may block these.",
+  "Hemp Cookies says hemp protein 'contains all 9 essential amino acids': check whether that's an allowed nutrient statement.",
+  "SolarSplashing is a concept with a launch list; it needs a licensed contractor to operate. Florida's rules on unlicensed referral businesses (Chapter 489) decide what it may say.",
+  "KamSlam showed 'Test mode' on payments and has no contact email; NCU shows only the Nov 12 date. Both sites have no GitHub repo yet.",
+  "No brand can take payments until Stripe is connected; selling songs, merch and Planet CAS plots all depend on it.",
+];
