@@ -1,6 +1,7 @@
 import { after } from "next/server";
 import { isAdmin } from "@/lib/admin";
-import { ensureCrews, reviewOutput, runAgent, runDue, runResearchDue, saveOwnerNotes } from "@/lib/crews";
+import { ensureCrews, reviewOutput, runAgent, runDue, runResearchDue, saveOwnerNotes, setAutopilot, CAS_SLUG } from "@/lib/crews";
+import { askCounsel } from "@/lib/counsel";
 
 export const maxDuration = 300;
 
@@ -25,6 +26,13 @@ export async function POST(req: Request) {
   } else if (action === "notes" && slug) {
     await saveOwnerNotes(slug, String(f.get("notes") || ""));
     back.searchParams.set("msg", "Saved. The Brand Developer and every writer for that brand will use your answers from now on.");
+  } else if (action === "ask-counsel") {
+    const q = String(f.get("question") || "").trim();
+    if (q) { await askCounsel(q); after(() => runAgent(CAS_SLUG, "counsel").then(() => undefined)); }
+    back.searchParams.set("msg", "AI Counsel is researching your question. The answer will show here and arrive by email in a few minutes.");
+  } else if (action === "autopilot-on" || action === "autopilot-off") {
+    await setAutopilot(action === "autopilot-on");
+    back.searchParams.set("msg", action === "autopilot-on" ? "Autopilot on: Mini Me publishes or rejects drafts itself." : "Autopilot off: drafts wait for you.");
   } else if ((action === "approve" || action === "reject") && slug) {
     await reviewOutput(slug, String(f.get("output") || ""), action === "approve" ? "approved" : "rejected");
   }

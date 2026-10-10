@@ -1,0 +1,12 @@
+name: Agent heartbeat
+# Keeps the Cyber Ad Space agent engine turning all day. The endpoint spaces and budgets the work itself.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: curl -fsS --max-time 60 https://cyberadspace.com/api/tick || true

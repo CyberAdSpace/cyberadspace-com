@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin";
 import { aiConfigured } from "@/lib/ai";
 import { allCrews, allProjects, storageReady } from "@/lib/crews";
+import { readLibrary } from "@/lib/counsel";
+import { engineState } from "@/lib/engine";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Agent crews | CyberAdSpace", robots: { index: false, follow: false } };
@@ -15,6 +17,9 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
   const ready = storageReady();
   const [crews, projects] = ready ? await Promise.all([allCrews(), allProjects()]) : [[], []];
   const missing = projects.filter((p) => !crews.some((c) => c.project.slug === p.slug));
+  const [lib, engine] = ready ? await Promise.all([readLibrary(), engineState()]) : [null, null];
+  const cas = crews.find((c) => c.project.slug === "cyberadspace");
+  const autopilot = cas?.autopilot !== false;
   const drafts = crews.flatMap((c) => c.outputs.filter((o) => o.status === "draft").map((o) => ({ c, o })));
 
   return (
@@ -41,6 +46,34 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
           </section>
         );
       })()}
+
+      <section className="admin-card">
+        <h2>Engine</h2>
+        <p className="muted">Agents work all day: every few minutes the engine runs the most overdue agent, AI Counsel studies every 30 minutes, Mini Me reviews every 3 hours, and every site is checked hourly. {engine?.lastJob ? `Last job: ${engine.lastJob.project} · ${engine.lastJob.agent}, ${when(engine.lastJob.at)}. ` : ""}{engine ? `${engine.aiJobs} AI jobs today.` : ""}</p>
+        <form method="post" action="/api/admin/crews" className="hero-actions">
+          <span className="muted">Autopilot is <b>{autopilot ? "on" : "off"}</b>: {autopilot ? "Mini Me publishes or rejects drafts itself." : "drafts wait for you."}</span>
+          <button className="btn" name="action" value={autopilot ? "autopilot-off" : "autopilot-on"}>{autopilot ? "Turn autopilot off" : "Turn autopilot on"}</button>
+        </form>
+      </section>
+
+      <section className="admin-card">
+        <h2>AI Counsel</h2>
+        <p className="muted">The attorney agent. It learns the way attorneys do (statutes and regulations first, then agency guidance and court decisions, then new rules) and keeps a cited law library that every brand&apos;s agents follow. It isn&apos;t licensed, so it never presents itself to the public as a lawyer.</p>
+        <form method="post" action="/api/admin/crews">
+          <label className="muted" htmlFor="counsel-q">Ask a legal question about any brand</label>
+          <textarea id="counsel-q" name="question" rows={3} style={{ width: "100%" }} placeholder="Can Cáñamo Café sell its CBD, CBG and CBN products after the federal hemp changes?" />
+          <button className="btn btn-primary" name="action" value="ask-counsel">Ask AI Counsel</button>
+        </form>
+        {lib?.questions.slice(0, 5).map((q) => (
+          <details key={q.id}><summary>{q.answer ? "Answered" : "Researching"} · {q.question.slice(0, 90)}</summary><pre className="crew-draft-pre">{q.answer ?? "Working on it."}</pre></details>
+        ))}
+        <h3>Law library</h3>
+        {lib?.topics.map((t) => (
+          <details key={t.key}><summary>{t.title} · {t.rules.length} rules · {t.lastStudiedAt ? `studied ${when(t.lastStudiedAt)}` : "not studied yet"}</summary>
+            <pre className="crew-draft-pre">{t.rules.map((r) => `- ${r.rule}\n  [${r.citation}]${r.url ? ` ${r.url}` : ""}`).join("\n") || "Nothing yet."}{t.openIssues.length ? `\n\nStill open:\n${t.openIssues.map((x) => `- ${x}`).join("\n")}` : ""}</pre>
+          </details>
+        ))}
+      </section>
 
       <section className="admin-card">
         <h2>Send projects through the system</h2>
