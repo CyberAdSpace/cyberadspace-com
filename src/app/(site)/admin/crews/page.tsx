@@ -53,6 +53,35 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
         ))}
       </section>
 
+      <section className="admin-card">
+        <h2>Research &amp; plans</h2>
+        <p className="muted">Brand Developers bring concept and pre-launch brands to life. Compliance Researchers check current law and the live site and propose safe wording. Both search the web and cite sources. Compliance memos are research, not legal advice. Only you see this section.</p>
+        <form method="post" action="/api/admin/crews" className="hero-actions">
+          <button className="btn btn-primary" name="action" value="run-research">Run all research agents now</button>
+        </form>
+        {crews.filter((c) => c.agents.some((a) => a.kind === "develop" || a.kind === "compliance")).map((c) => {
+          const dev = c.outputs.find((o) => o.agentId === "develop");
+          const law = c.outputs.find((o) => o.agentId === "compliance");
+          const hasDev = c.agents.some((a) => a.kind === "develop");
+          return (
+            <article key={c.project.slug} className="crew-draft">
+              <h3>{c.project.name}</h3>
+              {hasDev && (dev ? <details><summary>Brand brief · {when(dev.at)}</summary><pre>{dev.body}</pre></details> : <p className="muted">Brand Developer hasn&apos;t run yet.</p>)}
+              {c.agents.some((a) => a.kind === "compliance") && (law ? <details><summary>Compliance memo · {when(law.at)}</summary><pre>{law.body}</pre></details> : <p className="muted">Compliance Researcher hasn&apos;t run yet.</p>)}
+              {c.rules?.length ? <p className="muted"><small>{c.rules.length} compliance rules are in force for this brand&apos;s writers.</small></p> : null}
+              {hasDev && (
+                <form method="post" action="/api/admin/crews">
+                  <input type="hidden" name="slug" value={c.project.slug} />
+                  <label className="muted" htmlFor={`notes-${c.project.slug}`}>Your answers and notes (treated as facts by every agent for this brand){c.ownerNotesAt ? ` · saved ${when(c.ownerNotesAt)}` : ""}</label>
+                  <textarea id={`notes-${c.project.slug}`} name="notes" rows={5} defaultValue={c.ownerNotes ?? ""} style={{ width: "100%" }} />
+                  <button className="btn" name="action" value="notes">Save answers</button>
+                </form>
+              )}
+            </article>
+          );
+        })}
+      </section>
+
       {(() => {
         const books = crews.find((c) => c.project.slug === "cyberadspace")?.outputs.find((o) => o.agentId === "books");
         return books ? (
@@ -76,7 +105,7 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
                   <tr key={c.project.slug + a.id}>
                     <td>{i === 0 ? <><b>{c.project.name}</b><br /><small>{c.project.source === "client" ? "Client brand" : c.project.category}</small></> : null}</td>
                     <td>{a.name}<br /><small>{a.job}</small></td>
-                    <td>{a.cadence === "daily" ? "Daily" : "Weekly"}</td>
+                    <td>{a.cadence === "daily" ? "Daily" : a.cadence === "live" ? "Live" : "Weekly"}</td>
                     <td>{when(a.lastRunAt)}</td>
                     <td>{a.standby ? <small>{a.standby}</small> : when(a.nextRunAt)}</td>
                     <td><small>{latest ? `${latest.title} (${latest.status})` : "—"}</small></td>

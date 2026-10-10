@@ -73,3 +73,36 @@ export async function chatText(system: string, messages: ChatTurn[], opts: { max
   const text: string = json?.choices?.[0]?.message?.content ?? "";
   return text.trim();
 }
+
+export type Source = { title: string; url: string };
+
+/** Research with live web search (OpenAI Responses API + web_search tool), returning a JSON object
+ *  plus the pages the model actually cited. Falls back to chatJSON (no web) if search isn't available. */
+export async function researchJSON<T>(system: string, user: string): Promise<{ data: T; sources: Source[]; searched: boolean }> {
+  const model = process.env.OPENAI_RESEARCH_MODEL || TEXT_MODEL();
+  try {
+    const json = await call(
+      "responses",
+      {
+        model,
+        tools: [{ type: "web_search" }],
+        instructions: system + "\n\nSearch the web for current, official sources before answering. Respond with a single JSON object only, no other text.",
+        input: user,
+      },
+      200_000,
+    );
+    const items: { type?: string; content?: { type?: string; text?: string; annotations?: { type?: string; url?: string; title?: string }[] }[] }[] = json?.output ?? [];
+    const parts = items.filter((i) => i.type === "message").flatMap((i) => i.content ?? []).filter((c) => c.type === "output_text");
+    const text = json?.output_text || parts.map((p) => p.text ?? "").join("\n");
+    const sources: Source[] = [];
+    for (const a of parts.flatMap((p) => p.annotations ?? [])) {
+      if (a.type === "url_citation" && a.url && !sources.some((s) => s.url === a.url)) sources.push({ title: a.title || a.url, url: a.url.replace(/[?&]utm_source=openai$/, "") });
+    }
+    const m = String(text).match(/\{[\s\S]*\}/);
+    if (!m) throw new Error("no JSON in research reply");
+    return { data: JSON.parse(m[0]) as T, sources, searched: true };
+  } catch (e) {
+    console.warn("researchJSON: web search unavailable, falling back", e instanceof Error ? e.message : e);
+    return { data: await chatJSON<T>(system, user), sources: [], searched: false };
+  }
+}
