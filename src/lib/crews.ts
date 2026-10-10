@@ -189,7 +189,7 @@ export async function runAgent(slug: string, agentId: string): Promise<Output | 
   let c = await readCrew(slug); if (!c) return null;
   const a = c.agents.find((x) => x.id === agentId); if (!a) return null;
   if (a.usesAI && !aiConfigured()) {
-    a.standby = "Waiting for an AI key"; a.nextRunAt = nextRun(a); await saveCrew(c); return null;
+    a.standby = "Waiting for an AI key"; await saveCrew(c); return null;
   }
   await markRunning(slug, agentId, true);
   let o: Output | null = null;
@@ -206,25 +206,36 @@ export async function runAgent(slug: string, agentId: string): Promise<Output | 
   return o;
 }
 
-/** Run every agent that's due. Content agents are capped per call to stay inside the function time limit. */
-export async function runDue(maxContent = 6, onlyChecks = false): Promise<{ ran: number; drafts: { project: string; agent: string; title: string }[]; waiting: number }> {
+/** Run every agent that's due. Agents that have never produced work count as due.
+ *  Each project's agents run one after another (they share one file); projects run in parallel. */
+export async function runDue(maxContent = 40, onlyChecks = false): Promise<{ ran: number; drafts: { project: string; agent: string; title: string }[]; waiting: number }> {
   const now = Date.now();
   const crews = await allCrews();
   const checks: Promise<unknown>[] = [];
-  const content: { slug: string; agent: CrewAgent; project: string }[] = [];
+  const byProject = new Map<string, { slug: string; project: string; agents: CrewAgent[] }>();
+  let queued = 0;
   for (const c of crews) for (const a of c.agents) {
-    if (Date.parse(a.nextRunAt) > now) continue;
-    if (a.kind === "sitecheck") checks.push(runAgent(c.project.slug, a.id));
-    else if (!onlyChecks) content.push({ slug: c.project.slug, agent: a, project: c.project.name });
+    const due = Date.parse(a.nextRunAt) <= now || (a.usesAI && !a.lastRunAt);
+    if (!due) continue;
+    if (a.kind === "sitecheck") { checks.push(runAgent(c.project.slug, a.id)); continue; }
+    if (onlyChecks || !aiConfigured() || queued >= maxContent) continue;
+    queued++;
+    const g = byProject.get(c.project.slug) ?? { slug: c.project.slug, project: c.project.name, agents: [] };
+    g.agents.push(a); byProject.set(c.project.slug, g);
   }
-  await Promise.all(checks);
-  content.sort((x, y) => x.agent.nextRunAt.localeCompare(y.agent.nextRunAt));
   const drafts: { project: string; agent: string; title: string }[] = [];
-  let ran = checks.length;
-  for (const job of content.slice(0, aiConfigured() ? maxContent : content.length)) {
-    const o = await runAgent(job.slug, job.agent.id);
-    if (o) { ran++; if (o.status === "draft") drafts.push({ project: job.project, agent: job.agent.name, title: o.title }); }
-  }
+  let ran = 0;
+  const groups = [...byProject.values()];
+  const worker = async () => {
+    for (let g = groups.shift(); g; g = groups.shift()) {
+      for (const a of g.agents) {
+        const o = await runAgent(g.slug, a.id);
+        if (o) { ran++; if (o.status === "draft") drafts.push({ project: g.project, agent: a.name, title: o.title }); }
+      }
+    }
+  };
+  await Promise.all([Promise.all(checks), ...Array.from({ length: 6 }, worker)]);
+  ran += checks.length;
   if (drafts.length) {
     await sendMail({
       to: STUDIO_INBOX,
@@ -232,7 +243,8 @@ export async function runDue(maxContent = 6, onlyChecks = false): Promise<{ ran:
       text: `Your agents wrote ${drafts.length} new draft${drafts.length === 1 ? "" : "s"}:\n\n${drafts.map((d) => `- ${d.project}: ${d.agent}, "${d.title}"`).join("\n")}\n\nReview them here: ${siteUrl()}/admin/crews\n\nNothing is shown publicly until you approve it.`,
     }).catch(() => undefined);
   }
-  return { ran, drafts, waiting: Math.max(0, content.length - (aiConfigured() ? maxContent : content.length)) };
+  const total = crews.reduce((n, c) => n + c.agents.filter((a) => a.usesAI && (Date.parse(a.nextRunAt) <= now || !a.lastRunAt)).length, 0);
+  return { ran, drafts, waiting: Math.max(0, total - queued) };
 }
 
 export async function reviewOutput(slug: string, outputId: string, decision: "approved" | "rejected") {
