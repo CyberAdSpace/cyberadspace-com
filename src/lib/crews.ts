@@ -19,7 +19,7 @@ export type Project = { slug: string; name: string; tagline: string; category: s
 export type AgentKind = "sitecheck" | "social" | "devotional" | "songwriter" | "explainer" | "outreach" | "products" | "local" | "blog" | "chat" | "audit" | "books";
 
 // Brands whose site has the chat widget installed (the Chat Host only appears where it really exists).
-export const CHAT_INSTALLED = new Set(["cyberadspace", "why-is-this-taxed", "the-faith-vault", "the-scripture-guide", "the-divine-reader", "religion-relief", "elevated-remedies", "the-vendor-space", "canamo-cafe", "the-hemp-cookies", "founding-times", "antrias-academy", "palm-polish"]);
+export const CHAT_INSTALLED = new Set(["cyberadspace", "why-is-this-taxed", "the-faith-vault", "the-scripture-guide", "the-divine-reader", "religion-relief", "elevated-remedies", "the-vendor-space", "canamo-cafe", "the-hemp-cookies", "founding-times", "palm-polish"]);
 export const CAS_SLUG = "cyberadspace";
 
 export type CrewAgent = {
