@@ -26,6 +26,22 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
       {!ready && <p className="form-error">Storage isn&apos;t set up, so crews can&apos;t be saved.</p>}
       {!aiConfigured() && <p className="form-error">No OPENAI_API_KEY is set, so writing agents are on standby. Site Watch still runs. Add the key in Vercel → cyberadspace-com → Settings → Environment Variables, then redeploy.</p>}
 
+      {(() => {
+        const brief = crews.find((c) => c.project.slug === "cyberadspace")?.outputs.find((o) => o.agentId === "chief");
+        return (
+          <section className="admin-card">
+            <h2>Mini Me{brief ? ` · ${when(brief.at)}` : ""}</h2>
+            <p className="muted">In charge of every agent. Thinks with your profile, checks each brand against the $1K/month bar, sends agents to work and marks every draft. You still make the final call.</p>
+            {brief ? <pre className="crew-draft-pre">{brief.body}</pre> : <p className="muted">No brief yet. Mini Me runs first thing each morning.</p>}
+            <form method="post" action="/api/admin/crews" className="hero-actions">
+              <input type="hidden" name="slug" value="cyberadspace" />
+              <input type="hidden" name="agent" value="chief" />
+              <button className="btn btn-primary" name="action" value="run-one">Ask Mini Me for a brief now</button>
+            </form>
+          </section>
+        );
+      })()}
+
       <section className="admin-card">
         <h2>Send projects through the system</h2>
         <p className="muted">{crews.length} of {projects.length} projects have crews.{missing.length ? ` Waiting: ${missing.map((p) => p.name).join(", ")}.` : ""} New studio brands and delivered client brands get crews automatically every morning.</p>
@@ -42,6 +58,7 @@ export default async function CrewsAdmin({ searchParams }: { searchParams: Promi
           <article key={o.id} className="crew-draft">
             <p className="muted">{c.project.name} · {c.agents.find((a) => a.id === o.agentId)?.name} · {when(o.at)}</p>
             <h3>{o.title}</h3>
+            {o.note && <p className="ok-note">{o.note}</p>}
             <pre>{o.body}</pre>
             <form method="post" action="/api/admin/crews" className="hero-actions">
               <input type="hidden" name="slug" value={c.project.slug} />

@@ -13,10 +13,11 @@ import { runAudit, publicSummary, latestAudit } from "./audit";
 import { stripeConfigured } from "./stripe";
 import { XPR_ACCOUNT, XMD_CONTRACT, xprConfigured } from "./xpr";
 import { sendMail, siteUrl, STUDIO_INBOX } from "./mail";
+import { OWNER_PROFILE } from "@/data/owner";
 
 export type Project = { slug: string; name: string; tagline: string; category: string; url: string; source: "studio" | "client"; facts?: string };
 
-export type AgentKind = "sitecheck" | "social" | "devotional" | "songwriter" | "explainer" | "outreach" | "products" | "local" | "blog" | "chat" | "audit" | "books" | "develop" | "compliance";
+export type AgentKind = "sitecheck" | "social" | "devotional" | "songwriter" | "explainer" | "outreach" | "products" | "local" | "blog" | "chat" | "audit" | "books" | "develop" | "compliance" | "chief";
 
 // Brands whose site has the chat widget installed (the Chat Host only appears where it really exists).
 export const CHAT_INSTALLED = new Set(["cyberadspace", "why-is-this-taxed", "the-faith-vault", "the-scripture-guide", "the-divine-reader", "religion-relief", "elevated-remedies", "the-vendor-space", "canamo-cafe", "the-hemp-cookies", "founding-times", "palm-polish"]);
@@ -43,6 +44,7 @@ export type Output = {
   title: string;
   body: string;
   status: "draft" | "approved" | "rejected" | "auto" | "private"; // auto = shown without review; private = admin only
+  note?: string; // Mini Me's recommendation on a draft
 };
 
 export type Crew = {
@@ -150,6 +152,7 @@ export function designCrew(p: Project, now = new Date()): Crew {
   agents.push({ id: "blog", kind: "blog", name: "Blog Writer", job: "Drafts a weekly blog post from the fact sheet; it's published in the brand's journal once approved", cadence: "weekly", day: 3, usesAI: true, nextRunAt: due });
   if (CHAT_INSTALLED.has(p.slug)) agents.push({ id: "chat", kind: "chat", name: "Chat Host", job: "Answers visitors' questions on the site, around the clock, using only the fact sheet", cadence: "live", usesAI: true, nextRunAt: never });
   if (p.slug === CAS_SLUG) {
+    agents.unshift({ id: "chief", kind: "chief", name: "Mini Me", job: "In charge of every agent. Thinks like the owner: reads everything the crews produced, checks it against the $1K/month bar, sends agents to work, recommends approve or reject on every draft and writes the owner one daily brief", cadence: "daily", usesAI: true, nextRunAt: due });
     agents.push({ id: "audit", kind: "audit", name: "Security Auditor", job: "Checks every Cyber Ad Space site every day: uptime, certificates, broken links, forms, exposed files, leaked keys and claims that don't match the fact sheets", cadence: "daily", usesAI: false, nextRunAt: due });
     agents.push({ id: "books", kind: "books", name: "Books Keeper", job: "Keeps a private daily ledger of orders and payments (Stripe, XPR / WebAuth, manual). Read-only: it never moves money", cadence: "daily", usesAI: false, nextRunAt: due });
   }
@@ -200,7 +203,7 @@ function brief(p: Project, c?: Crew | null) {
   return `Brand: ${p.name}\nTagline: ${p.tagline || "(none)"}\nCategory: ${p.category}\nWebsite: ${p.url}\n\nFACT SHEET (the only facts you may use):\n${facts}${owner}${rules}`;
 }
 
-type WriterKind = Exclude<AgentKind, "sitecheck" | "chat" | "audit" | "books" | "develop" | "compliance">;
+type WriterKind = Exclude<AgentKind, "sitecheck" | "chat" | "audit" | "books" | "develop" | "compliance" | "chief">;
 const PROMPTS: Record<WriterKind, string> = {
   blog: "Write one blog post (450-700 words) for this brand's journal that would genuinely help its audience, using only fact-sheet facts about the brand. Use a few '## ' subheadings and short paragraphs. End with one line inviting readers to visit the website. Return {\"title\": string, \"body\": string} where title is the post headline.",
   social: "Write three short social media posts for this brand: one for Instagram, one for Facebook, one for X. Each under 60 words, with 2-4 relevant hashtags. Return {\"title\": string, \"body\": string} where body lists the three posts clearly labeled.",
@@ -299,6 +302,65 @@ async function runCompliance(c: Crew, a: CrewAgent): Promise<Output> {
   return { id: id6(), agentId: a.id, at: new Date().toISOString(), title: String(r.title || "Compliance memo").split(/\s+/).slice(0, 8).join(" "), body: body.slice(0, 12000), status: "private" };
 }
 
+type ChiefOut = {
+  headline?: string;
+  priorities?: { brand?: string; why?: string; action?: string }[];
+  reviews?: { id?: string; decision?: "approve" | "reject" | "edit"; reason?: string }[];
+  dispatch?: { slug?: string; agent?: string; reason?: string }[];
+  dollar_bar?: { brand?: string; verdict?: string }[];
+  owner_questions?: string[];
+  next_step?: string;
+};
+
+/** Mini Me: the agent in charge. Reads every crew, the audit and the books, thinks like the owner, and directs the work. */
+async function runChief(a: CrewAgent): Promise<Output> {
+  const crews = await allCrews();
+  const audit = await latestAudit();
+  const day = 864e5 * 8;
+  const recent = (c: Crew) => c.outputs.filter((o) => Date.now() - Date.parse(o.at) < day && o.agentId !== "sitecheck" && o.agentId !== "chief");
+  const drafts = crews.flatMap((c) => c.outputs.filter((o) => o.status === "draft").map((o) => ({ c, o })));
+  const board = crews.map((c) => {
+    const st = stageOf(c.project.slug);
+    const site = audit?.sites.find((s) => s.slug === c.project.slug);
+    const issues = site?.checks.filter((k) => k.status === "fail" || k.status === "warn").map((k) => `${k.label}: ${k.detail}`).join(" | ");
+    const work = recent(c).filter((o) => o.status !== "draft").slice(0, 4).map((o) => `  - ${c.agents.find((x) => x.id === o.agentId)?.name}: ${o.title} — ${o.body.replace(/\s+/g, " ").slice(0, o.agentId === "develop" || o.agentId === "compliance" ? 900 : 200)}`).join("\n");
+    return `## ${c.project.name} (slug ${c.project.slug}; ${c.project.category}; stage ${st}${site ? `; audit ${site.grade}` : ""})\nAgents: ${c.agents.map((x) => `${x.id}${x.lastRunAt ? "" : " (never ran)"}`).join(", ")}${c.ownerNotes ? `\nOwner notes: ${c.ownerNotes.slice(0, 400)}` : ""}${issues ? `\nAudit issues: ${issues.slice(0, 700)}` : ""}${work ? `\nRecent work:\n${work}` : ""}`;
+  }).join("\n\n");
+  const books = crews.find((c) => c.project.slug === CAS_SLUG)?.outputs.find((o) => o.agentId === "books")?.body ?? "No books yet.";
+  const draftList = drafts.slice(0, 40).map(({ c, o }) => `[${o.id}] ${c.project.name} · ${c.agents.find((x) => x.id === o.agentId)?.name}: ${o.title}\n${o.body.replace(/\s+/g, " ").slice(0, 500)}`).join("\n\n") || "(no drafts waiting)";
+  const r = await chatJSON<ChiefOut>(
+    `You are Mini Me, the agent in charge of every Cyber Ad Space agent crew. You think like the owner. Their profile:\n${OWNER_PROFILE}\n\nYour job each morning: read everything below, decide what matters most for reaching $1K/month per brand, direct the agents, and brief the owner in a few direct lines. Be honest, practical and encouraging; never sugarcoat; label estimates; never promise income. Legal and health-claim risks come first. You can dispatch these agents to run today: develop (Brand Developer, concept/pre-launch brands only), compliance (Compliance Researcher), blog, social, and each brand's specialist; only dispatch an agent id that brand actually has. Recommend approve, reject or edit for every waiting draft: reject anything with health claims, invented facts, wrong status (selling a concept), or that wouldn't help the brand earn.`,
+    `TODAY'S BOARD\n\n${board}\n\nBOOKS\n${books}\n\nDRAFTS WAITING FOR THE OWNER\n${draftList}\n\nReturn {"headline": one sentence, "priorities": [{"brand","why","action"}] (top 3-5, most important first), "reviews": [{"id": draft id in brackets, "decision": "approve"|"reject"|"edit", "reason": short}], "dispatch": [{"slug","agent","reason"}] (at most 8), "dollar_bar": [{"brand","verdict": one line on its path to $1K/month and the next lever}] (only brands where you have something useful to say), "owner_questions": [at most 3 decisions only the owner can make], "next_step": the single most important thing for the owner to do today}.`,
+  );
+  // act: dispatch agents (they run in this same job) and attach recommendations to drafts
+  const dispatched: string[] = [];
+  for (const d of (r.dispatch ?? []).slice(0, 8)) {
+    const c = await readCrew(String(d.slug ?? "")); if (!c) continue;
+    const ag = c.agents.find((x) => x.id === d.agent && x.kind !== "chat" && x.kind !== "chief" && x.kind !== "audit" && x.kind !== "books");
+    if (!ag) continue;
+    ag.nextRunAt = new Date().toISOString(); await saveCrew(c);
+    dispatched.push(`${c.project.name} → ${ag.name}: ${d.reason ?? ""}`);
+  }
+  const notes = new Map((r.reviews ?? []).filter((x) => x.id).map((x) => [String(x.id).replace(/[[\]]/g, ""), x]));
+  for (const c of crews) {
+    let touched = false;
+    const fresh = await readCrew(c.project.slug); if (!fresh) continue;
+    for (const o of fresh.outputs) { const n = notes.get(o.id); if (n && o.status === "draft") { o.note = `Mini Me: ${n.decision} — ${n.reason ?? ""}`; touched = true; } }
+    if (touched) await saveCrew(fresh);
+  }
+  const body = [
+    r.headline ?? "",
+    `## Priorities\n${(r.priorities ?? []).map((p, i) => `${i + 1}. ${p.brand}: ${p.why} → ${p.action}`).join("\n")}`,
+    dispatched.length ? `## Agents I sent to work today\n${dispatched.map((x) => `- ${x}`).join("\n")}` : "",
+    notes.size ? `## Drafts\nI marked ${notes.size} draft${notes.size === 1 ? "" : "s"} with approve / reject / edit. You still make the call on /admin/crews.` : "",
+    r.dollar_bar?.length ? `## The $1K bar\n${r.dollar_bar.map((d) => `- ${d.brand}: ${d.verdict}`).join("\n")}` : "",
+    r.owner_questions?.length ? `## Your call\n${r.owner_questions.map((q) => `- ${q}`).join("\n")}` : "",
+    `**Next step:** ${r.next_step ?? ""}`,
+  ].filter(Boolean).join("\n\n");
+  await sendMail({ to: STUDIO_INBOX, subject: `Mini Me: ${String(r.headline ?? "today's brief").slice(0, 90)}`, text: `${body}\n\nEverything: ${siteUrl()}/admin/crews` }).catch(() => undefined);
+  return { id: id6(), agentId: a.id, at: new Date().toISOString(), title: "Daily brief", body: body.slice(0, 12000), status: "private" };
+}
+
 /** Save the owner's answers for the Brand Developer (and every writer) to use. */
 export async function saveOwnerNotes(slug: string, notes: string) {
   const c = await readCrew(slug); if (!c) return;
@@ -353,7 +415,7 @@ async function runBooks(): Promise<Output> {
 }
 
 function trimOutputs(c: Crew) {
-  const daily = new Set(["sitecheck", "audit", "books"]);
+  const daily = new Set(["sitecheck", "audit", "books", "chief"]);
   const keep = [...daily].flatMap((id) => c.outputs.filter((o) => o.agentId === id).slice(0, 7));
   const rest = c.outputs.filter((o) => !daily.has(o.agentId)).slice(0, 40);
   c.outputs = [...keep, ...rest].sort((a, b) => b.at.localeCompare(a.at));
@@ -377,7 +439,7 @@ export async function runAgent(slug: string, agentId: string): Promise<Output | 
   await markRunning(slug, agentId, true);
   let o: Output | null = null;
   try {
-    o = a.kind === "sitecheck" ? await runSiteCheck(c.project) : a.kind === "audit" ? await runAuditAgent() : a.kind === "books" ? await runBooks() : a.kind === "develop" ? await runDevelop(c, a) : a.kind === "compliance" ? await runCompliance(c, a) : await runContent(c.project, a, c);
+    o = a.kind === "sitecheck" ? await runSiteCheck(c.project) : a.kind === "audit" ? await runAuditAgent() : a.kind === "books" ? await runBooks() : a.kind === "develop" ? await runDevelop(c, a) : a.kind === "compliance" ? await runCompliance(c, a) : a.kind === "chief" ? await runChief(a) : await runContent(c.project, a, c);
   } catch (e) {
     o = { id: crypto.randomBytes(6).toString("hex"), agentId, at: new Date().toISOString(), title: `${a.name} hit a problem`, body: e instanceof Error ? e.message : String(e), status: "rejected" };
   }
@@ -398,7 +460,7 @@ export async function runDue(maxContent = 40, onlyChecks = false): Promise<{ ran
   const byProject = new Map<string, { slug: string; project: string; agents: CrewAgent[] }>();
   let queued = 0;
   for (const c of crews) for (const a of c.agents) {
-    if (a.kind === "chat" || a.kind === "audit" || RESEARCH.has(a.kind)) continue; // chat is live; audit and research have their own daily jobs
+    if (a.kind === "chat" || a.kind === "audit" || a.kind === "chief" || RESEARCH.has(a.kind)) continue; // chat is live; audit and research have their own daily jobs
     const due = Date.parse(a.nextRunAt) <= now || (a.usesAI && !a.lastRunAt);
     if (!due) continue;
     if (a.kind === "sitecheck") { checks.push(runAgent(c.project.slug, a.id)); continue; }
