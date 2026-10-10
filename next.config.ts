@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "kamslam.com", pathname: "/**" }],
   },
+  async rewrites() {
+    return [{ source: "/why-is-this-taxed", destination: "/why-is-this-taxed/index.html" }];
+  },
   async redirects() {
     return [
       { source: "/payments", destination: "/", permanent: true },

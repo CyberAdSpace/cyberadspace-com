@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why Is This Taxed? | A Cyber Ad Space project</title>
+<meta name="description" content="Everyday tax rules traced back to the law that made them, the people who wrote it, and the problem they were trying to fix. With sources.">
+<meta property="og:title" content="Why Is This Taxed?">
+<meta property="og:description" content="Every tax rule has a family tree. Follow it back to the law, the lawmakers and the reason.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cyberadspace.com/why-is-this-taxed">
+<meta property="og:image" content="https://cyberadspace.com/assets/logos/logo-why-is-this-taxed.png">
+<link rel="icon" href="/assets/logos/logo-why-is-this-taxed.png">
+<link rel="canonical" href="https://cyberadspace.com/why-is-this-taxed">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a statute-book index on the left, one rule's family tree (root to twist) on the right; stacks on phones. */
+:root{
+  --bg:#eef1ec; --paper:#f8faf6; --ink:#16211b; --muted:#56635b; --line:#c9d2ca;
+  --accent:#1d6a4c; --accent-soft:#dcebe2; --twist:#a8620f; --twist-soft:#f6e7cf;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Literata",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101613; --paper:#17201b; --ink:#e3ebe5; --muted:#9aa89f; --line:#2c3a32;
+  --accent:#5fc49a; --accent-soft:#1d3329; --twist:#e3a14a; --twist-soft:#3a2b16; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101613; --paper:#17201b; --ink:#e3ebe5; --muted:#9aa89f; --line:#2c3a32;
+  --accent:#5fc49a; --accent-soft:#1d3329; --twist:#e3a14a; --twist-soft:#3a2b16; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1120px;margin:0 auto}
+header{padding-block:36px 20px;display:grid;gap:10px;border-bottom:2px solid var(--ink)}
+.kicker{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:900 clamp(40px,8vw,84px)/.92 var(--display);font-stretch:72%;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.lede{max-width:62ch;margin:0;color:var(--muted)}
+.ask{margin-block:22px;display:grid;gap:8px}
+.ask label{font:600 14px var(--display);font-stretch:100%}
+.askrow{display:flex;gap:8px;flex-wrap:wrap}
+.askrow input{flex:1 1 260px;min-width:0;font:16px var(--body);padding:12px 14px;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:2px}
+.askrow button{font:700 15px var(--display);padding:12px 18px;background:var(--ink);color:var(--paper);border:0;border-radius:2px;cursor:pointer}
+button:focus-visible,input:focus-visible,.idx button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.answer{font-size:15px;color:var(--muted);min-height:1.6em}
+.answer b{color:var(--ink)}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:32px;margin-top:8px}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+.idx{display:grid;gap:2px;align-content:start}
+.idx h2{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.idx button{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:12px 4px;color:var(--ink);font:600 17px/1.25 var(--display);font-stretch:90%;cursor:pointer}
+.idx button .sec{font:500 12px var(--mono);color:var(--muted);min-width:4.2em}
+.idx button[aria-current="true"]{background:var(--accent-soft)}
+.idx button[aria-current="true"] .sec{color:var(--accent)}
+article{min-width:0}
+.rule{font:900 clamp(30px,5vw,48px)/1 var(--display);font-stretch:80%;margin:0 0 6px;text-wrap:balance}
+.short{font-size:19px;margin:0 0 26px;max-width:58ch}
+.tree{list-style:none;margin:0;padding:0;position:relative}
+.tree::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.node{position:relative;padding-left:40px;padding-block:0 26px}
+.node::before{content:"";position:absolute;left:2px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--paper);border:3px solid var(--accent)}
+.node.twist::before{border-color:var(--twist);background:var(--twist)}
+.tag{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:flex;gap:10px;flex-wrap:wrap}
+.tag .yr{color:var(--ink);font-weight:500}
+.node.twist .tag{color:var(--twist)}
+.node h3{font:700 21px/1.2 var(--display);font-stretch:95%;margin:4px 0 4px}
+.node p{margin:0;max-width:62ch}
+.node.twist .box{background:var(--twist-soft);padding:14px 16px;border-radius:2px}
+.cite{font:400 13px/1.5 var(--mono);color:var(--muted);margin-top:6px}
+.srcs{border-top:1px solid var(--line);padding-top:14px;margin-top:4px;font-size:14px}
+.srcs h4{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.srcs ul{margin:0;padding-left:18px}
+.srcs a{color:var(--accent)}
+.note{margin-top:40px;padding-top:16px;border-top:2px solid var(--ink);font-size:14px;color:var(--muted);max-width:75ch}
+@media (prefers-reduced-motion:no-preference){article{animation:in .35s ease}@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+<style>
+.home{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);text-decoration:none}
+.home:hover{text-decoration:underline}
+.pro{margin-top:28px;padding:16px 18px;border:1.5px solid var(--ink);display:grid;gap:6px;max-width:75ch}
+.pro h2{font:700 18px var(--display);font-stretch:95%;margin:0}
+.pro p{margin:0;font-size:15px}
+.pro .addr{font:500 14px var(--mono);color:var(--accent);user-select:all}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <a class="home" href="https://cyberadspace.com">A Cyber Ad Space project</a>
+  <h1>Why Is This Taxed?</h1>
+  <p class="lede">Every tax rule has a family tree. Pick a rule and follow it back: the law that made it, the people who wrote it, and the problem they were trying to fix.</p>
+</header>
+
+<form class="ask" id="askform" autocomplete="off">
+  <label for="q">Ask about an everyday tax rule</label>
+  <div class="askrow">
+    <input id="q" placeholder="e.g. If I trade my gold for silver, is that taxed?">
+    <button type="submit">Find the rule</button>
+  </div>
+  <div class="answer" id="answer" aria-live="polite">Answers come only from the reviewed entries below. This explains where rules came from. It isn't advice for your return.</div>
+</form>
+
+<div class="grid">
+  <nav class="idx" aria-label="Rules">
+    <h2>The rules</h2>
+    <div id="idx"></div>
+  </nav>
+  <article id="entry"></article>
+</div>
+
+<section class="pro" aria-labelledby="pro-h">
+  <h2 id="pro-h">Need help with your own return?</h2>
+  <p>This site explains where tax rules came from. For your own situation, talk to a licensed tax professional such as a CPA or enrolled agent.</p>
+  <p>Are you a tax pro in Hernando, Pasco or Citrus County? Founding sponsor spots are open. Email <span class="addr">Contact@CyberAdSpace.com</span></p>
+</section>
+<p class="note">Educational history only, not tax or legal advice. Federal rules only; states differ. Rules change, so check the linked sources and a tax professional before acting. Entries were researched in October 2026 and are being reviewed by a human before public launch.</p>
+</div>
+
+<script>
+const E = [
+{ id:"food", sec:"FL §212.08", title:"Groceries aren't taxed in Florida, but meals are",
+  short:"There's no federal tax on buying food. Florida's sales tax skips groceries but charges it on restaurant meals, hot food, candy and soda.",
+  keys:"food groceries grocery eat eating restaurant meal meals candy soda drink drinks snack sales florida store supermarket",
+  nodes:[
+   {k:"Root",yr:"1949",h:"Florida starts a sales tax",p:"The Florida Legislature created the state sales tax in the General Revenue Act of 1949. Sales tax is a state choice. There is no federal sales tax, so food is never taxed by the IRS when you buy it."},
+   {k:"Branch",yr:"Today",h:"Food for home is exempt",p:"Florida law exempts food products for human consumption from sales tax, so a normal grocery run is tax-free.",c:"Fla. Stat. §212.08(1)(a)"},
+   {k:"Branch",yr:"Today",h:"Meals, hot food, candy and soda are not",p:"The exemption doesn't cover food sold as meals, food served by restaurants, cafeterias and similar places, hot prepared food, candy, or soft drinks. Those are taxed like other purchases.",c:"Fla. Stat. §212.08(1)(c)"},
+   {k:"Why",yr:"Policy",h:"Necessities vs. treats",p:"States that exempt groceries usually argue that food is a necessity and that taxing it costs lower-income families the biggest share of their budget. Groceries are also a large source of revenue, which is why a few states still tax them."},
+   {k:"Twist",yr:"2026",h:"A rotisserie chicken can be taxed when raw chicken isn't",p:"Hot food and candy are taxed in Florida while basic groceries aren't. Eight states, including Alabama, Mississippi and Tennessee, still charge sales tax on groceries, usually at a reduced rate.",twist:true}
+  ],
+  src:[["Florida Statutes §212.08 (text)","https://www.floridasalestax.com/florida-sales-tax-statute/212-08/"],["Florida Trend: Florida's tax law exemptions","https://floridatrend.com/print/article/27149"],["AARP: States that tax groceries in 2026","https://www.aarp.org/money/taxes/info-2024/states-that-tax-groceries.html"]]},
+
+{ id:"gift", sec:"§102",
+  title:"Giving things away usually isn't taxed",
+  short:"Give away homegrown food, cash or anything else, and the person who gets it owes no income tax. The giver only files a gift tax form above $19,000 per person in 2026, and almost nobody ever pays gift tax.",
+  keys:"gift gifts give giving given away donate donating free grow grew homegrown garden share sharing present inheritance",
+  nodes:[
+   {k:"Root",yr:"1913",h:"Gifts are not income",p:"From the start, the income tax left gifts out of the recipient's income. Today that rule is Section 102 of the tax code, so a neighbor who gets your tomatoes owes nothing.",c:"26 U.S.C. §102"},
+   {k:"Branch",yr:"1924",h:"Congress tries a gift tax",p:"The Revenue Act of 1924 created the first federal gift tax, paid by the giver, with a $500 annual exemption. Congress repealed it two years later, in 1926."},
+   {k:"Branch",yr:"1932",h:"The gift tax comes back for good",p:"The Revenue Act of 1932 reinstated it during the Depression, when the government needed new revenue. In 1976 Congress tied it to the estate tax under one lifetime limit."},
+   {k:"Why",yr:"Today",h:"A large lifetime allowance",p:"In 2026 you can give up to $19,000 per person per year without filing anything. Above that you file a form, but tax is only owed after lifetime gifts pass $15 million.",c:"IRS 2026 inflation adjustments"},
+   {k:"Twist",yr:"Today",h:"Giving is free, selling isn't",p:"Hand your extra vegetables to neighbors and no tax applies. Sell them, and the profit is income, even at a roadside stand. Swap them for a service, and it's barter.",twist:true}
+  ],
+  src:[["IRS Statistics of Income: Gift tax history (PDF)","https://www.irs.gov/pub/irs-soi/11pwcompench3c05.pdf"],["Morgan Lewis: 2026 gift and estate tax amounts","https://www.morganlewis.com/pubs/2025/10/irs-announces-increased-gift-and-estate-tax-exemption-amounts-for-2026"]]},
+
+{ id:"barter", sec:"§61", title:"Bartering is taxed",
+  short:"Trade a service for a service, and both of you have income equal to what you received, at fair market value.",
+  keys:"barter trade swap exchange lawn mow pool neighbor services favor trade dollars",
+  nodes:[
+   {k:"Root",yr:"1913",h:"The income tax counts income from any source",p:"The 16th Amendment let Congress tax income “from whatever source derived.” That wording, carried into the tax code as Section 61, means income doesn't have to arrive as cash.",c:"U.S. Const. amend. XVI · 26 U.S.C. §61"},
+   {k:"Branch",yr:"1982",h:"Congress makes barter exchanges report",p:"The Tax Equity and Fiscal Responsibility Act (TEFRA) required organized barter exchanges to file Form 1099-B for their members. Putting the paperwork on the exchange made members cheaper to audit.",c:"Pub. L. 97-248 · 26 U.S.C. §6045"},
+   {k:"Who",yr:"1981–82",h:"Rep. Pete Stark's bill, signed by President Reagan",p:"The bill started as H.R. 4961, introduced by Rep. Pete Stark (D-CA) in November 1981. It passed both chambers by narrow votes and was signed on September 3, 1982."},
+   {k:"Why",yr:"1979–82",h:"The barter industry asked for it",p:"Commercial barter had been largely unregulated. The industry's own trade group, IRTA, lobbied for rules that treat trade dollars like U.S. dollars, because reporting made exchanges look legitimate."},
+   {k:"Twist",yr:"Today",h:"Your neighbor deal is income too",p:"Mowing a neighbor's lawn in return for pool cleaning is barter, and both people technically have income. No form gets filed for it, but the rule still applies. One IRS letter ruling also found that a free, noncommercial community exchange was not a “barter exchange” for 1099-B paperwork.",twist:true}
+  ],
+  src:[["IRS: Bartering produces taxable income","https://www.irs.gov/newsroom/bartering-produces-taxable-income-and-reporting-requirements"],["Wikipedia: TEFRA (1982)","https://en.wikipedia.org/wiki/Tax_Equity_and_Fiscal_Responsibility_Act_of_1982"],["Crowell & Moring: Barter exchange reporting","https://www.crowell.com/en/insights/publications/barter-exchange-reporting-relief"],["IRS letter ruling on a community exchange (PDF)","https://www.eitc.irs.gov/pub/irs-wd/0724006.pdf"]]},
+
+{ id:"gold", sec:"§1(h)", title:"Trading gold for silver is taxed",
+  short:"A metal-for-metal swap counts as selling the gold. Long-held gains can be taxed at up to 28%, higher than stocks.",
+  keys:"gold silver bullion coins metal collectibles 28 1031 like-kind swap trade precious",
+  nodes:[
+   {k:"Root",yr:"1921",h:"Like-kind swaps start out tax-deferred",p:"The Revenue Act of 1921 created the idea of a like-kind exchange: trade one investment for a similar one and put off the tax. It became Section 1031 in the 1954 code."},
+   {k:"Branch",yr:"1997",h:"Collectibles stay at 28%",p:"The Taxpayer Relief Act of 1997 cut the top rate on most long-term gains from 28% to 20%. Congress left collectibles, including gold and silver bullion, at 28%.",c:"26 U.S.C. §1(h) · §408(m)"},
+   {k:"Branch",yr:"2017",h:"Swaps narrowed to real estate",p:"The Tax Cuts and Jobs Act limited Section 1031 to real property. Since 2018, swapping metals, cars or art is a taxable sale.",c:"26 U.S.C. §1031"},
+   {k:"Why",yr:"1997",h:"A higher rate for things wealthy people collect",p:"Supporters argued that collectibles were mostly owned by the wealthy and didn't drive new investment or growth, so they shouldn't get the lower rate."},
+   {k:"Twist",yr:"Today",h:"Gold mining stocks are taxed lower than gold",p:"Physical bullion and funds that hold it fall under the 28% collectibles rate, while shares of mining companies get ordinary stock rates.",twist:true}
+  ],
+  src:[["The Tax Adviser: The taxation of collectibles","https://www.thetaxadviser.com/issues/2019/nov/taxation-collectibles/"],["Utah State Extension: Like-kind exchanges after TCJA","https://extension.usu.edu/ruraltax/tax-topics/LKE2026"],["IRS: Final 1031 regulations (TD 9935, PDF)","https://www.eitc.irs.gov/pub/irs-drop/td_9935.pdf"]]},
+
+{ id:"tips", sec:"2025", title:"Tips get a new deduction",
+  short:"From 2025 through 2028, workers in tipped jobs can deduct up to $25,000 of tips from federal income tax.",
+  keys:"tips tipped server bartender waiter hair no tax on tips overtime gratuity",
+  nodes:[
+   {k:"Root",yr:"1913",h:"Tips were always income",p:"Under the broad “any source” definition of income, tips have been taxable wages, and employees report them to employers."},
+   {k:"Branch",yr:"2025",h:"The One Big Beautiful Bill Act adds a deduction",p:"Signed July 4, 2025, the law lets eligible workers deduct up to $25,000 of qualified tips. It phases out above $150,000 of income ($300,000 joint) and works whether or not you itemize.",c:"Pub. L. 119-21"},
+   {k:"Who",yr:"2024",h:"Both presidential candidates backed it",p:"No tax on tips was a campaign promise from both major candidates in 2024, which helped it pass as part of the 2025 package."},
+   {k:"Why",yr:"2025",h:"Help for service workers, with guardrails",p:"The cap and income phaseout were meant to stop high earners from relabeling pay as tips. The IRS publishes a list of occupations that count."},
+   {k:"Twist",yr:"2029",h:"It expires, and payroll tax still applies",p:"The deduction covers income tax only. Social Security and Medicare tax still apply to tips, and the deduction ends after 2028 unless Congress extends it.",twist:true}
+  ],
+  src:[["IRS: No tax on tips and overtime (PDF)","https://www.irs.gov/pub/irs-pdf/p6133.pdf"],["IRS: One Big Beautiful Bill provisions","https://www.irs.gov/newsroom/one-big-beautiful-bill-provisions"]]},
+
+{ id:"1099k", sec:"§6050W", title:"Payment apps don't decide what's taxable",
+  short:"PayPal, Venmo and marketplaces send a 1099-K only above $20,000 and 200 transactions, but side income below that is still taxable.",
+  keys:"1099-k 1099k paypal venmo cash app etsy ebay side hustle gig marketplace selling online 600 20000",
+  nodes:[
+   {k:"Root",yr:"2011",h:"Payment platforms start reporting",p:"Form 1099-K reporting began in 2011 with a threshold of $20,000 and 200 transactions per year.",c:"26 U.S.C. §6050W"},
+   {k:"Branch",yr:"2021",h:"The $600 rule",p:"The American Rescue Plan Act dropped the threshold to $600 with no transaction count. The IRS delayed it several times after confusion from sellers and platforms."},
+   {k:"Branch",yr:"2025",h:"Back to $20,000 and 200",p:"The One Big Beautiful Bill Act repealed the $600 rule retroactively, restoring the original threshold.",c:"OBBBA §70432"},
+   {k:"Why",yr:"2021–25",h:"Catching unreported income vs. burying people in forms",p:"The lower threshold aimed to close the gap on unreported online income. Critics said it would flood casual sellers and people splitting dinner bills with forms."},
+   {k:"Twist",yr:"Today",h:"No form doesn't mean no tax",p:"Profit from selling or side work is taxable even when no 1099-K arrives. Some states also set their own lower reporting thresholds.",twist:true}
+  ],
+  src:[["Avalara: OBBBA changes 1099 thresholds","https://www.avalara.com/blog/en/north-america/2025/07/one-big-beautiful-bill-act-1099-reporting-threshold.html"],["Beancount: 1099-K threshold guide (2026)","https://beancount.io/blog/2026/08/13/form-1099k-threshold-20000-200-transactions-obbba-guide"]]}
+];
+
+const idx=document.getElementById('idx'), entry=document.getElementById('entry');
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function show(id){
+  const e=E.find(x=>x.id===id)||E[0];
+  [...idx.children].forEach(b=>b.setAttribute('aria-current',b.dataset.id===e.id));
+  entry.innerHTML=`<div class="kicker">${esc(e.sec)} · family tree</div><h2 class="rule">${esc(e.title)}</h2><p class="short">${esc(e.short)}</p>
+  <ol class="tree">${e.nodes.map(n=>`<li class="node${n.twist?' twist':''}"><div class="${n.twist?'box':''}"><div class="tag"><span>${esc(n.k)}</span><span class="yr">${esc(n.yr)}</span></div><h3>${esc(n.h)}</h3><p>${esc(n.p)}</p>${n.c?`<div class="cite">${esc(n.c)}</div>`:''}</div></li>`).join('')}</ol>
+  <div class="srcs"><h4>Sources</h4><ul>${e.src.map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a></li>`).join('')}</ul></div>`;
+  try{localStorage.setItem('wit-entry',e.id)}catch(_){}
+}
+idx.innerHTML=E.map(e=>`<button type="button" data-id="${e.id}"><span class="sec">${esc(e.sec)}</span><span>${esc(e.title)}</span></button>`).join('');
+idx.addEventListener('click',ev=>{const b=ev.target.closest('button');if(b)show(b.dataset.id)});
+document.getElementById('askform').addEventListener('submit',ev=>{
+  ev.preventDefault();
+  const q=document.getElementById('q').value.toLowerCase(), a=document.getElementById('answer');
+  const STOP=new Set("tax taxes taxed taxable taxing irs are the and for you your does did can get how what why when who will with that this have has from about income pay paid owe".split(" "));
+  const words=q.split(/[^a-z0-9-]+/).filter(w=>w.length>2&&!STOP.has(w));
+  let best=null,score=0;
+  E.forEach(e=>{const keys=e.keys.toLowerCase().split(/\s+/);const s=words.filter(w=>keys.some(k=>k===w||(w.length>3&&(k.startsWith(w)||w.startsWith(k))))).length;if(s>score){score=s;best=e}});
+  if(best){a.innerHTML=`<b>${esc(best.title)}.</b> ${esc(best.short)} The full family tree is open below.`;show(best.id);entry.scrollIntoView({behavior:'smooth',block:'start'})}
+  else a.textContent="That rule isn't in the library yet. We only answer from reviewed entries, so we won't guess. Try one of the rules listed below.";
+});
+let start=location.hash.slice(1);
+try{start=start||localStorage.getItem('wit-entry')}catch(_){}
+show(start||'barter');
+</script>
+
+</body>
+</html>

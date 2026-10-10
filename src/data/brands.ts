@@ -80,6 +80,17 @@ export const BRANDS: Brand[] = [
     status: "Live",
   },
   {
+    slug: "why-is-this-taxed",
+    name: "Why Is This Taxed?",
+    tagline: "Every tax rule has a family tree.",
+    category: "Education · Tax history",
+    accent: "#5fc49a",
+    logo: "/assets/logos/logo-why-is-this-taxed.png",
+    url: "https://cyberadspace.com/why-is-this-taxed",
+    email: "Contact@CyberAdSpace.com",
+    status: "Live · beta",
+  },
+  {
     slug: "the-divine-reader",
     name: "The Divine Reader",
     tagline: "Every sacred text, beautifully typeset.",
