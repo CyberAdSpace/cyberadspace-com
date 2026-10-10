@@ -53,6 +53,19 @@ for (const [key, inbox] of Object.entries(BRAND_INBOXES)) {
   for (const o of inbox.origins) ORIGIN_TO_SLUG.set(o, brand.slug);
 }
 
+// Other live domains that serve a brand site but have no contact inbox entry.
+const EXTRA_ORIGINS: Record<string, string[]> = {
+  "the-scripture-guide": ["scriptureguide.com"],
+  "the-divine-reader": ["divinereader.com", "reader.thefaithvault.com"],
+  "the-green-oven": ["thegreenovenco.co", "thegreenovenco.com"],
+};
+for (const [slug, domains] of Object.entries(EXTRA_ORIGINS)) {
+  for (const d of domains) {
+    ORIGIN_TO_SLUG.set(`https://${d}`, slug);
+    if (d.split(".").length === 2) ORIGIN_TO_SLUG.set(`https://www.${d}`, slug);
+  }
+}
+
 // Extra origins for local testing only (comma-separated); they may use any brand.
 const testOrigins = () => (process.env.CHAT_TEST_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
 
