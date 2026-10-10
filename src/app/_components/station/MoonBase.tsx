@@ -302,32 +302,74 @@ export default function MoonBase() {
         </div>
         {!sel && <p className="moon-tip">Drag to explore, pinch or use + to zoom. Tap a dome or an agent.</p>}
         {(room || agent) && (
-          <aside className="moon-panel" aria-live="polite">
+          <aside className={`moon-panel${room ? " moon-terminal" : ""}`} aria-live="polite" style={room ? ({ "--t": room.color } as React.CSSProperties) : undefined}>
             <button type="button" className="moon-close" onClick={() => setSel(null)} aria-label="Close">×</button>
-            {room && (
-              <>
-                <div className="moon-kicker" style={{ color: room.color }}>Dome</div>
-                <h2>{room.name}</h2>
-                <p>{room.blurb}</p>
-                {brandsFor(room).length > 0 && (
-                  <ul className="moon-list">
-                    {brandsFor(room).map((b) => (
-                      <li key={b.slug}>
-                        <span className="moon-dot" style={{ background: b.accent }} />
-                        <span className="moon-li-main"><b>{b.name}</b><small>{b.tagline}</small></span>
-                        <span className="moon-li-end"><small>{b.status}</small><a href={b.url} target="_blank" rel="noopener noreferrer">Visit ↗</a></span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <ul className="moon-list">
-                  {AGENTS.filter((a) => a.room === room.id).map((a) => (
-                    <li key={a.id}><span className="moon-dot" style={{ background: a.color }} /><span className="moon-li-main"><b>{a.name}</b><small>{a.role}</small></span><span className={`moon-pill s-${statuses[a.id]}`}>{STATUS_TEXT[statuses[a.id]]}</span></li>
-                  ))}
-                </ul>
-                {room.id === "factory" && <a className="moon-cta" href="#factory-floor">Watch the factory floor ↓</a>}
-              </>
-            )}
+            {room && (() => {
+              const bs = brandsFor(room), crew = AGENTS.filter((a) => a.room === room.id);
+              const busy = crew.filter((a) => statuses[a.id] === "working" || statuses[a.id] === "reviewing").length;
+              const orders = (feed?.orders ?? []).filter((o) => o.status !== "delivered");
+              return (
+                <>
+                  <div className="term-head">
+                    <div className="moon-kicker">{room.name} terminal</div>
+                    <h2>{room.name}</h2>
+                    <p>{room.blurb}</p>
+                  </div>
+                  <div className="term-stats">
+                    {bs.length > 0 && <div><b>{bs.length}</b><small>Brands</small></div>}
+                    {bs.length > 0 && <div><b>{bs.filter((b) => b.status.startsWith("Live")).length}</b><small>Live sites</small></div>}
+                    <div><b>{crew.length}</b><small>Crew</small></div>
+                    <div><b>{busy}</b><small>Working now</small></div>
+                    {room.id === "factory" && <div><b>{orders.length}</b><small>Open orders</small></div>}
+                  </div>
+                  {bs.length > 0 && (
+                    <section>
+                      <h3 className="term-h">Brands in this dome</h3>
+                      <div className="term-grid">
+                        {bs.map((b) => (
+                          <a key={b.slug} className="term-card" href={b.url} target="_blank" rel="noopener noreferrer" style={{ "--a": b.accent } as React.CSSProperties}>
+                            <span className="term-logo">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={b.logo} alt="" loading="lazy" /></span>
+                            <b>{b.name}</b>
+                            <small>{b.tagline}</small>
+                            <span className={`term-status${b.status.startsWith("Live") ? " is-live" : ""}`}>{b.status}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+                  {room.id === "factory" && (
+                    <section>
+                      <h3 className="term-h">Open builds</h3>
+                      {orders.length ? (
+                        <ul className="term-builds">
+                          {orders.map((o) => {
+                            const keys = Object.keys(o.steps), done = keys.filter((k) => o.steps[k] === "done").length;
+                            const now = AGENTS.find((a) => a.step && o.steps[a.step] === "running");
+                            return (
+                              <li key={o.code}>
+                                <span className="mono">Brand #{o.code}</span>
+                                <span className="term-bar"><i style={{ width: `${(done / keys.length) * 100}%` }} /></span>
+                                <small>{now ? `${now.name} working` : o.status === "review" ? "With the reviewer" : `${done}/${keys.length} steps`}</small>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : <p className="term-empty">No open builds right now. New orders appear here the moment they&apos;re paid.</p>}
+                    </section>
+                  )}
+                  <section>
+                    <h3 className="term-h">Crew</h3>
+                    <ul className="moon-list">
+                      {crew.map((a) => (
+                        <li key={a.id}><span className="moon-dot" style={{ background: a.color }} /><span className="moon-li-main"><b>{a.name}</b><small>{a.role}</small></span><span className={`moon-pill s-${statuses[a.id]}`}>{STATUS_TEXT[statuses[a.id]]}</span></li>
+                      ))}
+                      {!crew.length && <li><span /><span className="moon-li-main"><small>No agents stationed here. These brands run as live websites.</small></span><span /></li>}
+                    </ul>
+                  </section>
+                  {room.id === "factory" && <a className="moon-cta" href="#factory-floor" onClick={() => setSel(null)}>Watch the factory floor ↓</a>}
+                </>
+              );
+            })()}
             {agent && (
               <>
                 <div className="moon-kicker" style={{ color: agent.color }}>{agent.kind === "person" ? "Person" : "Agent"} · {roomById(agent.room).name}</div>
